@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+
+
+    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
+    .page-banner::before { content: ""; position: absolute; inset: 0; z-index: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .page-banner-inner { position: relative; z-index: 1; }
+    .page-banner h1 { margin: 0 0 10px; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; }
+    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
+
+    .section { padding: 56px 0; }
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px; gap: 16px; }
+    .section-head h2 { margin: 0; font-size: clamp(22px, 2.4vw, 28px); font-weight: 800; }
+    .section-head span { color: var(--muted); font-size: 13px; }
+
+    .featured-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+    .featured-grid:has(> :only-child) { grid-template-columns: minmax(0, 600px); justify-content: start; }
+    .feature-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 30px rgba(2,52,88,.08); border: 1px solid #e6eef3; display: flex; flex-direction: column; }
+    .feature-top { height: 110px; background: linear-gradient(120deg, var(--top1), var(--top2)); position: relative; }
+    .feature-card:nth-child(1) .feature-top { --top1: #073457; --top2: #0e5f92; }
+    .feature-card:nth-child(2) .feature-top { --top1: #0e5f92; --top2: #00a2e0; }
+    .feature-card:nth-child(3) .feature-top { --top1: #04304f; --top2: #556b2f; }
+    .feature-card:nth-child(4) .feature-top { --top1: #073457; --top2: #1a7fb8; }
+    .feature-card:nth-child(5) .feature-top { --top1: #082b50; --top2: #0e5f92; }
+    .feature-card:nth-child(6) .feature-top { --top1: #04304f; --top2: #073457; }
+    .badge { position: absolute; top: 14px; right: 16px; background: rgba(255,255,255,.92); color: var(--ink); font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 999px; }
+    .feature-body { padding: 22px 22px 24px; flex: 1; display: flex; flex-direction: column; }
+    .feature-body h3 { margin: 0 0 10px; font-size: 17px; line-height: 1.4; }
+    .feature-body p { margin: 0 0 16px; color: var(--muted); font-size: 13px; line-height: 1.8; flex: 1; }
+    .feature-cta { align-self: flex-start; color: var(--brand); font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; }
+
+    .news-list { display: flex; flex-direction: column; gap: 0; }
+    .news-row { display: grid; grid-template-columns: 110px 1fr; gap: 18px; padding: 16px 0; border-bottom: 1px solid #e6eef3; align-items: baseline; }
+    .news-row b { color: var(--brand); font-size: 12px; font-weight: 800; direction: ltr; text-align: right; }
+    .news-row div h4 { margin: 0 0 4px; font-size: 14px; font-weight: 700; line-height: 1.5; }
+    .news-row div p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+    .news-group-title { font-size: 15px; font-weight: 800; margin: 36px 0 6px; color: var(--ink); }
+    .news-group-title:first-child { margin-top: 0; }
+
+    @media (max-width: 900px) {
+      .featured-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+    }
+  </style>
+</helmet>
+
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="news" hint-size="100%,78px"></dc-import>
+
+  <div style="padding-top:78px">
+  <section class="page-banner">
+    <div class="container page-banner-inner">
+      <h1>الأخبار والشراكات</h1>
+      <p>تغطية لزيارات وفد وقف التضامن الاجتماعي، شراكاته المؤسسية والأكاديمية في تركيا والسعودية وقطر وإندونيسيا وماليزيا، ومشاريعه الميدانية.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>مقالات ومشاريع مميزة</h2>
+        <span>آخر ما نشرته المؤسسة رسميًا</span>
+      </div>
+      <div class="featured-grid">
+        <a class="feature-card" href="Toplum Vakfı News Article - Saudi Visit.dc.html" style="text-decoration:none;color:inherit">
+          <div class="feature-top"><span class="badge">الأخبار والشراكات</span></div>
+          <div class="feature-body">
+            <h3>وفد وقف التضامن الاجتماعي يبحث تعزيز الشراكة في المشاريع الإنسانية بالسعودية</h3>
+            <p>زيارة رسمية جمعت وفد الوقف برئاسة الدكتور أحمد حمدي يلدريم مع الأمين العام للندوة العالمية للشباب الإسلامي، لبحث فرص التعاون في العمل الإنساني والإغاثي.</p>
+            <span class="feature-cta">اقرأ المزيد ←</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="section-head">
+        <h2>آخر الأخبار</h2>
+        <span>عناوين وتواريخ رسمية من أرشيف المؤسسة</span>
+      </div>
+      <div class="news-list">
+        <div class="news-group-title">أخبار الشراكات والزيارات</div>
+        <div class="news-row"><b>11 يوليو 2025</b><div><h4>وفد وقف التضامن الاجتماعي يزور الندوة العالمية بالسعودية</h4><p>لتعزيز الشراكة في المشاريع الإنسانية.</p></div></div>
+        <div class="news-row"><b>10 يوليو 2025</b><div><h4>زيارة وفد وقف التضامن الاجتماعي للسفير التركي بالرياض</h4><p>لبحث الشراكة والتعاون الاستراتيجي.</p></div></div>
+        <div class="news-row"><b>4 يوليو 2025</b><div><h4>زيارة رئيس مؤسسة AXIS لوقف التضامن الاجتماعي</h4><p>لبحث التعاون في مشاريع منطقة البلقان.</p></div></div>
+        <div class="news-row"><b>25 أبريل 2025</b><div><h4>وقف التضامن الاجتماعي يلتقي برئيس مؤسسة AXIS</h4><p>لقاء في إسطنبول لدعم التعاون.</p></div></div>
+        <div class="news-row"><b>21 أبريل 2025</b><div><h4>وفد وقف التضامن الاجتماعي يزور قطر برئاسة د. أحمد حمدي يلدريم</h4><p>لتعزيز التعاون في المجالات الوقفية والعلمية مع الجهات الرسمية في الدوحة.</p></div></div>
+        <div class="news-row"><b>23 مارس 2025</b><div><h4>وقف التضامن الاجتماعي يعزز شراكاته الأكاديمية في إندونيسيا</h4><p>تعاون مع جامعة دار النجاح لدعم التعليم الإسلامي والتبادل الطلابي.</p></div></div>
+        <div class="news-row"><b>1 أغسطس 2025</b><div><h4>زيارة وقف التضامن الاجتماعي إلى إندونيسيا لتعزيز التعاون الخيري</h4><p>بحث فرص الشراكة مع جمعية Langkah Amanah في المشاريع الإنسانية والتنموية.</p></div></div>
+        <div class="news-row"><b>16 سبتمبر 2026</b><div><h4>وقف التضامن الاجتماعي يجري اجتماعًا مع الهلال الأحمر التركي</h4><p>أولى خطوات التعاون والمساعدة المجتمعية.</p></div></div>
+        <div class="news-row"><b>16 سبتمبر 2026</b><div><h4>وقف التضامن الاجتماعي يزور سفارة جمهورية تركيا في كوالالمبور</h4><p>مناقشة مشاريع مشتركة في التعليم والصحة والتعاون الثقافي.</p></div></div>
+        <div class="news-row"><b>16 سبتمبر 2026</b><div><h4>وقف التضامن الاجتماعي في الملتقى الفقهي الحادي عشر لمسائل الوقف</h4><p>تبادل آراء حول فقه الوقف وتطبيقاته.</p></div></div>
+        <div class="news-row"><b>16 سبتمبر 2026</b><div><h4>وقف التضامن الاجتماعي في المعرض الدولي الرابع للمنظمات غير الحكومية</h4><p>مناقشة فرص جديدة للتعاون بين منظمات المجتمع المدني.</p></div></div>
+        <div class="news-row"><b>16 سبتمبر 2026</b><div><h4>وقف التضامن الاجتماعي في لقاءات قرض الحسن</h4><p>مشاركة في لقاءات تهدف إلى الدعم الإنساني والتضامن.</p></div></div>
+
+        <div class="news-group-title">أخبار ماليزيا وآسيا</div>
+        <div class="news-row"><b>16 سبتمبر 2026</b><div><h4>وقف التضامن الاجتماعي شارك في فعاليات أسبوع الوقف</h4><p>مشاركة مؤسسة توبلوم في احتفالات أسبوع الوقف.</p></div></div>
+        <div class="news-row"><b>15 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي تعقد اجتماعًا استراتيجيًا مع جامعة مالايا</h4><p>خطوات نحو التعاون والمشاريع المشتركة.</p></div></div>
+        <div class="news-row"><b>14 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يلتقي مع سينتا سوريا ماليزيا</h4><p>بحث شراكة في المساعدات الإنسانية.</p></div></div>
+        <div class="news-row"><b>15 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يعقد اجتماعًا مع وقف نما</h4><p>تعاون محتمل في التعليم والتنمية.</p></div></div>
+        <div class="news-row"><b>14 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يعقد اجتماعًا مع وقف سيريا كير</h4><p>تعاون محتمل في المساعدات الإنسانية.</p></div></div>
+        <div class="news-row"><b>13 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يعقد اجتماعًا مع وقف التواصل</h4><p>تعاون ومشاريع مشتركة.</p></div></div>
+        <div class="news-row"><b>11 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يعقد اجتماعًا مع وقف جلوبال حياة</h4><p>تعاون في المشاريع الإنسانية والاجتماعية.</p></div></div>
+        <div class="news-row"><b>12 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يزور IAIS ماليزيا</h4><p>مناقشة الدراسات الإسلامية والتعاون.</p></div></div>
+        <div class="news-row"><b>11 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يجتمع مع وقف هالوان ماليزيا</h4><p>تعاون في المساعدات الإنسانية والتعليم.</p></div></div>
+        <div class="news-row"><b>13 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يجتمع مع وقف ميرسي ماليزيا</h4><p>تعاون في المساعدات الإنسانية.</p></div></div>
+        <div class="news-row"><b>13 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يجتمع مع وكالة الإغاثة الماليزية</h4><p>مناقشة فرص التعاون في المشاريع الإنسانية.</p></div></div>
+        <div class="news-row"><b>13 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يجتمع مع MAPIM ماليزيا</h4><p>تعاون في المشاريع الإنسانية والتنموية.</p></div></div>
+        <div class="news-row"><b>12 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يجتمع مع منظمة مسلم كير ماليزيا</h4><p>بحث فرص التعاون في المشاريع الإنسانية والاجتماعية.</p></div></div>
+        <div class="news-row"><b>14 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يجتمع مع وقف MyCARE</h4><p>بحث فرص التعاون في المشاريع الإنسانية والتنموية.</p></div></div>
+        <div class="news-row"><b>15 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يجتمع مع وقف بيدولي إنسان</h4><p>بحث فرص التعاون في المشاريع الإنسانية والاجتماعية.</p></div></div>
+        <div class="news-row"><b>12 أغسطس 2025</b><div><h4>وقف التضامن الاجتماعي يجتمع مع وقف واده</h4><p>بحث فرص التعاون في المشاريع التعليمية والاجتماعية.</p></div></div>
+
+        <div class="news-group-title">أخبار أواخر 2025</div>
+        <div class="news-row"><b>15 سبتمبر 2025</b><div><h4>زيارة وفد وقف التضامن الاجتماعي لوزير الأوقاف السوري في سوريا</h4><p>تفاصيل الزيارة قيد الاعتماد من المصدر الرسمي.</p></div></div>
+        <div class="news-row"><b>20 نوفمبر 2025</b><div><h4>زيارة سفارة الجمهورية التركية في مدينة الرياض</h4><p>تفاصيل الزيارة قيد الاعتماد من المصدر الرسمي.</p></div></div>
+        <div class="news-row"><b>28 نوفمبر 2025</b><div><h4>زيارة جمعية قطر الخيرية</h4><p>تفاصيل الزيارة قيد الاعتماد من المصدر الرسمي.</p></div></div>
+        <div class="news-row"><b>8 ديسمبر 2025</b><div><h4>زيارة الأمانة العامة للندوة العالمية للشباب الإسلامي بمدينة الرياض</h4><p>تفاصيل الزيارة قيد الاعتماد من المصدر الرسمي.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-strip">© 2024 وقف التضامن الاجتماعي — <a href="Toplum Vakfı Homepage.dc.html">العودة للرئيسية</a></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

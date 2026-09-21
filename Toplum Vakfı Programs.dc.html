@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+
+    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
+    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .page-banner-inner { position: relative; z-index: 1; }
+    .page-banner h1 { margin: 0 0 10px; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; }
+    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
+
+    .programs-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; padding: 50px 0 70px; }
+    .prog-card { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #e6eef3; box-shadow: 0 12px 28px rgba(2,52,88,.07); transition: transform .2s, box-shadow .2s; display: block; }
+    .prog-card:hover { transform: translateY(-4px); box-shadow: 0 18px 34px rgba(2,52,88,.13); }
+    .prog-image { height: 150px; background-position: center; background-size: cover; }
+    .prog-body { padding: 20px; }
+    .prog-body h3 { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
+    .prog-body p { margin: 0 0 14px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+    .prog-sub { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+    .prog-sub li { background: var(--page-bg); color: var(--muted); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+    .prog-link { color: var(--brand); font-size: 12.5px; font-weight: 800; }
+
+
+
+    @media (max-width: 900px) {
+      .programs-grid { grid-template-columns: 1fr; }
+    }
+      .mobile-sticky-donate { display: none; }
+    @media (max-width: 760px) {
+      .prog-sub li { font-size: 12px; }
+      .mobile-sticky-donate { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500; padding: 12px 16px; background: #fff; box-shadow: 0 -8px 24px rgba(2,20,38,.15); }
+      .mobile-sticky-donate a { display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 14px; min-height: 44px; }
+      body { padding-bottom: 70px; }
+    }
+  </style>
+
+<svg style="position:absolute; width:0; height:0" aria-hidden="true">
+  <defs>
+    <clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="programs" hint-size="100%,78px"></dc-import>
+  <div class="mobile-sticky-donate"><a href="Toplum Vakfı Cart.dc.html">تبرع الآن</a></div>
+
+  <section class="page-banner">
+    <div class="container page-banner-inner">
+      <h1>برامجنا لبناء حياة أفضل</h1>
+      <p>خمسة مسارات عمل رئيسية — حملة أمل، غرس القيم، بناء الإنسان، صناعة مستقبل للشباب، والجسد الواحد — يجمع كل منها مبادرات ومشاريع ملموسة.</p>
+    </div>
+  </section>
+
+  <div class="container programs-grid">
+    <a class="prog-card" href="Toplum Vakfı Program - Quran.dc.html">
+      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="prog-body"><h3>حملة أمل</h3><p>مبادرات إيمانية وتعليمية واجتماعية تخدم المجتمع الفلسطيني وتدعم ارتباطه بالعلم والقيم.</p><ul class="prog-sub"><li>تحفيظ القرآن</li><li>الاعتكاف</li><li>وجبات الإفطار</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
+    </a>
+    <a class="prog-card" href="Toplum Vakfı Blog.dc.html">
+      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="prog-body"><h3>غرس القيم</h3><p>مبادرات إعلامية وتربوية ومجتمعية تهدف إلى تأصيل القيم وتحويلها إلى ممارسة يومية.</p><ul class="prog-sub"><li>بودكاست غرس</li><li>الأسرة القيمية</li><li>ركن القيم</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
+    </a>
+    <a class="prog-card" href="Toplum Vakfı Program - Aytam.dc.html">
+      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="prog-body"><h3>بناء الإنسان</h3><p>مبادرات تعنى بتأهيل البنية التعليمية والمجتمعية، ودعم بيئات آمنة للتعلم والعبادة والرعاية.</p><ul class="prog-sub"><li>بناء دار أيتام</li><li>ترميم مدارس</li><li>تأهيل مساجد</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
+    </a>
+    <a class="prog-card" href="Toplum Vakfı Stories.dc.html">
+      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="prog-body"><h3>صناعة مستقبل للشباب</h3><p>مسارات لتنمية المهارات والقيادة والمبادرات التي يقودها الشباب ورواد المجتمع.</p><ul class="prog-sub"><li>زاد المرشدين</li><li>حاضنة المبادرات</li><li>زاد الرواد</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
+    </a>
+    <a class="prog-card" href="Toplum Vakfı Partners.dc.html">
+      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="prog-body"><h3>الجسد الواحد</h3><p>مبادرة تعزز التكافل والانتماء المجتمعي ضمن إطار قيمي مشترك.</p><ul class="prog-sub"><li>دار القيم</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
+    </a>
+    <a class="prog-card" href="Toplum Vakfı Zakat Calculator.dc.html">
+      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1607863680198-23d4b2565df0?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="prog-body"><h3>حاسبة الزكاة</h3><p>احسب زكاة مالك بسهولة وتبرع بها مباشرة لمن يستحقها.</p><ul class="prog-sub"><li>حاسبة تلقائية</li><li>تبرع مباشر</li></ul><span class="prog-link">احسب زكاتك ←</span></div>
+    </a>
+    <a class="prog-card" href="Toplum Vakfı Sadaqah Jariyah.dc.html">
+      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1542601098-8fc114e148f1?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="prog-body"><h3>صدقة جارية</h3><p>زرع شجرة أو حفر بئر بلوحة تحمل اسمك أو اسم من تحب.</p><ul class="prog-sub"><li>شجرة</li><li>بئر</li></ul><span class="prog-link">تبرع بصدقة جارية ←</span></div>
+    </a>
+    <a class="prog-card" href="Toplum Vakfı Religious Occasions.dc.html">
+      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1591189863430-ab87e120f312?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="prog-body"><h3>مناسبات شرعية</h3><p>كفّارة، فدية الصيام، وعقيقة — أدِّ ما عليك ببساطة.</p><ul class="prog-sub"><li>كفّارة</li><li>فدية</li><li>عقيقة</li></ul><span class="prog-link">تصفح ←</span></div>
+    </a>
+  </div>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

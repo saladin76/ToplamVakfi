@@ -1,0 +1,49 @@
+/* ============================================================
+   Minber-i Aksa — Typography tokens
+   LTR uses Montserrat/Poppins; RTL (Arabic) swaps to Cairo/Almarai.
+   ============================================================ */
+:root {
+  /* Families */
+  --font-sans: Montserrat, Poppins, ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: Cairo, Almarai, Tajawal, ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-body: var(--font-sans);
+
+  /* Weights (the brand leans heavy: 800–900 for headings & CTAs) */
+  --fw-regular: 400;   /* @kind font */
+  --fw-medium: 500;    /* @kind font */
+  --fw-semibold: 600;  /* @kind font */
+  --fw-bold: 700;      /* @kind font */
+  --fw-heavy: 800;     /* @kind font */
+  --fw-black: 900;     /* @kind font */
+
+  /* Fluid display sizes (from production clamps) */
+  --fs-hero:    clamp(42px, 7vw, 86px);   /* @kind font */  /* homepage / page hero H1 */
+  --fs-display: clamp(36px, 5vw, 72px);   /* @kind font */  /* detail hero H1 */
+  --fs-h2:      clamp(30px, 4vw, 56px);   /* @kind font */  /* section titles */
+  --fs-h3:      24px;                      /* @kind font */  /* card titles */
+  --fs-lead:    clamp(17px, 2vw, 22px);   /* @kind font */  /* hero sub / lead paragraph */
+
+  /* Fixed sizes */
+  --fs-body:    16px;   /* @kind font */
+  --fs-sm:      14px;   /* @kind font */  /* nav, buttons */
+  --fs-xs:      13px;   /* @kind font */  /* eyebrow, utility bar */
+  --fs-xxs:     12px;   /* @kind font */  /* badges, micro-labels */
+
+  /* Line heights */
+  --lh-tight: .98;   /* @kind other */
+  --lh-snug:  1.08;  /* @kind other */
+  --lh-body:  1.6;   /* @kind other */
+
+  /* Eyebrow treatment — a signature of the brand */
+  --eyebrow-weight: 900;          /* @kind font */
+  --eyebrow-transform: uppercase; /* @kind other */
+  --eyebrow-color: var(--gold);
+  --eyebrow-size: 13px;           /* @kind font */
+}
+
+/* Arabic / RTL type swap */
+[dir="rtl"] {
+  --font-heading: var(--font-arabic);
+  --font-body: var(--font-arabic);
+}

@@ -1,0 +1,8 @@
+.DS_Store
+.env
+.env.*
+node_modules/
+.image-slots.state.json
+.thumbnail
+screenshots/
+uploads/

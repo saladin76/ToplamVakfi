@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(720px, calc(100% - 48px)); margin: 0 auto; }
+    .secure-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
+    .secure-badge svg { width: 15px; height: 15px; color: var(--brand); }
+    .steps { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 26px 0 12px; flex-wrap: wrap; }
+    .steps-dots { display: flex; align-items: center; gap: 6px; }
+    .step-dot { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); font-weight: 700; }
+    .step-dot .circle { width: 24px; height: 24px; border-radius: 50%; background: #e9eff3; color: var(--muted); display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+    .step-dot.done .circle { background: var(--brand); color: #fff; }
+    .step-dot.error .circle { background: #d64545; color: #fff; }
+    .step-dot.error { color: #d64545; }
+    .step-sep { width: 24px; height: 1px; background: #dbe6ee; align-self: center; }
+    .panel { background: #fff; border: 1px solid #e6eef3; border-radius: 18px; box-shadow: 0 16px 34px rgba(2,52,88,.08); padding: 34px; margin: 20px 0 60px; text-align: center; }
+    .error-icon { width: 68px; height: 68px; margin: 0 auto 18px; color: #d64545; background: #fdeaea; border-radius: 50%; display: grid; place-items: center; }
+    .error-icon svg { width: 32px; height: 32px; }
+    .panel h2 { margin: 0 0 10px; font-size: 19px; font-weight: 800; }
+    .panel p { color: var(--muted); font-size: 13.5px; margin: 0 0 26px; line-height: 1.85; }
+    .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn-row a { flex: 1; display: inline-flex; align-items: center; justify-content: center; min-width: 130px; background: var(--brand); color: #fff; padding: 13px 26px; border-radius: 999px; font-weight: 800; font-size: 13.5px; min-height: 44px; }
+    .btn-row a.outline { background: transparent; color: var(--muted); border: 1.5px solid #e2eaf0; }
+    @media (max-width: 480px) { .step-dot span:not(.circle) { display: none; } .step-sep { width: 14px; } .panel { padding: 22px; } }
+  </style>
+</helmet>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+  <div style="height:78px"></div>
+  <div class="container">
+    <div class="steps">
+      <div class="steps-dots">
+      <div class="step-dot done"><span class="circle">✓</span><span>السلة</span></div>
+      <div class="step-sep"></div>
+      <div class="step-dot error"><span class="circle">!</span><span>الدفع</span></div>
+      <div class="step-sep"></div>
+      <div class="step-dot"><span class="circle">3</span><span>التأكيد</span></div>
+      </div>
+      <div class="secure-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>لم يُخصم أي مبلغ</span></div>
+    </div>
+    <div class="panel">
+      <div class="error-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div>
+      <h2>تعذّرت عملية الدفع</h2>
+      <p>لم تكتمل عملية التبرع. لم يتم خصم أي مبلغ من حسابك. يمكنك إعادة المحاولة أو اختيار طريقة دفع أخرى.</p>
+      <div class="btn-row">
+        <a href="Toplum Vakfı Payment Info.dc.html">إعادة المحاولة</a>
+        <a class="outline" href="Toplum Vakfı Contact.dc.html">تواصل مع الدعم</a>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

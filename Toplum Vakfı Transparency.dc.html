@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
+    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .page-banner-inner { position: relative; z-index: 1; }
+    .page-banner h1 { margin: 0 0 10px; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; }
+    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
+    .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 56px 0 20px; }
+    .trust-item { background: #fff; border: 1px solid #e6eef3; border-radius: 14px; padding: 24px; text-align: center; }
+    .trust-item svg { width: 30px; height: 30px; color: var(--brand); margin-bottom: 10px; }
+    .trust-item span { display: block; font-size: 12.5px; font-weight: 700; }
+    .docs-section { padding: 30px 0 70px; max-width: 720px; margin: 0 auto; }
+    .docs-section h2 { font-size: 19px; font-weight: 800; margin: 30px 0 14px; }
+    .docs-section p { color: #33495e; font-size: 14.5px; line-height: 1.9; margin: 0 0 16px; }
+    .docs-list { display: flex; flex-direction: column; gap: 10px; }
+    .doc-link { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 14px 18px; font-size: 13.5px; font-weight: 700; }
+    .doc-link:hover { border-color: var(--brand); color: var(--brand); }
+    .empty-state { background: #fff; border: 1px dashed #d7e3ea; border-radius: 14px; padding: 30px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+    .empty-state svg { width: 30px; height: 30px; color: #b9c9d4; margin-bottom: 10px; }
+    .updated-note { text-align: center; font-size: 11px; color: #9fb0bd; margin-top: 30px; }
+    @media (max-width: 760px) { .updated-note { font-size: 12px; } }
+    @media (max-width: 900px) { .trust-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</helmet>
+<svg style="position:absolute; width:0; height:0" aria-hidden="true">
+  <defs><clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox"><path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/></clipPath></defs>
+</svg>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+
+  <section class="page-banner">
+    <div class="container page-banner-inner">
+      <h1>التقارير والشفافية</h1>
+      <p>وقف معتمد رسميًا يعمل بأمانة وشفافية، ويحرص على أن تصل كل مساهمة إلى من يحتاجها.</p>
+    </div>
+  </section>
+
+  <div class="container trust-grid">
+    <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><span>مؤسسة معتمدة رسميًا منذ 1995</span></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>تبرع إلكتروني آمن</span></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg><span>تقارير دورية عن الأثر</span></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg><span>سياسات واضحة للخصوصية والاسترداد</span></div>
+  </div>
+
+  <div class="container docs-section">
+    <h2>اعتمادنا الرسمي</h2>
+    <p>تم اعتماد وقف التضامن الاجتماعي رسميًا وبدء نشاطه بموجب موافقة المديرية العامة للأوقاف في جمهورية تركيا بتاريخ 03/11/1995 تحت رقم السجل 3673.</p>
+    <h2>وثائق وسياسات</h2>
+    <div class="docs-list">
+      <a class="doc-link" href="Toplum Vakfı Privacy Policy.dc.html"><span>سياسة الخصوصية والأمان</span><span>↗</span></a>
+      <a class="doc-link" href="Toplum Vakfı Donation Agreement.dc.html"><span>اتفاقية التبرع</span><span>↗</span></a>
+      <a class="doc-link" href="Toplum Vakfı Refund Policy.dc.html"><span>سياسة الإلغاء والاسترداد</span><span>↗</span></a>
+      <a class="doc-link" href="Toplum Vakfı Payment Details.dc.html"><span>معلومات الدفع</span><span>↗</span></a>
+      <a class="doc-link" href="Toplum Vakfı Terms.dc.html"><span>الشروط والأحكام</span><span>↗</span></a>
+      <a class="doc-link" href="Toplum Vakfı FAQ.dc.html"><span>الأسئلة الشائعة</span><span>↗</span></a>
+    </div>
+
+    <h2>التقارير المالية المنشورة</h2>
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="margin:0 auto"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+      <div>لم يتم نشر تقارير مالية سنوية على الموقع بعد. سيتم نشر التقرير السنوي الأول فور الانتهاء من التدقيق الخارجي.</div>
+    </div>
+    <p class="updated-note">آخر تحديث لهذه الصفحة: 1 سبتمبر 2026</p>
+  </div>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

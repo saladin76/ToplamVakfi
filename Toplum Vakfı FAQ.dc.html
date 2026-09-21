@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 122px 24px 80px; }
+    h1 { font-size: 24px; font-weight: 800; margin: 0 0 26px; }
+    .faq-item { border: 1px solid #e6eef3; border-radius: 12px; overflow: hidden; margin-bottom: 10px; background: #fff; }
+    .faq-q { padding: 16px 20px; font-size: 14.5px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .faq-q .chev { transition: transform .2s; color: var(--brand); }
+    .faq-item.open .faq-q .chev { transform: rotate(180deg); }
+    .faq-a { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height .25s ease, padding .25s ease; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 20px 18px; }
+    .back { display: inline-block; margin-top: 30px; color: var(--brand); font-weight: 700; font-size: 13px; }
+  </style>
+</helmet>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+  <div class="wrap">
+    <h1>الأسئلة الشائعة</h1>
+    <div class="faq-item"><div class="faq-q"><span>كيف أتأكد أن تبرعي وصل إلى المشروع الصحيح؟</span><span class="chev">⌄</span></div><div class="faq-a">يمكنك اختيار مشروع محدد عند التبرع، وستصل تحديثات المشروع عبر صفحته الخاصة على الموقع.</div></div>
+    <div class="faq-item"><div class="faq-q"><span>هل التبرع الإلكتروني آمن؟</span><span class="chev">⌄</span></div><div class="faq-a">نعم، تتم معالجة جميع التبرعات عبر قنوات دفع آمنة ومشفّرة، ولا تُخزَّن بيانات بطاقتك على خوادمنا.</div></div>
+    <div class="faq-item"><div class="faq-q"><span>ما سياسة الاسترداد؟</span><span class="chev">⌄</span></div><div class="faq-a">يمكن طلب استرداد التبرع خلال 14 يومًا إذا لم يُصرف المبلغ على المشروع بعد. راجع سياسة الإلغاء والاسترداد الكاملة للتفاصيل.</div></div>
+    <div class="faq-item"><div class="faq-q"><span>كيف يمكن لمؤسستي أن تصبح شريكًا؟</span><span class="chev">⌄</span></div><div class="faq-a">تواصل معنا عبر صفحة "تواصل معنا"، وسيتواصل معك فريقنا لمناقشة فرص الشراكة.</div></div>
+    <div class="faq-item"><div class="faq-q"><span>هل يمكنني التبرع الشهري وإلغاؤه لاحقًا؟</span><span class="chev">⌄</span></div><div class="faq-a">نعم، يمكن إلغاء التبرع الشهري في أي وقت دون رسوم، ويسري الإلغاء قبل موعد الخصم التالي.</div></div>
+    <div class="faq-item"><div class="faq-q"><span>هل يمكن التبرع بهدية نيابة عن شخص آخر؟</span><span class="chev">⌄</span></div><div class="faq-a">نعم، اختر خيار "تبرع بهدية" أثناء التبرع لإضافة اسم الشخص المكرَّم.</div></div>
+    <a class="back" href="Toplum Vakfı Contact.dc.html">← تواصل معنا لأسئلة أخرى</a>
+  </div>
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    document.querySelectorAll('.faq-item').forEach(item => item.querySelector('.faq-q').addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }));
+  }
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

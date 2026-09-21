@@ -1,0 +1,42 @@
+/* ============================================================
+   Minber-i Aksa — Color tokens
+   Source of truth: production app/globals.css
+   ============================================================ */
+:root {
+  /* --- Brand core --- */
+  --deep:  #022222; /* deep dark green/navy — dark surfaces, footer, ink */
+  --navy:  #132c38; /* secondary dark — nav links, hero gradient */
+  --red:   #b34732; /* PRIMARY action colour — every main donate CTA */
+  --gold:  #c98a2b; /* accent — eyebrows, badges, ornament, dividers */
+  --green: #556b2f; /* support colour — zakat / continuity (never the main CTA) */
+
+  /* --- Surfaces --- */
+  --ivory: #fffdf8; /* default page background */
+  --sand:  #f7f2ea; /* alternate section background */
+  --white: #ffffff; /* cards, panels, inputs */
+
+  /* --- Text --- */
+  --ink:    #022222; /* headings / primary text (uses --deep) */
+  --muted:  #52616b; /* secondary text, captions, notes */
+  --gray:   #666666; /* tertiary text (identity guide) */
+  --gray-2: #888888; /* faint text (identity guide) */
+
+  /* --- Lines & effects --- */
+  --border:   rgba(2, 34, 34, .13);   /* hairline borders */
+  --border-2: rgba(255, 255, 255, .24); /* borders on dark surfaces */
+  --shadow:   0 18px 50px rgba(16, 33, 43, .12); /* card elevation */
+  --shadow-cta: 0 12px 24px rgba(179, 71, 50, .24); /* red button glow */
+
+  /* --- Semantic aliases --- */
+  --color-bg:          var(--ivory);
+  --color-bg-alt:      var(--sand);
+  --color-surface:     var(--white);
+  --color-surface-dark:var(--deep);
+  --text-heading:      var(--deep);
+  --text-body:         var(--deep);
+  --text-secondary:    var(--muted);
+  --text-on-dark:      rgba(255, 255, 255, .86);
+  --accent:            var(--gold);
+  --action:            var(--red);
+  --action-support:    var(--green);
+}

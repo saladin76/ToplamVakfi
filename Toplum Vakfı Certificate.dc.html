@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="omelette-owns-print" content="1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-ink: #0077b3; --navy: #062442; --ink: #062442; --muted: #5d7187; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #e8eef3; color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    button, a { font-family: inherit; }
+
+    .cert-stage { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: center; padding: 30px 14px 60px; }
+
+    .cert-toolbar { width: min(980px, 100%); display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .cert-type { display: flex; gap: 6px; background: #fff; border: 1px solid #dbe6ee; border-radius: 999px; padding: 4px; }
+    .cert-type button { min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 800; cursor: pointer; transition: background .2s, color .2s; }
+    .cert-type button.active { background: var(--brand); color: #fff; }
+    .cert-actions { display: flex; gap: 8px; }
+    .cert-actions button { min-height: 44px; padding: 0 22px; border: 0; border-radius: 999px; font-size: 13.5px; font-weight: 800; cursor: pointer; }
+    .btn-print { background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; box-shadow: 0 8px 18px rgba(0,162,224,.3); }
+    .btn-back { background: #fff; color: var(--ink); border: 1px solid #dbe6ee !important; }
+
+    /* A4 landscape is a MINIMUM, not a cap: a fixed ratio pins the body box, so any
+       extra line (a recurring-gift line, a long project name) escapes it and paints
+       over the border. The sheet is a grid so the in-flow body stretches to fill the
+       A4 minimum when content is short, and the sheet grows when it is not.
+       `min()` rather than width+max-width: the stage's auto track resolves to
+       max-content, so `max-width:100%` would clamp against 980px and never shrink. */
+    .sheet { position: relative; display: grid; width: min(980px, 100%); min-height: calc(min(980px, 100vw - 28px) / 1.414); background: #fff; box-shadow: 0 30px 70px rgba(2,36,66,.24); overflow: hidden; }
+    /* Official-document treatment: a deep navy band, a fine guilloche field, a
+       double rule with corner medallions, and a faint logo watermark. Every layer
+       is absolutely positioned and sits under the body (z-index 1). */
+    .sheet-frame { position: absolute; inset: 0; border: 10px solid var(--navy); }
+    .sheet-frame::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.28), inset 0 0 0 3px var(--brand); }
+    /* Guilloche: two counter-rotated fine hatches plus a ring field, all at low
+       opacity — a security-print texture rather than a bold diagonal weave. */
+    .sheet-weave { position: absolute; inset: 10px; background:
+        repeating-linear-gradient(45deg, rgba(6,36,66,.07) 0 1px, transparent 1px 7px),
+        repeating-linear-gradient(-45deg, rgba(0,162,224,.09) 0 1px, transparent 1px 7px),
+        repeating-radial-gradient(circle at 50% 50%, rgba(0,162,224,.07) 0 1px, transparent 1px 13px),
+        linear-gradient(#fbfdff, #f4fafe); }
+    .sheet-inner-rule { position: absolute; inset: 26px; background: #fff;
+      border: 1.5px solid var(--navy); box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(0,162,224,.55); }
+    .sheet-wash { position: absolute; inset: 31px; pointer-events: none; opacity: .045;
+      background: url('assets/logo-mark.png') center 46% / auto 58% no-repeat; }
+
+    /* Corner medallions on the inner rule */
+    .cnr { position: absolute; z-index: 0; width: 26px; height: 26px; border: 1.5px solid var(--brand); background: #fff; transform: rotate(45deg); }
+    .cnr::after { content: ""; position: absolute; inset: 5px; border: 1px solid rgba(6,36,66,.45); }
+    .cnr.tr { top: 13px; right: 13px; }
+    .cnr.tl { top: 13px; left: 13px; }
+    .cnr.br { bottom: 13px; right: 13px; }
+    .cnr.bl { bottom: 13px; left: 13px; }
+
+    /* In-flow (not absolute) so its height feeds the sheet; `relative` + z-index
+       keeps it above the four absolutely-positioned decorative layers. */
+    .sheet-body { position: relative; z-index: 1; margin: 34px; display: grid; grid-template-rows: auto auto 1fr auto; padding: 14px 56px 12px; text-align: center; }
+
+    .cert-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .cert-meta div { display: grid; gap: 6px; justify-items: center; }
+    .cert-meta span:first-child { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .3px; }
+    .cert-meta b { min-width: 118px; min-height: 30px; display: grid; place-items: center; border: 1px solid #cfe3ef; border-radius: 4px; background: #fbfdff; font-size: 13px; font-weight: 800; color: var(--brand-ink); direction: ltr; padding: 0 8px; letter-spacing: .5px; }
+
+    .cert-head { display: grid; justify-items: center; gap: 6px; margin-top: 4px; }
+    .cert-logo { height: 44px; width: auto; }
+    .cert-eyebrow { font-size: 12px; font-weight: 800; color: var(--brand-ink); letter-spacing: 3px; }
+    .cert-title { margin: 0; font-size: 30px; font-weight: 900; color: var(--navy); letter-spacing: -.6px; }
+    /* Rule with a centred lozenge — the engraved divider of a formal document. */
+    .cert-rule { position: relative; width: 260px; height: 1.5px; background: linear-gradient(90deg, transparent, var(--navy) 22%, var(--navy) 78%, transparent); }
+    .cert-rule::after { content: ""; position: absolute; top: 50%; left: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; background: var(--brand); transform: rotate(45deg); box-shadow: 0 0 0 3px #fff; }
+    .cert-lead { margin: 2px 0 0; font-size: 14.5px; font-weight: 700; color: var(--muted); }
+
+    .cert-fields { display: grid; align-content: center; gap: 14px; }
+    .cert-name { font-size: 26px; font-weight: 900; color: var(--brand-ink); line-height: 1.5; padding-bottom: 8px; border-bottom: 1.5px dotted #9fc0d6; display: inline-block; min-width: 340px; max-width: 100%; margin: 0 auto; word-break: break-word; }
+    .cert-lines { display: grid; gap: 8px; font-size: 14.5px; color: var(--ink); font-weight: 600; line-height: 1.8; }
+    .cert-lines b { color: var(--brand-ink); font-weight: 800; display: inline-block; }
+    .cert-lines b.num { direction: ltr; }
+    .cert-note { margin: 8px auto 0; max-width: 62ch; font-size: 13px; line-height: 2; color: #3f5567; text-wrap: pretty; }
+
+    .cert-foot { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 14px; }
+    .cert-sign { text-align: center; }
+    .cert-sign .line { border-bottom: 1.5px solid rgba(6,36,66,.35); margin-bottom: 7px; min-height: 22px; }
+    .cert-sign span { font-size: 12px; color: var(--muted); }
+    /* Diameter is derived from the 12px text, not chosen: raising span/i to the
+       site's 12px floor grows contentH to 81px, so the circle must grow with it.
+       availWidthAtEdge = 2*sqrt(62² − 40.5²) = 94px ≥ widest child 84px. */
+    .cert-seal { position: relative; width: 124px; height: 124px; border-radius: 50%; display: grid; place-items: center; align-content: center; gap: 1px; color: var(--navy);
+      background: radial-gradient(circle, #fff 0 58%, #eef8fd 58% 100%);
+      border: 2px solid var(--navy);
+      box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 4.5px var(--brand), 0 4px 14px rgba(2,36,66,.14); }
+    /* Notched perimeter: an embossed-stamp edge rather than a plain ring. */
+    .cert-seal::before { content: ""; position: absolute; inset: -7px; border-radius: 50%; z-index: -1;
+      background: repeating-conic-gradient(var(--navy) 0 3deg, transparent 3deg 9deg); opacity: .5; }
+    .cert-seal b { font-size: 13px; font-weight: 900; line-height: 1.3; }
+    .cert-seal span { font-size: 12px; color: var(--muted); font-weight: 700; }
+    .cert-seal i { font-style: normal; font-size: 12px; color: var(--brand-ink); font-weight: 800; direction: ltr; letter-spacing: 1px; }
+
+    .cert-hint { width: min(760px, 100%); margin: 16px auto 0; font-size: 12px; color: var(--muted); line-height: 1.8; text-align: center; }
+
+    /* 761–1008px: the A4 minimum still holds, but the head and fields want more
+       breathing room than the desktop padding gives at this width. */
+    @media (min-width: 761px) and (max-width: 1008px) {
+      .sheet-body { margin: 28px; padding: 26px 34px 20px; gap: 18px; }
+      .cert-logo { height: 54px; }
+    }
+
+    @media (max-width: 760px) {
+      .cert-stage { padding: 18px 12px 40px; }
+      /* The A4 minimum would be far taller than this content needs, so it is
+         dropped and the sheet simply follows its text. */
+      .sheet { min-height: 0; }
+      .sheet-body { margin: 26px; padding: 14px 10px 10px; gap: 18px; }
+      .cert-fields { align-content: start; gap: 12px; }
+      .cert-logo { height: 44px; }
+      .cert-title { font-size: 21px; }
+      .cert-eyebrow { font-size: 12px; letter-spacing: 2px; }
+      .cert-lead { font-size: 12.5px; }
+      .cert-name { font-size: 19px; min-width: 200px; }
+      .cert-lines { font-size: 12.5px; gap: 8px; line-height: 1.8; }
+      .cert-note { font-size: 12px; line-height: 1.85; }
+      .cert-meta b { min-width: 92px; font-size: 12px; }
+      .cert-meta span:first-child { font-size: 12px; }
+      /* Geometry rule: content height must clear the circle's diameter, so the
+         mobile seal drops the label line and keeps a real diameter for what remains. */
+      .cert-seal { width: 100px; height: 100px; }
+      .cert-seal b { font-size: 12px; }
+      .cert-seal span { display: none; }
+      .cert-seal i { font-size: 12px; }
+      .cert-toolbar { justify-content: center; }
+    }
+
+    @page { size: A4 landscape; margin: 0; }
+    @media print {
+      body { background: #fff; }
+      .cert-stage { padding: 0; min-height: 0; display: block; }
+      .noprint, .tv-header, .tv-foot { display: none !important; }
+      /* Fill the real page box instead of imposing a ratio on it: if the user flips
+         the dialog to portrait, a forced 1.414 box would be 562px tall for ~716px of
+         content and clip the seal. Filling the sheet works in either orientation. */
+      .sheet { width: 100%; max-width: none; height: 100vh; min-height: 0; box-shadow: none; }
+      .sheet-body { margin: 34px; padding: 14px 56px 12px; gap: normal; }
+    }
+  </style>
+</helmet>
+
+<div dir="rtl">
+  <div class="noprint"><dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import></div>
+  <div class="noprint" style="height:78px"></div>
+
+  <div class="cert-stage">
+    <div class="cert-toolbar noprint">
+      <div class="cert-type" id="certType">
+        <button type="button" class="active" data-type="thanks">شهادة شكر</button>
+        <button type="button" data-type="waqf">شهادة صدقة جارية</button>
+      </div>
+      <div class="cert-actions">
+        <button class="btn-print" type="button" id="certPrint">طباعة / حفظ PDF</button>
+        <button class="btn-back" type="button" id="certBack">رجوع</button>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <div class="sheet-frame"></div>
+      <div class="sheet-weave"></div>
+      <div class="sheet-inner-rule"></div>
+      <div class="sheet-wash"></div>
+      <span class="cnr tr"></span>
+      <span class="cnr tl"></span>
+      <span class="cnr br"></span>
+      <span class="cnr bl"></span>
+
+      <div class="sheet-body">
+        <div class="cert-meta">
+          <div><span>رقم الشهادة</span><b id="cNo">—</b></div>
+          <div><span>تاريخ الإصدار</span><b id="cDate">—</b></div>
+        </div>
+
+        <div class="cert-head">
+          <img class="cert-logo" src="assets/logo-mark.png" alt="Toplum Vakfı">
+          <span class="cert-eyebrow">وقف التضامن الاجتماعي</span>
+          <h1 class="cert-title" id="cTitle">شهادة شكر وتقدير</h1>
+          <div class="cert-rule"></div>
+          <p class="cert-lead" id="cLead">تشهد المؤسسة بأن</p>
+        </div>
+
+        <div class="cert-fields">
+          <span class="cert-name" id="cName">—</span>
+          <div class="cert-lines" id="cLines">
+            <div id="cLine1">قد ساهم بمبلغ <b class="num" id="cAmount">—</b></div>
+            <div id="cLine2">لدعم <b id="cProject">مشاريع المؤسسة الإنسانية</b></div>
+          </div>
+          <p class="cert-note" id="cNote">
+            تتقدم المؤسسة بالشكر والتقدير على هذه المساهمة، وتؤكد توجيهها إلى وجهتها
+            المحددة وفق سياسات الصرف والمتابعة الميدانية المعتمدة.
+          </p>
+        </div>
+
+        <div class="cert-foot">
+          <div class="cert-sign"><div class="line"></div><span>مدير المؤسسة</span></div>
+          <div class="cert-seal">
+            <b>وقف التضامن<br />الاجتماعي</b>
+            <span>سجل رقم</span>
+            <i>3673</i>
+          </div>
+          <div class="cert-sign"><div class="line"></div><span>الختم والتوقيع</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="cert-hint noprint">
+      الشهادة تُطبع على مقاس A4 عرضي. تُعتمد بالختم والتوقيع الرسميين من المؤسسة عند الإصدار النهائي.
+    </p>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const order = JSON.parse(localStorage.getItem('tv_last_order') || 'null');
+    const money = (v) => (window.tvCurrency ? window.tvCurrency.format(Number(v)) : '$' + v);
+    const set = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+
+    const donor = (order && order.donor) || {};
+    const name = (donor.name || '').trim();
+    const displayName = donor.anonymous ? 'متبرع يفضّل عدم ذكر اسمه' : (name || '—');
+    const items = (order && order.items) || [];
+    // One named project reads as a real certificate; several stay generic.
+    const project = items.length === 1 && items[0].name ? items[0].name : 'مشاريع المؤسسة الإنسانية';
+    const once = order ? (order.onceTotal != null ? order.onceTotal : order.total) : null;
+    const monthly = Number((order && order.monthlyTotal) || 0);
+
+    const d = new Date();
+    const date = d.getFullYear() + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + String(d.getDate()).padStart(2, '0');
+
+    set('cNo', order && order.ref ? order.ref : 'TV-0000');
+    set('cDate', date);
+    set('cName', displayName);
+    set('cProject', project);
+    set('cAmount', once != null ? money(once) : '—');
+
+    // Recurring gifts get their own line rather than being folded into the total.
+    if (monthly > 0) {
+      const lines = document.getElementById('cLines');
+      if (lines && !document.getElementById('cLine3')) {
+        const el = document.createElement('div');
+        el.id = 'cLine3';
+        el.innerHTML = 'وبتبرع شهري متجدّد بمبلغ <b class="num">' + money(monthly) + '</b>';
+        lines.appendChild(el);
+      }
+    }
+
+    const setType = (type) => {
+      const waqf = type === 'waqf';
+      set('cTitle', waqf ? 'شهادة صدقة جارية' : 'شهادة شكر وتقدير');
+      set('cLead', 'تشهد المؤسسة بأن');
+      const l1 = document.getElementById('cLine1');
+      const l2 = document.getElementById('cLine2');
+      if (l1) l1.innerHTML = (waqf ? 'قد أوقف مبلغ <b class="num">' : 'قد ساهم بمبلغ <b class="num">')
+        + (once != null ? money(once) : '—') + '</b>';
+      if (l2) l2.innerHTML = (waqf ? 'صدقةً جارية في <b>' : 'لدعم <b>') + project + '</b>';
+      set('cNote', waqf
+        ? 'صدقة جارية يُوجَّه ريعها إلى المشاريع الإنسانية والتعليمية التي تنفذها المؤسسة، ويستمر أثرها ما دام المشروع قائمًا. وتلتزم المؤسسة بتوجيه المبلغ وفق سياسات الصرف والمتابعة الميدانية المعتمدة.'
+        : 'تتقدم المؤسسة بالشكر والتقدير على هذه المساهمة، وتؤكد توجيهها إلى وجهتها المحددة وفق سياسات الصرف والمتابعة الميدانية المعتمدة.');
+    };
+
+    document.querySelectorAll('#certType button').forEach(b => b.addEventListener('click', () => {
+      document.querySelectorAll('#certType button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      setType(b.dataset.type);
+    }));
+
+    // A jariyah/waqf item in the order should open on the matching certificate.
+    const isWaqf = items.some(it => /صدقة جارية|وقف/.test(it.name || ''));
+    if (isWaqf) {
+      const btn = document.querySelector('#certType button[data-type="waqf"]');
+      if (btn) btn.click();
+    }
+
+    document.getElementById('certPrint').addEventListener('click', () => window.print());
+    document.getElementById('certBack').addEventListener('click', () => {
+      if (history.length > 1) history.back();
+      else window.location.href = 'Toplum Vakfı Homepage.dc.html';
+    });
+  }
+  renderVals() { return {}; }
+}
+
+</script>
+</body>
+</html>

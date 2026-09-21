@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+
+    .sr-top { padding: 112px 0 30px; }
+    .sr-top h1 { margin: 0 0 6px; font-size: 26px; font-weight: 800; }
+    .sr-top p { margin: 0 0 22px; color: var(--muted); font-size: 13.5px; }
+    .search-box { display: flex; gap: 8px; background: #fff; border: 1.5px solid #e2eaf0; border-radius: 999px; padding: 6px 6px 6px 18px; max-width: 620px; box-shadow: 0 10px 26px rgba(2,52,88,.07); }
+    .search-box input { flex: 1; min-width: 0; border: 0; outline: none; font-size: 14px; font-family: inherit; text-align: right; background: transparent; color: var(--ink); }
+    .search-box button { background: var(--brand); color: #fff; border: 0; border-radius: 999px; padding: 11px 26px; font-weight: 800; font-size: 13.5px; font-family: inherit; cursor: pointer; min-height: 44px; }
+
+    .sr-filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 22px 0 8px; }
+    .sr-chip { background: #fff; border: 1px solid #e2eaf0; color: var(--ink); border-radius: 999px; padding: 9px 18px; font-size: 12.5px; font-weight: 700; font-family: inherit; cursor: pointer; min-height: 40px; }
+    .sr-chip.active, .sr-chip:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .sr-count { color: var(--muted); font-size: 12.5px; margin: 14px 0 0; }
+
+    .sr-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; padding: 18px 0 70px; }
+    .sr-card { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 28px rgba(2,52,88,.07); transition: transform .2s, box-shadow .2s; display: block; }
+    .sr-card:hover { transform: translateY(-4px); box-shadow: 0 18px 34px rgba(2,52,88,.13); }
+    .sr-img { height: 148px; background-position: center; background-size: cover; }
+    .sr-body { padding: 18px; }
+    .sr-cat { display: inline-block; background: var(--page-bg); color: var(--brand); font-size: 11px; font-weight: 800; padding: 4px 11px; border-radius: 999px; margin-bottom: 9px; }
+    .sr-body h3 { margin: 0 0 8px; font-size: 15px; }
+    .sr-body p { margin: 0 0 12px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+    .sr-link { color: var(--brand); font-size: 12.5px; font-weight: 800; }
+
+    .sr-empty { display: none; text-align: center; padding: 50px 24px 90px; }
+    .sr-empty svg { width: 54px; height: 54px; color: #b7c8d6; margin-bottom: 16px; }
+    .sr-empty h2 { margin: 0 0 8px; font-size: 18px; font-weight: 800; }
+    .sr-empty p { margin: 0 0 22px; color: var(--muted); font-size: 13.5px; }
+    .sr-empty a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; background: var(--brand); color: #fff; padding: 12px 28px; border-radius: 999px; font-weight: 800; font-size: 13.5px; }
+
+    @media (max-width: 900px) { .sr-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 600px) { .sr-grid { grid-template-columns: 1fr; } .sr-top { padding-top: 100px; } }
+  </style>
+</helmet>
+
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+
+  <div class="container sr-top">
+    <h1>نتائج البحث</h1>
+    <p>ابحث في مشاريعنا وبرامجنا.</p>
+    <div class="search-box">
+      <input type="text" id="srInput" placeholder="ابحث في الموقع...">
+      <button type="button" id="srBtn">بحث</button>
+    </div>
+    <div class="sr-filters" id="srFilters">
+      <button class="sr-chip active" type="button" data-cat="الكل">الكل</button>
+      <button class="sr-chip" type="button" data-cat="حملة أمل">حملة أمل</button>
+      <button class="sr-chip" type="button" data-cat="بناء الإنسان">بناء الإنسان</button>
+      <button class="sr-chip" type="button" data-cat="المياه والسكن">المياه والسكن</button>
+      <button class="sr-chip" type="button" data-cat="التمكين الاجتماعي">التمكين الاجتماعي</button>
+      <button class="sr-chip" type="button" data-cat="الإغاثة الإنسانية">الإغاثة الإنسانية</button>
+    </div>
+    <p class="sr-count" id="srCount"></p>
+  </div>
+
+  <div class="container sr-grid" id="srGrid">
+    <a class="sr-card" href="Toplum Vakfı Project - Dar Aytam.dc.html" data-cat="بناء الإنسان" data-title="بناء دار أيتام في سوريا">
+      <div class="sr-img" style="background-image:url('assets/hero-bg.jpg')"></div>
+      <div class="sr-body"><span class="sr-cat">بناء الإنسان</span><h3>بناء دار أيتام في سوريا</h3><p>مأوى آمن ورعاية تعليمية وصحية لأيتام فقدوا عائلاتهم.</p><span class="sr-link">عرض المشروع ←</span></div>
+    </a>
+    <a class="sr-card" href="Toplum Vakfı Project - Schools Restoration.dc.html" data-cat="بناء الإنسان" data-title="ترميم وتأهيل المدارس">
+      <div class="sr-img" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="sr-body"><span class="sr-cat">بناء الإنسان</span><h3>ترميم وتأهيل المدارس</h3><p>إعادة تأهيل بيئات التعلم لتكون آمنة ومجهزة للطلاب.</p><span class="sr-link">عرض المشروع ←</span></div>
+    </a>
+    <a class="sr-card" href="Toplum Vakfı Project - Water Wells.dc.html" data-cat="المياه والسكن" data-title="حفر آبار المياه">
+      <div class="sr-img" style="background-image:url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="sr-body"><span class="sr-cat">المياه والسكن</span><h3>حفر آبار المياه</h3><p>مصادر مياه نظيفة دائمة للمجتمعات المحتاجة.</p><span class="sr-link">عرض المشروع ←</span></div>
+    </a>
+    <a class="sr-card" href="Toplum Vakfı Project - Quran Scholarships.dc.html" data-cat="حملة أمل" data-title="منح تحفيظ القرآن">
+      <div class="sr-img" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="sr-body"><span class="sr-cat">حملة أمل</span><h3>منح تحفيظ القرآن</h3><p>دعم حلقات التحفيظ والمعلمين وتمكين الطلاب.</p><span class="sr-link">عرض المشروع ←</span></div>
+    </a>
+    <a class="sr-card" href="Toplum Vakfı Project - Gharimin.dc.html" data-cat="التمكين الاجتماعي" data-title="تسديد ديون الغارمين">
+      <div class="sr-img" style="background-image:url('assets/hero-bg.jpg')"></div>
+      <div class="sr-body"><span class="sr-cat">التمكين الاجتماعي</span><h3>تسديد ديون الغارمين</h3><p>فكّ ضائقة الأسر المتعففة المثقلة بالديون.</p><span class="sr-link">عرض المشروع ←</span></div>
+    </a>
+    <a class="sr-card" href="Toplum Vakfı Project - Food Baskets.dc.html" data-cat="الإغاثة الإنسانية" data-title="السلال الغذائية">
+      <div class="sr-img" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="sr-body"><span class="sr-cat">الإغاثة الإنسانية</span><h3>السلال الغذائية</h3><p>وجبات وسلال غذائية للأسر الأكثر احتياجًا.</p><span class="sr-link">عرض المشروع ←</span></div>
+    </a>
+  </div>
+
+  <div class="sr-empty" id="srEmpty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <h2>لا توجد نتائج مطابقة</h2>
+    <p>جرّب كلمات أخرى أو تصفّح جميع المشاريع.</p>
+    <a href="Toplum Vakfı Projects.dc.html">عرض جميع المشاريع</a>
+  </div>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const cards = [...document.querySelectorAll('.sr-card')];
+    const grid = document.getElementById('srGrid');
+    const empty = document.getElementById('srEmpty');
+    const count = document.getElementById('srCount');
+    const input = document.getElementById('srInput');
+    let cat = 'الكل';
+
+    const apply = () => {
+      const q = input.value.trim();
+      let shown = 0;
+      cards.forEach(c => {
+        const okCat = cat === 'الكل' || c.dataset.cat === cat;
+        const okQ = !q || c.dataset.title.includes(q) || c.dataset.cat.includes(q);
+        const ok = okCat && okQ;
+        c.style.display = ok ? 'block' : 'none';
+        if (ok) shown++;
+      });
+      grid.style.display = shown ? 'grid' : 'none';
+      empty.style.display = shown ? 'none' : 'block';
+      count.textContent = shown ? `${shown} نتيجة` : '';
+    };
+
+    document.querySelectorAll('.sr-chip').forEach(chip => chip.addEventListener('click', () => {
+      document.querySelectorAll('.sr-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      cat = chip.dataset.cat;
+      apply();
+    }));
+    const q0 = new URLSearchParams(location.search).get('q');
+    if (q0) input.value = q0;
+    input.addEventListener('input', apply);
+    document.getElementById('srBtn').addEventListener('click', apply);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') apply(); });
+    apply();
+  }
+  renderVals() { return {}; }
+}
+
+</script>
+</body>
+</html>

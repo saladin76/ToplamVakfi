@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 122px 24px 80px; }
+    h1 { font-size: 24px; font-weight: 800; margin: 0 0 20px; }
+    h2 { font-size: 16px; font-weight: 800; margin: 28px 0 10px; }
+    p, li { color: #33495e; font-size: 14px; line-height: 1.9; }
+    ul { padding-inline-start: 20px; }
+    .back { display: inline-block; margin-top: 30px; color: var(--brand); font-weight: 700; font-size: 13px; }
+  </style>
+</helmet>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+  <div class="wrap">
+    <h1>سياسة الخصوصية والأمان</h1>
+    <p>يلتزم وقف التضامن الاجتماعي بحماية بيانات المتبرعين والمستفيدين، ومعالجتها بأمانة وشفافية دون استخدامها لغير الغرض الذي جُمعت من أجله.</p>
+    <h2>البيانات التي نجمعها</h2>
+    <ul>
+      <li>الاسم والبريد الإلكتروني ورقم الهاتف عند التبرع أو التواصل معنا.</li>
+      <li>بيانات الدفع، والتي تُعالج عبر مزودي خدمة دفع آمنين ومعتمدين ولا تُخزَّن على خوادمنا.</li>
+    </ul>
+    <h2>كيف نستخدم بياناتك</h2>
+    <p>نستخدم بياناتك لإصدار إيصالات التبرع، والتواصل بخصوص المشاريع التي دعمتها، ولا نشاركها مع أي طرف ثالث لأغراض تسويقية دون موافقتك.</p>
+    <h2>حماية بيانات المستفيدين</h2>
+    <p>لا يُنشر أي بيانات أو صور للمستفيدين، وبخاصة الأطفال، دون موافقة واضحة، وتُحمى هويتهم في جميع موادنا الإعلامية.</p>
+    <a class="back" href="Toplum Vakfı Transparency.dc.html">← العودة للتقارير والشفافية</a>
+  </div>
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+</body>
+</html>

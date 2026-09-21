@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --brand: #00a2e0;
+      /* Text-only shade: the brand blue is a fill colour and fails 4.5:1 as small
+         text on white (2.90:1). This one measures 4.90:1. */
+      --brand-ink: #0077b3;
+      --brand-2: #00a1df;
+      --ink: #062442;
+      --navy: #031a31;
+      --navy-2: #082c50;
+      --white: #fefefe;
+      --line: #e5e5e5;
+      --muted: #5d7187;
+      --page-bg: #f4f8fb;
+      --shadow: 0 18px 50px rgba(0, 25, 51, .15);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    button, a { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    .page { overflow-x: clip; min-height: 100vh; padding-bottom: 116px; }
+
+    .hero {
+      position: relative;
+      min-height: 560px;
+      isolation: isolate;
+      background: linear-gradient(120deg, #021428, #082b50);
+    }
+    .hero-slides { position: absolute; inset: 0 0 auto 0; height: 560px; z-index: -2; overflow: hidden; }
+    .hero-slide { position: absolute; inset: 0; background-position: center 30%; background-size: cover; background-repeat: no-repeat; opacity: 0; transition: opacity 1.4s ease; transform: scale(1.04); }
+    .hero-slide.active { opacity: 1; animation: heroPan 9s ease-out both; }
+    @keyframes heroPan { from { transform: scale(1.04); } to { transform: scale(1.11); } }
+    .hero-scrim { position: absolute; inset: 0 0 auto 0; height: 560px; z-index: -1; background: linear-gradient(260deg, rgba(2,20,38,.62) 0%, rgba(4,26,48,.46) 40%, rgba(8,43,80,.26) 70%, rgba(8,43,80,.14) 100%); }
+    .hero-dots { position: relative; z-index: 5; margin-top: 28px; display: flex; gap: 0; }
+    /* Tiling 44px targets, not stacked overlays: at a 16px pitch an expanded
+       overlay overlaps its neighbours and the later sibling steals the hit. Each
+       button is a real 44px box with zero rail gap; a child element draws the dot
+       (a real node, unlike ::before, is measurable and verifiable). */
+    .hero-dots button { position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
+    /* Width is not transitioned: animation frames do not complete in this host, so a
+       width tween leaves the previously-active dot stuck at its old size. */
+    .hero-dots button i { display: block; width: 8px; height: 8px; border-radius: 999px; background: rgba(255,255,255,.4); transition: background .25s; }
+    .hero-dots button.active i { background: #fff; width: 24px; }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      z-index: -1; opacity: .18;
+      background-image: radial-gradient(#fff 1px, transparent 1.5px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, #000, transparent 69%);
+    }
+    .container { width: min(1280px, calc(100% - 64px)); margin: 0 auto; }
+    .mobile-sticky-donate { display: none; }
+    @media (max-width: 760px) {
+      .mobile-sticky-donate { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500; padding: 12px 16px; background: #fff; box-shadow: 0 -8px 24px rgba(2,20,38,.15); }
+      .mobile-sticky-donate a { display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 14.5px; }
+      body { padding-bottom: 70px; }
+    }
+
+    .hero-content { position: relative; z-index: 5; display: flex; align-items: start; gap: 60px; min-height: 445px; padding: calc(106px + var(--alert-h, 44px)) 0 60px; }
+    .statement { flex: 1.5; padding-inline: 7px; color: white; margin-top: 60px; position: relative; z-index: 1; animation: fadeInUp .8s ease both; }
+    .statement::before { content: ""; position: absolute; z-index: -1; inset: -20px -40px -20px -240px; background: radial-gradient(ellipse at right, rgba(2,20,38,.85), transparent 75%); }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    h1 { margin: 0 0 8px; font-size: clamp(36px, 4.4vw, 62px); line-height: 1.2; letter-spacing: 0; font-weight: 800; white-space: nowrap; text-shadow: 0 2px 18px rgba(0,0,0,.3); }
+    h1 span { color: #4fc3f7; }
+    .statement p { color: #f1f7fb; font-size: 15.5px; line-height: 1.85; margin: 22px 0 30px; max-width: 460px; font-weight: 500; }
+    .impact-link { display: inline-flex; align-items: center; gap: 14px; color: #fff; background: var(--brand); text-decoration: none; padding: 8px 24px 8px 8px; border-radius: 999px; font-size: 13.5px; font-weight: 700; letter-spacing: .1px; line-height: 1; box-shadow: 0 8px 20px rgba(0,162,224,.28); transition: transform .2s ease, box-shadow .2s ease; }
+    .impact-link:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,162,224,.38); }
+    .impact-link b { height: 32px; width: 32px; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%; background: #07365a; font-size: 15px; transition: transform .2s ease; }
+    .impact-link:hover b { transform: translateX(-3px); }
+
+    /* Donation widget — moved below hero as a light card */
+    .dw-wrap { position: fixed; inset: auto 0 0 0; z-index: 900; max-width: none; margin: 0; padding: 12px 20px; text-align: center; background: linear-gradient(to top, rgba(244,248,251,.98), rgba(244,248,251,.75)); backdrop-filter: blur(10px); }
+    .dw-wrap .dw { box-shadow: 0 8px 22px rgba(2,20,38,.14); }
+    @media (max-width: 760px) { .dw-cta { font-size: 15px; } }
+    .dw { display: inline-flex; box-sizing: border-box; max-width: 100%; color: var(--ink); background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 18px 26px; box-shadow: 0 20px 48px rgba(2,20,38,.14); animation: fadeInUp .8s .15s ease both; }
+    .dw-inner { width: 100%; max-width: 100%; display: flex; align-items: center; gap: 14px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .dw-sep { flex-shrink: 0; width: 1px; height: 26px; background: #e6eef3; }
+    .dw-inner::-webkit-scrollbar { display: none; }
+    .dw-project { flex-shrink: 0; width: 150px; height: 42px; padding: 0 12px; border-radius: 10px; background: #f2f6f9; border: 1px solid #e2eaf0; color: var(--ink); font-size: 12.5px; font-weight: 700; font-family: inherit; outline: none; cursor: pointer; transition: border-color .2s; }
+    .dw-project:hover, .dw-project:focus { border-color: var(--brand); }
+    .dw-project option { color: var(--ink); }
+    .dw-amount { flex-shrink: 0; display: flex; align-items: center; gap: 8px; direction: ltr; }
+    .dw-step { width: 34px; height: 34px; border-radius: 50%; background: #f2f6f9; border: 1px solid #e2eaf0; color: var(--ink); font-size: 17px; line-height: 1; flex-shrink: 0; cursor: pointer; transition: background .2s, color .2s, transform .15s; }
+    .dw-step:hover { background: var(--brand); border-color: var(--brand); color: #fff; transform: scale(1.06); }
+    .dw-value { display: flex; align-items: baseline; gap: 2px; }
+    .dw-value span { font-size: 15px; font-weight: 800; color: var(--brand); }
+    .dw-value input { position: relative; z-index: 3; width: 66px; background: transparent; border: 0; border-bottom: 2px solid rgba(0,162,224,.35); color: var(--ink); font-size: 20px; font-weight: 900; font-family: inherit; text-align: center; outline: none; cursor: text; pointer-events: auto; }
+    .dw-value input:focus { border-bottom-color: var(--brand); }
+    .dw-presets { flex-shrink: 0; display: flex; gap: 6px; }
+    .dw-presets button { flex-shrink: 0; height: 42px; padding: 0 14px; border-radius: 10px; border: 1.5px solid #e2eaf0; background: #f2f6f9; color: var(--ink); font-size: 12.5px; font-weight: 800; cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .dw-presets button:hover { border-color: var(--brand); color: var(--brand); background: #eaf6fd; transform: translateY(-1px); }
+    .dw-presets button.active { background: linear-gradient(135deg, var(--brand), #0089cb); border-color: var(--brand); color: #fff; box-shadow: 0 8px 18px rgba(0,162,224,.34); }
+    .dw-row { flex-shrink: 0; display: flex; gap: 6px; }
+    .dw-custom { display: flex; align-items: center; gap: 5px; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 10px; height: 42px; padding: 0 12px; direction: ltr; width: 118px; transition: border-color .2s, background .2s; }
+    .dw-custom:focus-within { border-color: var(--brand); background: #fff; }
+    .dw-custom span { color: var(--muted); font-weight: 800; font-size: 12px; }
+    .dw-custom input { flex: 1; width: 100%; background: transparent; border: 0; color: var(--ink); font-size: 12px; outline: none; text-align: left; font-family: inherit; }
+    .dw-custom input::placeholder { color: #9fb0bd; direction: rtl; }
+    .dw-freq { flex-shrink: 0; display: flex; gap: 0; background: #eef3f7; border: 1px solid #e2eaf0; border-radius: 10px; padding: 3px; height: 42px; align-items: center; }
+    .dw-freq button { position: relative; height: 100%; padding: 0 16px; border-radius: 8px; background: transparent; color: var(--muted); font-size: 12.5px; font-weight: 800; white-space: nowrap; cursor: pointer; transition: background .2s, color .2s, box-shadow .2s; }
+    .dw-freq button:hover { color: var(--ink); }
+    .dw-freq button.active { background: #fff; color: var(--brand); box-shadow: 0 2px 6px rgba(2,52,88,.12); }
+    .dw-cta-row { flex-shrink: 0; display: flex; gap: 8px; order: -1; position: sticky; inset-inline-start: 0; background: #fff; padding-inline-end: 6px; z-index: 4; }
+    .dw-cta { background: linear-gradient(135deg, var(--brand-2), #0089cb); color: #fff; height: 42px; padding: 0 28px; border-radius: 10px; font-weight: 800; font-size: 13.5px; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 7px; cursor: pointer; box-shadow: 0 8px 18px rgba(0,162,224,.3); transition: transform .2s, box-shadow .2s; }
+    .dw-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,162,224,.44); }
+    .dw-cta:disabled { opacity: .7; cursor: default; transform: none; }
+    /* Trust note beside the CTA (required by the widget brief). It lives inside
+       .dw-sheet, so it renders in the mobile sheet and — via display:contents above
+       1151px — as a compact trailing line in the desktop bar. */
+    .dw-trust { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; margin: 0; font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+    .dw-trust svg { width: 15px; height: 15px; color: var(--brand-ink); }
+    .dw-toggle { display: none; }
+    @media (max-width: 1150px) {
+      .dw { transform: none; }
+      .dw-wrap { padding: 0; background: #fff; backdrop-filter: none; border-top: 1px solid #e6eef3; box-shadow: 0 -4px 16px rgba(2,20,38,.07); }
+      .dw { display: block; width: 100%; max-width: none; margin: 0; padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); border: 0; border-radius: 0; background: transparent; box-shadow: none; animation: none; }
+      .dw-inner { flex-direction: column; align-items: stretch; gap: 0; overflow: visible; }
+      .dw-cta-row { order: 0; position: static; display: flex; align-items: center; gap: 8px; padding: 0; background: none; }
+      .dw-cta { flex: 1; height: 50px; font-size: 15px; border-radius: 12px; box-shadow: none; }
+      .dw-toggle { display: grid; place-items: center; flex: 0 0 50px; width: 50px; height: 50px; border-radius: 12px; background: #f2f6f9; border: 0; color: #4a6276; cursor: pointer; transition: background .2s, color .2s; }
+      .dw-toggle svg { width: 20px; height: 20px; transition: transform .25s; }
+      .dw-wrap.expanded .dw-toggle { background: #eaf6fd; color: var(--brand); }
+      .dw-wrap.expanded .dw-toggle svg { transform: rotate(180deg); }
+      /* Bottom sheet (expanded) */
+      .dw-inner { position: relative; }
+      .dw-project-wrap, .dw-amount, .dw-presets, .dw-row, .dw-freq, .dw-sep { display: none; }
+      .dw-sheet { position: fixed; inset: auto 0 0 0; z-index: -1; background: #fff; border-radius: 22px 22px 0 0; box-shadow: 0 -18px 50px rgba(2,20,38,.24); padding: 10px 18px calc(88px + env(safe-area-inset-bottom)); transform: translateY(101%); transition: transform .32s cubic-bezier(.32,.72,0,1); max-height: calc(100dvh - 66px - var(--alert-h, 44px)); overflow-y: auto; overscroll-behavior: contain; text-align: start; }
+      .dw-wrap.expanded .dw-sheet { transform: translateY(0); }
+      .dw-handle { display: block; width: 42px; height: 4px; margin: 4px auto 14px; border-radius: 999px; background: #dbe5ec; }
+      .dw-sheet-title { display: block; margin-bottom: 18px; font-size: 15px; font-weight: 800; color: var(--ink); text-align: center; }
+      .dw-sheet section { margin-bottom: 18px; }
+      .dw-sheet section:last-child { margin-bottom: 0; }
+      .dw-field-label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 800; color: var(--muted); }
+      .dw-scrim { display: block; position: fixed; inset: 0; z-index: -2; background: rgba(2,20,38,.45); opacity: 0; pointer-events: none; transition: opacity .3s; }
+      .dw-wrap.expanded .dw-scrim { opacity: 1; pointer-events: auto; }
+      .dw-wrap.expanded .dw-project-wrap { display: block; }
+      .dw-wrap.expanded .dw-amount { display: flex; justify-content: center; gap: 22px; }
+      .dw-wrap.expanded .dw-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .dw-wrap.expanded .dw-row { display: flex; }
+      .dw-wrap.expanded .dw-freq { display: flex; width: 100%; height: 54px; }
+      .dw-trust { display: none; justify-content: center; width: 100%; margin-top: 14px; font-size: 12.5px; }
+      .dw-wrap.expanded .dw-trust { display: inline-flex; }
+      .dw-wrap.expanded .dw-project, .dw-wrap.expanded .dw-custom { width: 100%; height: 52px; }
+      .dw-wrap.expanded .dw-presets button { min-height: 50px; font-size: 14px; border-radius: 12px; }
+      .dw-wrap.expanded .dw-freq button { flex: 1; min-height: 46px; font-size: 13.5px; }
+      .dw-wrap.expanded .dw-step { width: 50px; height: 50px; font-size: 22px; }
+      .dw-wrap.expanded .dw-value input { font-size: 26px; }
+      .mobile-sticky-donate { display: none !important; }
+      .page { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+    }
+    @media (min-width: 1151px) {
+      .dw-handle, .dw-sheet-title, .dw-field-label, .dw-scrim { display: none; }
+      .dw-sheet { display: contents; }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+
+    .impact-panel { position: relative; z-index: 1; width: 100%; min-height: 310px; padding: 14px max(4%, calc((100% - 1280px) / 2 + 40px)) 0; background: var(--page-bg); margin-top: -2px; box-shadow: 0 -30px 40px -20px rgba(2,20,38,.12); }
+    .stats { flex: 1; display: grid; grid-template-columns: repeat(5, 1fr); align-items: stretch; }
+    .stat { display: grid; place-content: center; text-align: center; min-height: 68px; border-inline-start: 1px solid #d9e5ec; }
+    .stat:first-child { border-inline-start: 0; }
+    .stat i { color: var(--brand); font-style: normal; display: inline-flex; align-items: center; justify-content: center; height: 30px; }
+    .stat i svg { width: 30px; height: 30px; }
+    .stat b { display: block; margin-top: 5px; font-size: 22px; line-height: 1.25; direction: ltr; }
+    .stat span { color: #3d5468; font-size: 12px; font-weight: 600; }
+    .program-row { display: grid; grid-template-columns: 1.9fr repeat(6, 1fr); align-items: stretch; gap: 12px; max-width: 1290px; margin: 28px auto 0; }
+    .program-intro { padding: 5px 12px 12px 20px; align-self: center; }
+    .program-intro h2 { color: #047db9; font-size: 26px; line-height: 1.25; margin: 0; letter-spacing: -.4px; }
+    .program-intro p { margin: 8px 0 13px; color: #49647b; line-height: 1.65; font-size: 12px; }
+    .program-intro a { display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; background: var(--brand); color: white; text-decoration: none; font-size: 12.5px; font-weight: 800; padding: 10px 18px; }
+    .program { min-height: 0; display: flex; flex-direction: column; color: var(--ink); text-decoration: none; overflow: hidden; background: #fff; border: 1px solid #dbe9f0; border-radius: 14px; box-shadow: 0 8px 17px rgba(2,52,88,.08); transition: transform .2s, box-shadow .2s; }
+    .program:hover { transform: translateY(-4px); box-shadow: 0 14px 26px rgba(2,52,88,.14); }
+    .program-image { height: 86px; background-position: center; background-size: cover; position: relative; }
+    .program-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent, rgba(3,34,59,.25)); }
+    .program:nth-child(2) .program-image { background-image: url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=500&q=80'); }
+    .program:nth-child(3) .program-image { background-image: url('https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=500&q=80'); }
+    .program:nth-child(4) .program-image { background-image: url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=500&q=80'); }
+    .program:nth-child(5) .program-image { background-image: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80'); }
+    .program:nth-child(6) .program-image { background-image: url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=500&q=80'); }
+    .program:nth-child(7) .program-image { background-image: url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=500&q=80'); }
+    .program-body { padding: 12px 10px; text-align: center; flex: 1; display: flex; flex-direction: column; }
+    .program-body b { display: block; font-size: 13px; line-height: 1.4; letter-spacing: -.2px; }
+    .program-body span { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; line-height: 1.55; text-wrap: balance; flex: 1; }
+    .program-body i { margin-top: 8px; display: inline-grid; place-items: center; height: 22px; width: 22px; border: 1px solid rgba(0,162,224,.4); border-radius: 50%; color: var(--brand); font-style: normal; transition: background .2s, color .2s, border-color .2s; }
+    .program-body i svg { width: 11px; height: 11px; }
+    .program:hover .program-body i { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+    .impact-world { position: relative; background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 40px 0 56px; isolation: isolate; overflow: hidden; }
+    .impact-world::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .impact-world-stats { position: relative; padding: 22px max(4%, calc((100% - 1280px) / 2 + 40px)); margin-bottom: 8px; }
+    .impact-world-stats .stat b { color: #fff; }
+    .impact-world-stats .stat span { color: #9fc0d6; }
+    .impact-world-stats .stat { border-inline-start-color: rgba(255,255,255,.18); }
+    .impact-world-stats .stats { display: grid; grid-template-columns: repeat(6, 1fr); align-items: stretch; }
+    .impact-world-inner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+    .iw-text { flex: 1; color: #fff; }
+    .iw-text h2 { margin: 0 0 12px; font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; }
+    .iw-text p { margin: 0; color: #b9d3e6; font-size: 13.5px; line-height: 1.85; max-width: 320px; }
+    .iw-caption { position: absolute; z-index: 2; bottom: 10px; left: 16px; right: auto; font-size: 12px; color: rgba(255,255,255,.6); }
+    [dir="rtl"] .iw-caption { left: auto; right: 16px; }
+    .iw-map { flex: 1.5; position: relative; height: 300px; min-width: 300px; }
+    .iw-map-frame { width: 100%; height: 100%; border: 0; display: block; background: transparent; }
+    .iw-note { position: absolute; z-index: 2; top: 14px; right: 16px; left: auto; color: #9cdbf8; font-family: cursive; font-size: 14px; line-height: 1.45; text-align: center; transform: rotate(-4deg); }
+    [dir="rtl"] .iw-note { right: auto; left: 16px; }
+
+    /* Our Story teaser */
+    .our-story-teaser { background: #fff; padding: 60px 0; }
+    .ost-inner { display: flex; align-items: center; gap: 50px; }
+    .ost-media { flex: 1; height: 280px; border-radius: 18px; background-position: center; background-size: cover; box-shadow: 0 16px 34px rgba(2,52,88,.14); }
+    .ost-text { flex: 1.1; }
+    .ost-text h2 { margin: 0 0 14px; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; color: var(--ink); }
+    .ost-text p { margin: 0 0 22px; color: var(--muted); font-size: 14px; line-height: 1.9; max-width: 420px; }
+
+    /* Alert bar */
+    /* The bar's height is published as --alert-h, and the header offset and hero
+       padding derive from it — so giving the controls a real 44px hit area only
+       needs the bar to grow; everything downstream follows. */
+    .alert-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 1100; display: flex; align-items: center; justify-content: center; gap: 16px; background: linear-gradient(90deg, #b3391f, #8f2c15); color: #fff; padding: 6px 20px; min-height: 56px; font-size: 13px; font-weight: 700; }
+    body:has(#alertBar:not([hidden])) .tv-header { top: var(--alert-h, 44px); }
+    .alert-bar .ab-dot { width: 7px; height: 7px; border-radius: 50%; background: #ffd9d0; box-shadow: 0 0 0 0 rgba(255,217,208,.7); animation: abPulse 2s infinite; flex-shrink: 0; }
+    @keyframes abPulse { 70% { box-shadow: 0 0 0 7px rgba(255,217,208,0); } 100% { box-shadow: 0 0 0 0 rgba(255,217,208,0); } }
+    .alert-bar a { display: inline-flex; align-items: center; min-height: 44px; color: #8f2c15; background: #fff; padding: 6px 18px; border-radius: 999px; font-size: 12.5px; font-weight: 800; white-space: nowrap; flex-shrink: 0; transition: transform .2s; }
+    .alert-bar a:hover { transform: translateY(-1px); }
+    .alert-bar .ab-brief { display: none; }
+    .alert-bar .ab-close { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; background: none; border: 0; color: rgba(255,255,255,.75); font-size: 17px; line-height: 1; cursor: pointer; padding: 0; }
+    .alert-bar .ab-close:hover { color: #fff; }
+    @media (max-width: 760px) {
+      .alert-bar { font-size: 12px; gap: 8px; padding: 6px 8px; min-height: 56px; }
+      .alert-bar .ab-full { display: none; }
+      .alert-bar .ab-brief { display: inline; }
+      .alert-bar > span:not(.ab-dot) { min-width: 0; }
+      .alert-bar a { padding: 6px 14px; font-size: 12px; }
+    }
+
+    /* Stories */
+    .stories { background: var(--page-bg); padding: 20px 0 70px; }
+    .stories-inner { display: flex; align-items: center; gap: 50px; }
+    .story-media { flex: 1.1; position: relative; height: 340px; border-radius: 18px; overflow: hidden; box-shadow: 0 16px 34px rgba(2,52,88,.15); }
+    .story-text { flex: 1; }
+    .sm-slide { position: absolute; inset: 0; background-position: center 25%; background-size: cover; opacity: 0; transition: opacity 1s ease; }
+    .sm-slide.active { opacity: 1; }
+    .sm-slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(2,20,38,.55), rgba(2,20,38,.05)); }
+    .sm-cap { position: absolute; z-index: 2; bottom: 18px; inset-inline-start: 20px; inset-inline-end: 20px; color: #fff; font-size: 13.5px; font-weight: 700; line-height: 1.6; text-shadow: 0 2px 12px rgba(2,20,38,.6); }
+    .sm-dots { position: absolute; z-index: 3; top: 4px; inset-inline-end: 6px; display: flex; gap: 0; }
+    .sm-dots button { position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
+    .sm-dots button i { display: block; width: 7px; height: 7px; border-radius: 999px; background: rgba(255,255,255,.45); transition: background .25s; }
+    .sm-dots button.active i { background: #fff; width: 20px; }
+
+    /* Field update badge */
+    .field-update { display: inline-flex; align-items: center; gap: 12px; margin-top: 22px; background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 12px 16px; box-shadow: 0 8px 20px rgba(2,52,88,.06); text-align: start; }
+    .fu-date { flex-shrink: 0; color: var(--brand); font-size: 12px; font-weight: 800; padding-inline-end: 12px; border-inline-end: 1px solid #e6eef3; }
+    .fu-text { color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+    .story-text h2 { margin: 0 0 14px; font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; color: var(--ink); letter-spacing: -.4px; }
+    .story-text p { margin: 0 0 22px; color: var(--muted); font-size: 14px; line-height: 1.85; max-width: 400px; }
+    .story-cta { background: transparent; color: var(--brand); border: 2px solid var(--brand); padding: 10px 22px; border-radius: 999px; font-weight: 800; font-size: 13px; white-space: nowrap; transition: all .2s; }
+    .story-cta:hover { background: var(--brand); color: #fff; }
+
+    /* Priority projects */
+    .priority-projects { background: var(--page-bg); padding: 70px 0; }
+    /* Pinned to 3 tracks: an auto-sized count fell to 3 columns below ~1180px and
+       orphaned the 4th card on a second row. */
+    .pp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 1.3vw, 22px); }
+    .pp-card { background: #fff; border-radius: clamp(14px, 1.2vw, 22px); overflow: hidden; border: 1px solid #eef2f6; box-shadow: 0 10px 26px rgba(2,52,88,.07); transition: transform .25s, box-shadow .25s, border-color .25s; cursor: pointer; display: flex; flex-direction: column; }
+    .pp-card:hover { transform: translateY(-6px); box-shadow: 0 26px 52px rgba(2,52,88,.16); border-color: rgba(0,162,224,.28); }
+    .pp-image { aspect-ratio: 16/10; height: auto; background-position: center; background-size: cover; position: relative; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+    .pp-card:hover .pp-image { transform: scale(1.06); }
+    .pp-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,20,38,0) 55%, rgba(2,20,38,.4)); }
+    .pp-state { position: absolute; top: 14px; right: 16px; font-size: 12px; font-weight: 800; padding: 6px 13px; border-radius: 999px; color: #fff; background: var(--muted); }
+    .pp-card.is-paused { opacity: .75; cursor: default; }
+    .pp-image-1 { background-image: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80'); }
+    .pp-image-2 { background-image: url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80'); }
+    .pp-image-3 { background-image: url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80'); }
+    .pp-body { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.2vw, 20px) clamp(13px, 1.1vw, 18px); display: flex; flex-direction: column; flex: 1; }
+    .pp-body h3 { margin: 0 0 6px; font-size: clamp(14.5px, 1vw, 17px); font-weight: 800; color: var(--ink); line-height: 1.4; text-wrap: pretty; }
+    .pp-body p { margin: 0 0 13px; color: var(--muted); font-size: 12px; line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .pp-progress-row { margin-top: auto; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 7px; }
+    .pp-progress-row b { font-size: 13px; font-weight: 800; color: var(--brand-ink); white-space: nowrap; }
+    .pp-progress-row span { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .pp-progress { height: 7px; background: #eef3f7; border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+    .pp-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), #4fc3f7); border-radius: 999px; box-shadow: 0 0 10px rgba(0,162,224,.5); }
+    .pp-amounts-row { display: flex; gap: 6px; margin-bottom: 12px; }
+    .pp-amounts { display: flex; gap: 6px; flex: 3; }
+    .pp-amounts button { flex: 1; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 999px; padding: 9px 4px; font-size: 12.5px; font-weight: 800; color: var(--ink); cursor: pointer; transition: background .15s, border-color .15s, color .15s, transform .15s; direction: ltr; font-family: inherit; }
+    .pp-amounts button:hover { border-color: var(--brand); transform: translateY(-1px); }
+    .pp-amounts button.active { background: linear-gradient(135deg, var(--brand), #0089cb); border-color: var(--brand); color: #fff; box-shadow: 0 8px 18px rgba(0,162,224,.38); }
+    .pp-custom { position: relative; flex: 1.6; }
+    .pp-custom input { width: 100%; height: 100%; box-sizing: border-box; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 999px; padding: 9px 10px; font-size: 12px; font-weight: 700; color: var(--ink); font-family: inherit; text-align: center; outline: none; transition: border-color .15s, background .15s; }
+    .pp-custom input::placeholder { color: var(--muted); font-weight: 600; }
+    .pp-custom input:focus { border-color: var(--brand); background: #fff; }
+    .pp-actions { display: flex; gap: 8px; }
+    .pp-btn { flex: 1.3; display: flex; align-items: center; justify-content: center; gap: 6px; background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; padding: 11px; border: 0; border-radius: 999px; font-weight: 800; font-size: 13px; white-space: nowrap; cursor: pointer; font-family: inherit; box-shadow: 0 8px 18px rgba(0,162,224,.3); transition: box-shadow .2s, transform .2s; text-decoration: none; }
+    .pp-btn:hover { box-shadow: 0 12px 26px rgba(0,162,224,.42); transform: translateY(-1px); background: linear-gradient(135deg, var(--brand), #0089cb); }
+    .pp-cart { flex: 1.1; display: flex; align-items: center; justify-content: center; background: #f2f6f9; color: var(--ink); border: 1px solid #e2eaf0; padding: 12px 6px; border-radius: 999px; font-weight: 700; font-size: 12px; white-space: nowrap; cursor: pointer; font-family: inherit; transition: background .15s, border-color .15s, color .15s, transform .15s; }
+    .pp-cart:hover { background: #eaf6fd; border-color: var(--brand); color: var(--brand); transform: translateY(-1px); }
+
+    /* Zakat mini — one centred card: the old two-column split left a wide void. */
+    .zakat-mini { background: var(--page-bg); padding: 10px 0 60px; }
+    .zm-inner { display: block; }
+    .zm-head { max-width: 640px; margin: 0 auto 22px; text-align: center; }
+    .zm-head h2 { margin: 0; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; color: var(--ink); letter-spacing: -.4px; }
+    .zm-card { max-width: 880px; margin: 0 auto; background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 22px 26px; box-shadow: 0 12px 28px rgba(2,52,88,.07); }
+    .zm-row { display: grid; grid-template-columns: 1.2fr auto 1fr; align-items: end; gap: 22px; }
+    .zm-col { min-width: 0; }
+    .zm-col-out { text-align: center; padding-inline: 22px; border-inline: 1px solid #eef3f7; align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; }
+    .zm-out-label { display: block; color: var(--muted); font-size: 12.5px; font-weight: 700; margin-bottom: 4px; }
+    .zm-out { display: flex; align-items: baseline; justify-content: center; gap: 2px; color: var(--brand-ink); font-size: 30px; font-weight: 900; direction: ltr; line-height: 1.1; }
+    .zm-out small { font-size: 16px; }
+    .zm-out i { font-style: normal; }
+    .zm-col-cta { display: flex; flex-direction: column; justify-content: flex-end; }
+    .zm-link { display: block; margin-top: 14px; text-align: center; color: var(--brand-ink); font-size: 12.5px; font-weight: 800; }
+    .zm-nisab { margin: 18px 0 0; padding-top: 14px; border-top: 1px solid #eef3f7; font-size: 12px; font-weight: 600; color: var(--muted); line-height: 1.7; text-align: center; }
+    @media (max-width: 820px) {
+      .zm-row { grid-template-columns: 1fr; align-items: stretch; gap: 16px; }
+      .zm-col-out { border-inline: 0; padding-inline: 0; padding-block: 14px; border-block: 1px solid #eef3f7; }
+      .zm-nisab { text-align: start; }
+    }
+    .zm-card label { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink); margin-bottom: 7px; }
+    .zm-link { text-align: center; color: var(--brand-ink); font-size: 12.5px; font-weight: 800; }
+    .zm-field { display: flex; align-items: center; gap: 7px; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 10px; padding: 0 14px; direction: ltr; transition: border-color .2s, background .2s; }
+    .zm-field:focus-within { border-color: var(--brand); background: #fff; }
+    .zm-field span { color: var(--muted); font-weight: 800; font-size: 13px; }
+    /* A padded wrapper does not extend the control's own hit area, so the height
+       goes on the control itself, not the wrapper. */
+    .zm-field input { flex: 1; width: 100%; min-height: 48px; background: transparent; border: 0; outline: none; font-family: inherit; font-size: 14px; color: var(--ink); text-align: left; }
+    .zm-cta { display: flex; align-items: center; justify-content: center; width: 100%; background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; padding: 14px; border: 0; cursor: pointer; font-family: inherit; border-radius: 999px; font-weight: 800; font-size: 13.5px; box-shadow: 0 8px 18px rgba(0,162,224,.3); transition: transform .2s, box-shadow .2s; }
+    .zm-cta:disabled { background: #cfd8de; color: var(--ink); box-shadow: none; cursor: default; transform: none; }
+    .zm-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,162,224,.42); }
+
+    /* FAQ mini */
+    .faq-mini { background: var(--page-bg); padding: 10px 0 70px; text-align: center; }
+    .fm-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; text-align: start; }
+    .fm-item { background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px 20px; transition: border-color .2s, box-shadow .2s; }
+    .fm-item[open] { border-color: rgba(0,162,224,.3); box-shadow: 0 10px 24px rgba(2,52,88,.08); }
+    .fm-item summary { list-style: none; cursor: pointer; font-size: 13.5px; font-weight: 800; color: var(--ink); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .fm-item summary::-webkit-details-marker { display: none; }
+    .fm-item summary::after { content: "+"; flex-shrink: 0; color: var(--brand); font-size: 18px; font-weight: 700; line-height: 1; }
+    .fm-item[open] summary::after { content: "−"; }
+    .fm-item p { margin: 12px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.85; }
+    .fm-link { display: inline-block; margin-top: 22px; color: var(--brand); font-size: 13px; font-weight: 800; }
+    @media (max-width: 900px) { .fm-list { grid-template-columns: 1fr; } }
+
+    /* Monthly giving strip */
+    .monthly-strip { position: relative; background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); color: #fff; padding: 46px 0; overflow: hidden; }
+    .monthly-strip::before { content: ""; position: absolute; inset: 0; opacity: .14; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .ms-inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 46px; }
+    .ms-text { flex: 1; }
+    .ms-text h2 { margin: 0 0 10px; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; letter-spacing: -.4px; }
+    .ms-text p { margin: 0; color: #b9d3e6; font-size: 13.5px; line-height: 1.85; max-width: 420px; }
+    .ms-side { flex: 0 0 auto; }
+    .ms-plans { display: flex; gap: 12px; }
+    .ms-plan { flex: 1; min-width: 0; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: 18px 14px; text-align: center; cursor: pointer; transition: background .2s, border-color .2s, transform .2s; }
+    .ms-plan:hover, .ms-plan.active { background: rgba(0,162,224,.16); border-color: var(--brand); transform: translateY(-3px); }
+    .ms-plan-custom { flex: 1.6; cursor: default; padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+    .ms-plan-custom:hover { transform: none; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); }
+    .ms-plan-custom.active { background: rgba(0,162,224,.16); border-color: var(--brand); }
+    .ms-custom { display: flex; align-items: center; gap: 5px; direction: ltr; }
+    .ms-custom span { color: #9fc0d6; font-size: 15px; font-weight: 800; }
+    .ms-custom input { width: 70px; min-width: 0; min-height: 44px; background: transparent; border: 0; border-bottom: 1.5px solid rgba(255,255,255,.28); color: #fff; font-family: inherit; font-size: 17px; font-weight: 900; text-align: center; outline: none; padding-bottom: 2px; }
+    .ms-custom input::placeholder { font-size: 12px; font-weight: 700; color: #9fc0d6; }
+    .ms-custom input:focus { border-bottom-color: var(--brand); }
+    .ms-note { margin: 14px 0 0; color: #cfe6f5; font-size: 12.5px; font-weight: 700; text-align: center; }
+    .ms-fine { margin: 10px 0 0; color: #9fc0d6; font-size: 12px; text-align: center; line-height: 1.7; }
+    .ms-plan b { display: block; font-size: 22px; font-weight: 900; direction: ltr; margin-bottom: 4px; }
+    .ms-plan span { display: block; color: #b9d3e6; font-size: 12px; }
+    .ms-cta { display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 14px; background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; padding: 14px 30px; border-radius: 999px; font-weight: 800; font-size: 14px; border: 0; cursor: pointer; font-family: inherit; box-shadow: 0 8px 20px rgba(0,162,224,.34); transition: transform .2s; }
+    .ms-cta:hover { transform: translateY(-2px); }
+
+    /* Gift donation */
+    .gift-sec { background: var(--page-bg); padding: 46px 0; }
+    /* Header spans the full width; preview and form sit as two aligned columns
+       beneath it. Previously the preview lived inside the text column, which left
+       a tall void between the paragraph and the sheet. */
+    .gift-card { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 30px; box-shadow: 0 12px 28px rgba(2,52,88,.07); display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; gap: 24px 36px; }
+    .gift-text { grid-column: 1 / -1; }
+    .gift-text h2 { margin: 0 0 8px; font-size: clamp(20px, 2.2vw, 26px); font-weight: 800; color: var(--ink); letter-spacing: -.4px; }
+    .gift-text p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.85; max-width: 62ch; }
+    .gift-form { display: flex; flex-direction: column; gap: 10px; }
+    .gift-occasions { display: flex; gap: 6px; background: #eef3f7; border: 1px solid #e2eaf0; border-radius: 10px; padding: 3px; }
+    .gift-occasions button { flex: 1; min-height: 44px; background: transparent; border: 0; border-radius: 8px; color: var(--muted); font-family: inherit; font-size: 12.5px; font-weight: 800; cursor: pointer; transition: background .2s, color .2s, box-shadow .2s; }
+    .gift-occasions button:hover { color: var(--ink); }
+    .gift-occasions button.active { background: #fff; color: var(--brand-ink); box-shadow: 0 2px 6px rgba(2,52,88,.12); }
+    .gift-amounts { display: flex; gap: 8px; }
+    .gift-custom { flex: 1.1; display: flex; align-items: center; justify-content: center; gap: 4px; min-height: 46px; padding: 0 8px; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 10px; direction: ltr; transition: border-color .15s, background .15s; box-sizing: border-box; }
+    .gift-custom:focus-within { border-color: var(--brand); background: #fff; }
+    .gift-custom span { color: var(--muted); font-size: 13px; font-weight: 800; }
+    .gift-custom input { width: 100%; min-width: 0; min-height: 44px; background: transparent; border: 0; outline: none; font-family: inherit; font-size: 13.5px; font-weight: 800; color: var(--ink); text-align: center; }
+    .gift-custom input::placeholder { font-weight: 700; color: var(--muted); }
+
+    .gift-preview { margin-top: 0; }
+    .gp-label { display: block; margin-bottom: 10px; color: var(--muted); font-size: 12px; font-weight: 800; }
+    /* Miniature of the real certificate sheet: same navy frame, blue weave,
+       inner rule, dotted name line and registration seal. */
+    .gp-sheet { position: relative; width: 100%; max-width: 460px; aspect-ratio: 1.414 / 1; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 16px 38px rgba(2,52,88,.14); }
+    /* Same official treatment as the full certificate, scaled: navy band with an
+       inner brand line, fine guilloche, double rule with corner medallions and a
+       faint logo watermark. */
+    .gp-frame { position: absolute; inset: 0; border: 6px solid #031a31; border-radius: 8px; }
+    .gp-frame::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.28), inset 0 0 0 2px var(--brand); }
+    .gp-weave { position: absolute; inset: 6px; background:
+        repeating-linear-gradient(45deg, rgba(6,36,66,.07) 0 1px, transparent 1px 6px),
+        repeating-linear-gradient(-45deg, rgba(0,162,224,.09) 0 1px, transparent 1px 6px),
+        repeating-radial-gradient(circle at 50% 50%, rgba(0,162,224,.07) 0 1px, transparent 1px 11px),
+        linear-gradient(#fbfdff, #f4fafe); }
+    .gp-rule-box { position: absolute; inset: 14px; background: #fff;
+      border: 1px solid #031a31; box-shadow: 0 0 0 3px #fff, 0 0 0 4px rgba(0,162,224,.55); }
+    .gp-wash { position: absolute; inset: 18px; pointer-events: none; opacity: .05;
+      background: url('assets/logo-mark.png') center 46% / auto 56% no-repeat; }
+    .gp-cnr { position: absolute; z-index: 0; width: 15px; height: 15px; border: 1px solid var(--brand); background: #fff; transform: rotate(45deg); }
+    .gp-cnr::after { content: ""; position: absolute; inset: 3px; border: 1px solid rgba(6,36,66,.45); }
+    .gp-cnr.tr { top: 7px; right: 7px; }
+    .gp-cnr.tl { top: 7px; left: 7px; }
+    .gp-cnr.br { bottom: 7px; right: 7px; }
+    .gp-cnr.bl { bottom: 7px; left: 7px; }
+    /* z-index establishes a stacking context so .gp-seal::before (z-index:-1) is
+       confined here; without it the negative-z ring escapes to .gp-sheet and paints
+       beneath the opaque .gp-rule-box. Matches .sheet-body on the certificate page. */
+    .gp-body { position: absolute; z-index: 1; inset: 20px; display: grid; grid-template-rows: auto auto 1fr auto; justify-items: center; text-align: center; padding: 10px 16px 6px; }
+    .gp-logo { height: 26px; width: auto; }
+    .gp-title { font-size: 13px; font-weight: 900; color: #031a31; letter-spacing: -.2px; margin-top: 6px; }
+    .gp-rule { position: relative; display: block; width: 88px; height: 1px; margin: 7px auto 0; background: linear-gradient(90deg, transparent, #031a31 22%, #031a31 78%, transparent); }
+    .gp-rule::after { content: ""; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--brand); transform: rotate(45deg); box-shadow: 0 0 0 2px #fff; }
+    .gp-to { display: block; align-self: center; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .gp-name { display: block; align-self: center; font-size: 15px; font-weight: 900; color: var(--brand-ink); line-height: 1.4; padding-bottom: 4px; border-bottom: 1.5px dotted #9fc0d6; min-width: 140px; max-width: 100%; word-break: break-word; }
+    .gp-msg { display: block; align-self: center; color: var(--muted); font-size: 12px; line-height: 1.6; min-height: 19px; max-width: 30ch; }
+    .gp-foot { align-self: end; display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 10px; width: 100%; }
+    .gp-sign { display: block; border-bottom: 1px solid rgba(6,36,66,.3); }
+    /* At miniature scale the full stamp text is taller than the circle's diameter,
+       so the seal carries only the registration number:
+       availWidthAtEdge = 2*sqrt(31² − 9.5²) = 59px ≥ widest child 27px. */
+    .gp-seal { position: relative; width: 62px; height: 62px; display: grid; place-items: center; border-radius: 50%; color: #031a31;
+      background: radial-gradient(circle, #fff 0 58%, #eef8fd 58% 100%);
+      border: 1.5px solid #031a31;
+      box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 3px var(--brand), 0 3px 10px rgba(2,36,66,.14); }
+    .gp-seal::before { content: ""; position: absolute; inset: -4px; border-radius: 50%; z-index: -1;
+      background: repeating-conic-gradient(#031a31 0 3deg, transparent 3deg 9deg); opacity: .5; }
+    .gp-seal i { font-style: normal; font-size: 12px; font-weight: 900; color: var(--brand-ink); direction: ltr; letter-spacing: .5px; }
+    /* Below this width the derived A4 height is shorter than the body's own text,
+       so the sheet follows content. `relative` (not `static`): the frame, weave and
+       opaque inner rule are absolutely positioned and would paint over an in-flow body. */
+    @media (max-width: 520px) {
+      .gp-sheet { aspect-ratio: auto; }
+      .gp-body { position: relative; z-index: 1; inset: auto; padding: 20px 18px 16px; gap: 10px; }
+    }
+    .gift-amounts button { flex: 1; min-height: 46px; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 10px; color: var(--ink); font-family: inherit; font-size: 13.5px; font-weight: 800; direction: ltr; cursor: pointer; transition: background .15s, border-color .15s, color .15s, transform .15s; }
+    .gift-amounts button:hover { border-color: var(--brand); transform: translateY(-1px); }
+    .gift-amounts button.active { background: linear-gradient(135deg, var(--brand), #0089cb); border-color: var(--brand); color: #fff; box-shadow: 0 8px 18px rgba(0,162,224,.32); }
+    .gift-fine { margin: 2px 0 0; color: var(--muted); font-size: 12px; text-align: center; line-height: 1.7; }
+    /* Direct children only: as `.gift-form input` this also matched the nested
+       custom-amount field at equal specificity but later in the sheet, overriding its
+       transparent background, removed border and the wrapper's focus-within state. */
+    .gift-form > input { background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 10px; padding: 11px 14px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none; transition: border-color .2s, background .2s; }
+    .gift-form > input:focus { border-color: var(--brand); background: #fff; }
+    /* Scoped to the submit button: as `.gift-form button` this also matched the
+       occasion and amount chips at equal specificity but later in the sheet, so it
+       overrode their background, padding, radius and border. */
+    #giftSubmit { background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; border: 0; border-radius: 999px; padding: 13px; font-weight: 800; font-size: 13.5px; font-family: inherit; cursor: pointer; box-shadow: 0 8px 18px rgba(0,162,224,.3); transition: transform .2s; }
+    #giftSubmit:hover { transform: translateY(-2px); }
+
+    /* Volunteer */
+    .volunteer { background: var(--page-bg); padding: 10px 0 60px; }
+    .vol-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+    .vol-card { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 28px; box-shadow: 0 10px 24px rgba(2,52,88,.06); transition: transform .2s, box-shadow .2s; }
+    .vol-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(2,52,88,.12); }
+    .vol-card h3 { margin: 0 0 8px; font-size: 16.5px; font-weight: 800; color: var(--ink); }
+    .vol-card p { margin: 0 0 16px; color: var(--muted); font-size: 12.5px; line-height: 1.8; }
+    .vol-card a { display: inline-flex; align-items: center; color: var(--brand); font-size: 12.5px; font-weight: 800; }
+
+    /* Field gallery */
+    .gallery { background: var(--page-bg); padding: 10px 0 60px; }
+    .gal-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); grid-auto-rows: 150px; gap: 12px; }
+    .gal-item { position: relative; border-radius: 12px; overflow: hidden; background: #dde7ee; }
+    .gal-item:first-child { grid-column: span 2; grid-row: span 2; }
+    .gal-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+    .gal-item:hover img { transform: scale(1.07); }
+
+    /* Back to top */
+    /* Sits above the docked donate bar (whose measured height is published as
+       --dock-h) so it never overlaps the primary CTA. */
+    .to-top { position: fixed; z-index: 1300; inset-inline-end: 22px; bottom: calc(22px + var(--dock-h, 0px)); width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid #e2eaf0; color: var(--ink); font-size: 18px; line-height: 1; cursor: pointer; box-shadow: 0 10px 24px rgba(2,52,88,.16); opacity: 0; pointer-events: none; transform: translateY(10px); transition: opacity .25s, transform .25s, background .2s, color .2s; }
+    .to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .to-top:hover { background: var(--brand); border-color: var(--brand); color: #fff; }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .priority-projects, .impact-world, .our-story-teaser, .stories, .news-teaser,
+        .monthly-strip, .gift-sec, .volunteer, .gallery,
+        .partners-strip, .trust-band, .zakat-mini, .faq-mini {
+          animation: sectionRise linear both;
+          animation-timeline: view();
+          animation-range: entry 0% cover 22%;
+        }
+      }
+    }
+    @keyframes sectionRise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+    @media (max-width: 900px) {
+      .ms-inner { flex-direction: column; align-items: stretch; gap: 26px; }
+      /* .gift-card is a grid now, so flex-direction cannot collapse it. */
+      .gift-card { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+      .gift-preview { order: 2; }
+      .gift-form { order: 1; }
+      .gp-sheet { margin-inline: auto; }
+      .ms-plans { justify-content: stretch; } .ms-plan { flex: 1; }
+      .ms-text p, .gift-text p { max-width: none; }
+      .vol-grid { grid-template-columns: 1fr; }
+      .gal-grid { grid-template-columns: repeat(2, minmax(0,1fr)); grid-auto-rows: 130px; }
+      .gal-item:first-child { grid-column: span 2; grid-row: span 1; }
+    }
+
+    /* Partners strip */
+    .partners-strip { background: var(--page-bg); padding: 10px 0 60px; text-align: center; }
+    .ps-head { max-width: 560px; margin: 0 auto 28px; }
+    .ps-head h2 { margin: 0 0 8px; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; color: var(--ink); }
+    .ps-head p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.8; }
+    .ps-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
+    .ps-slot { height: 112px; background: #fff; border: 1px solid #e6eef3; border-radius: 12px; overflow: hidden; padding: 12px; transition: border-color .2s, box-shadow .2s; }
+    .ps-slot:hover { border-color: rgba(0,162,224,.3); box-shadow: 0 10px 22px rgba(2,52,88,.08); }
+    .ps-link { display: inline-block; margin-top: 24px; color: var(--brand); font-size: 13px; font-weight: 800; }
+    @media (max-width: 900px) { .ps-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 560px) { .ps-slot { height: 92px; } }
+
+    /* Trust band — a numbered path: the four items are sequential steps, so the flat
+       card row read as an unrelated grid. */
+    .trust-band { background: var(--page-bg); padding: 10px 0 70px; }
+    .tb-head { text-align: center; max-width: 620px; margin: 0 auto 34px; }
+    .tb-head h2 { margin: 0 0 8px; font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; color: var(--ink); letter-spacing: -.4px; }
+    .tb-head p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.8; }
+    .tb-grid { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 20px; }
+    .tb-grid::before { content: ""; position: absolute; top: 19px; inset-inline: 40px; height: 2px; background: linear-gradient(90deg, rgba(0,162,224,.35), rgba(0,162,224,.12)); }
+    .tb-item { position: relative; background: transparent; padding: 0; text-align: center; }
+    .tb-num { position: relative; z-index: 1; display: grid; place-items: center; width: 38px; height: 38px; margin: 0 auto 14px; border-radius: 50%; background: #fff; border: 2px solid var(--brand); color: var(--brand-ink); font-size: 15px; font-weight: 900; box-shadow: 0 4px 12px rgba(0,162,224,.18); }
+    .tb-item b { display: block; font-size: 14.5px; font-weight: 800; color: var(--ink); margin-bottom: 6px; padding: 0; border: 0; line-height: 1.4; }
+    .tb-item span:not(.tb-num) { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.8; max-width: 30ch; margin: 0 auto; }
+    .tb-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 26px; margin-top: 24px; }
+    .tb-links a { color: var(--muted); font-size: 12.5px; font-weight: 700; transition: color .2s; }
+    .tb-links a:hover { color: var(--brand); }
+    @media (max-width: 1100px) { .tb-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 26px 20px; } .tb-grid::before { display: none; } }
+    @media (max-width: 560px) { .tb-grid { grid-template-columns: 1fr; gap: 22px; } }
+
+    /* News teaser */
+    .news-teaser { background: var(--page-bg); padding: 20px 0 70px; }
+    .nt-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px; gap: 16px; }
+    .nt-head h2 { margin: 0; font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; color: var(--ink); }
+    .nt-link { color: var(--brand); font-size: 13px; font-weight: 800; white-space: nowrap; }
+    .nt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .nt-card { display: block; background: #fff; border: 1px solid #e6eef3; border-radius: 14px; padding: 22px; box-shadow: 0 10px 24px rgba(2,52,88,.06); transition: transform .2s, box-shadow .2s; }
+    .nt-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(2,52,88,.12); }
+    .nt-cat { display: block; color: var(--brand); font-size: 12px; font-weight: 800; margin-bottom: 10px; }
+    .nt-card h3 { margin: 0 0 10px; font-size: 15px; line-height: 1.5; color: var(--ink); }
+    .nt-card p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+
+    /* Final CTA */
+    .cta-final { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 64px 0; text-align: center; color: #fff; }
+    .cta-final-inner h2 { margin: 0 0 12px; font-size: clamp(24px, 2.8vw, 34px); font-weight: 800; }
+    .cta-final-btn { display: inline-flex; align-items: center; background: var(--brand); color: #fff; padding: 14px 36px; border-radius: 999px; font-weight: 800; font-size: 14.5px; white-space: nowrap; box-shadow: 0 10px 24px rgba(0,162,224,.35); }
+    .cta-final-btn:hover { background: #0089cb; transform: translateY(-2px); }
+
+
+    @media (max-width: 900px) {
+      .pp-grid { grid-template-columns: 1fr; }
+      .nt-grid { grid-template-columns: 1fr; }
+      .ost-inner { flex-direction: column; } .ost-media { width: 100%; height: 220px; } .ost-text p { max-width: 100%; }
+      .stories-inner { flex-direction: column; }
+      .story-media { width: 100%; height: 220px; }
+      .story-text p { max-width: 100%; }
+      .impact-world-stats .stats { grid-template-columns: repeat(2, 1fr); gap: 10px 0; }
+      .impact-world-stats .stat:nth-child(odd) { border-inline-start: 0; }
+      .pp-progress-row span, .pp-state, .iw-caption, .nt-cat { font-size: 12px; }
+    }
+
+    @media (max-width: 1180px) {
+      .hero-content { gap: 20px; } .impact-panel { padding-inline: 4%; }
+    }
+    @media (max-width: 760px) {
+      .container { width: min(100% - 32px, 560px); }
+
+      /* The donate widget is a fixed bottom bar below 1150px, so the hero holds only
+         the statement — its height follows content instead of reserving 920px. */
+      .hero { min-height: 0; }
+      .hero-slides, .hero-scrim { height: 100%; }
+      .hero-content { display: flex; flex-direction: column; align-items: center; min-height: 0; padding: calc(74px + var(--alert-h, 44px)) 0 40px; gap: 0; }
+      .statement { text-align: center; padding: 0 4px; margin-top: 0; }
+      .statement::before { inset: -24px -24px; }
+      h1 { font-size: clamp(30px, 9.5vw, 40px); white-space: normal; line-height: 1.25; letter-spacing: -.5px; text-wrap: balance; }
+      .statement p { margin: 16px auto 22px; font-size: 14px; line-height: 1.9; max-width: 34ch; text-wrap: pretty; }
+      .impact-link { display: none; }
+      .hero-dots { margin-top: 24px; justify-content: center; }
+
+      /* The only .stats group lives in the dark map section, so the card treatment is
+         translucent — a white fill here would hide its white numbers. */
+      .impact-panel { min-height: 0; border-radius: 0; padding: 30px 0 0; box-shadow: none; }
+      .impact-world-stats .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 26px; }
+      .impact-world-stats .stat { min-height: 84px; gap: 2px; padding: 14px 8px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); border-inline-start: 1px solid rgba(255,255,255,.18); border-radius: 14px; }
+      .stat i svg { width: 22px; height: 22px; }
+      .stat b { font-size: 17px; }
+      .stat span { font-size: 12px; }
+
+      /* Programs: a 2-up grid, not a horizontal carousel. The carousel clipped cards
+         at both edges on RTL phones because the scroll start never aligned with the
+         container gutter; a wrapping grid shows every card whole. */
+      .program-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 12px; margin-top: 0; padding: 0; overflow: visible; }
+      /* Single column: with both title and paragraph kept nowrap by request, a
+         side-by-side link track cannot shrink and pushed the CTA off the left edge.
+         The link now sits on its own row, still aligned to the inline-end (left). */
+      /* `display: contents` promotes the intro's children to grid items so the CTA
+         can be ordered after the cards while staying in its semantic block. */
+      .program-intro { display: contents; }
+      .program-intro h2 { grid-column: 1 / -1; order: 1; margin: 0 0 2px; font-size: min(20px, 5.9vw); line-height: 1.35; letter-spacing: -.3px; white-space: nowrap; position: relative; padding-inline-start: 10px; }
+      .program-intro h2::before { content: ""; position: absolute; inset-inline-start: 0; top: 4px; bottom: 4px; width: 3px; border-radius: 3px; background: linear-gradient(180deg, var(--brand), #0089cb); }
+      .program-intro h2 br { display: none; }
+      .program-intro p { grid-column: 1 / -1; order: 2; font-size: min(12px, 3.35vw); line-height: 1.6; margin: 0 0 6px; max-width: 100%; white-space: nowrap; padding-inline-start: 10px; color: var(--muted); }
+      .program-intro a { grid-column: 1 / -1; order: 3; align-self: start; justify-self: center; margin-top: 0; padding: 0; min-height: 44px; font-size: min(12.5px, 3.9vw); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; background: transparent; color: var(--brand-ink); box-shadow: none; }
+      .program-intro a:hover { background: transparent; transform: none; }
+      .program-row .program { min-height: 0; display: flex; flex-direction: column; }
+      .program-body { padding: 12px 12px 14px; flex: 1; display: flex; flex-direction: column; }
+      .program-body span { flex: 1; }
+      .program-image { height: 96px; }
+      /* Uniform grid rows so image + title + subtitle line up across cards */
+      /* No grid-auto-rows here: grid rows already stretch their items, and forcing
+         1fr also stretched the implicit CTA row to a full card height. */
+      .program-row { gap: 10px; }
+      .program-row .program { order: 2; min-height: 0; display: flex; flex-direction: column; border-radius: 12px; }
+      .program-body { padding: 10px 10px 12px; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+      .program-body b { font-size: 13.5px; }
+      .program-body span { font-size: 12px; line-height: 1.55; margin-top: 0; min-height: 2.6em; flex: 0 1 auto; }
+      /* The whole card is already the link; the arrow chip only added height */
+      .program-body i { display: none; }
+
+      .impact-world-inner { flex-direction: column; gap: 30px; text-align: center; }
+      .iw-text p { margin-inline: auto; }
+      .iw-map { width: 100%; height: 220px; }
+
+      /* Tighter vertical rhythm: the desktop 60–70px bands read as dead space on a
+         phone, where each section already fills the viewport. */
+      .our-story-teaser { padding: 36px 0; }
+      .priority-projects { padding: 22px 0 36px; }
+      .stories, .news-teaser { padding: 14px 0 36px; }
+      .zakat-mini, .faq-mini, .gift-sec, .volunteer, .gallery, .partners-strip, .trust-band { padding: 8px 0 36px; }
+      .impact-world { padding: 40px 0; }
+      .monthly-strip { padding: 36px 0; }
+      /* Four plan tiles in a flex row overflow a phone (the custom-amount tile was
+         clipped at the edge); a 2×2 grid fits and keeps every tile tappable. */
+      .ms-inner { gap: 20px; }
+      .ms-text p { font-size: 13px; line-height: 1.8; max-width: 34ch; }
+      .ms-plans { display: flex; flex-wrap: nowrap; gap: 6px; }
+      .ms-plan { flex: 1 1 0; min-width: 0; padding: 12px 4px; border-radius: 12px; }
+      .ms-plan b { font-size: min(17px, 4.6vw); }
+      .ms-plan span { font-size: min(12px, 3.1vw); }
+      .ms-plan-custom { flex: 1.5; padding: 8px 4px; }
+      .ms-custom { gap: 2px; }
+      .ms-custom span { font-size: min(12px, 3.1vw); }
+      .ms-custom input { width: 100%; min-width: 0; font-size: min(14px, 3.8vw); }
+      .ms-note { margin-top: 12px; font-size: 12px; }
+      .ms-cta { margin-top: 12px; height: 50px; padding: 0 20px; border-radius: 12px; font-size: 14.5px; }
+      .ms-fine { margin-top: 8px; font-size: 12px; }
+      .cta-final { padding: 40px 0; }
+      .ost-inner, .stories-inner { gap: 24px; }
+      .ps-head, .tb-head { margin-bottom: 20px; }
+      .nt-head { margin-bottom: 18px; }
+      .field-update { margin-top: 16px; }
+    }
+    /* Text on light surfaces uses the accessible blue; --brand stays for fills.
+       Measured: #0077b3 = 4.90:1 on white, 4.58:1 on --page-bg. */
+    .story-cta, .fu-date, .nt-cat, .nt-link, .ps-link, .fm-link,
+    .vol-card a, .dw-value span, .dw-freq button.active,
+    .program-body i, .fm-item summary::after,
+    .pp-cart:hover, .tb-links a:hover, .dw-presets button:hover { color: var(--brand-ink); }
+    /* Short viewports: the fixed donate bar owns the bottom ~67px, so the hero's
+       last interactive element (the dot rail) must clear it. Nothing below the
+       dots can move them — only reducing the space above does. Placed last so it
+       wins over the base `.hero-content` padding shorthand. */
+    @media (max-height: 620px) {
+      .hero-content { padding-top: calc(72px + var(--alert-h, 44px)); padding-bottom: 32px; }
+      .statement p { margin: 12px 0 16px; }
+      .hero-dots { margin-top: 16px; }
+    }
+  </style>
+  <script src="./image-slot.js"></script>
+</helmet>
+
+<svg style="position:absolute; width:0; height:0" aria-hidden="true">
+  <defs>
+    <clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+<main class="page" dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+  <div class="alert-bar" id="alertBar">
+    <span class="ab-dot"></span>
+    <span><span class="ab-full">حملة الإغاثة العاجلة مفتوحة الآن — السلال الغذائية قيد التوزيع.</span><span class="ab-brief">حملة الإغاثة العاجلة مفتوحة</span></span>
+    <a href="Toplum Vakfı Project - Food Baskets.dc.html">تبرع للحملة</a>
+    <button class="ab-close" type="button" id="alertClose" aria-label="إغلاق التنبيه">✕</button>
+  </div>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-slides" aria-hidden="true">
+      <div class="hero-slide active" style="background-image:url('assets/hero-bg.jpg')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1900&q=85')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=1900&q=85')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1900&q=85')"></div>
+    </div>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-content container">
+      <div class="statement">
+        <h1 id="hero-title">الإنسانية <span>تجمعنا</span></h1>
+        <p>من أجل مجتمعات أكثر عدلًا ورحمة وكرامة.<br />نعمل ببرامج إنسانية وتعليمية تصل إلى من يحتاجها بأمانة وشفافية.</p>
+        <a class="impact-link" href="#impact">كن جزءًا من هذا الأثر <b>←</b></a>
+        <div class="hero-dots" id="heroDots"></div>
+      </div>
+    </div>
+
+    <div class="impact-panel" id="impact">
+    <div class="dw-wrap" data-dw-bar>
+      <div class="dw" aria-label="التبرع السريع">
+        <div class="dw-inner">
+        <div class="dw-cta-row">
+          <button class="dw-toggle" type="button" id="dwToggle" aria-expanded="false" aria-label="خيارات التبرع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg></button>
+          <button class="dw-cta" type="button">تبرع الآن</button>
+        </div>
+        <div class="dw-scrim" id="dwScrim"></div>
+        <div class="dw-sheet">
+        <span class="dw-handle"></span>
+        <span class="dw-sheet-title">خيارات التبرع</span>
+        <section>
+        <span class="dw-field-label">وجّه تبرعك إلى</span>
+        <div class="dw-project-wrap">
+        <select class="dw-project" id="dwProject">
+          <option value="general">حيث الحاجة</option>
+          <option value="zakat">الزكاة</option>
+          <option value="sadaqah">الصدقة</option>
+          <option value="dar-aytam">بناء دار أيتام في سوريا</option>
+          <option value="gharimin">تسديد ديون الغارمين في أفريقيا</option>
+        </select>
+        </div>
+        </section>
+        <div class="dw-sep"></div>
+        <section>
+        <span class="dw-field-label">المبلغ</span>
+        <div class="dw-amount">
+          <button class="dw-step" type="button" data-adjust="-100">−</button>
+          <div class="dw-value" data-no-currency><span data-currency-symbol>$</span><input id="amount" type="text" inputmode="numeric" value="100"></div>
+          <button class="dw-step" type="button" data-adjust="100">+</button>
+        </div>
+        </section>
+        <section>
+        <div class="dw-presets">
+          <button type="button" data-amount="100" class="active">$100</button>
+          <button type="button" data-amount="200">$200</button>
+          <button type="button" data-amount="300">$300</button>
+        </div>
+        </section>
+        <section>
+        <div class="dw-row">
+          <div class="dw-custom" data-no-currency><span data-currency-symbol>$</span><input id="customAmount" type="number" min="1" placeholder="مبلغ آخر"></div>
+        </div>
+        </section>
+        <div class="dw-sep"></div>
+        <section>
+        <span class="dw-field-label">التكرار</span>
+        <div class="dw-freq">
+          <button type="button" class="freq-btn active" data-freq="once">مرة واحدة</button>
+          <button type="button" class="freq-btn" data-freq="monthly">شهريًا</button>
+        </div>
+        </section>
+        <p class="dw-trust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3.5 5 6.2v5.1c0 4 2.9 7.7 7 9.2 4.1-1.5 7-5.2 7-9.2V6.2z"/><path d="M9.2 12.2l2 2 3.6-3.9"/></svg>دفع آمن ومحمي</p>
+        </div>
+        </div>
+      </div>
+    </div>
+      <div class="program-row" id="programs">
+        <div class="program-intro"><h2>برامجنا <br />لبناء حياة أفضل</h2><p>نعمل في مجالات متعددة لتلبية الاحتياجات الإنسانية الأساسية.</p><a href="Toplum Vakfı Programs.dc.html">استكشف جميع البرامج ←</a></div>
+        <a class="program" href="Toplum Vakfı Program - Taalim.dc.html"><div class="program-image"></div><div class="program-body"><b>التعليم</b><span>منح دراسية وترميم مدارس</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></i></div></a>
+        <a class="program" href="Toplum Vakfı Program - Sakan.dc.html"><div class="program-image"></div><div class="program-body"><b>المأوى والسكن</b><span>بناء وتأهيل مساكن للأسر</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></i></div></a>
+        <a class="program" href="Toplum Vakfı Program - Quran.dc.html"><div class="program-image"></div><div class="program-body"><b>القرآن والقيم</b><span>دعم حلقات التحفيظ والمعلمين</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></i></div></a>
+        <a class="program" href="Toplum Vakfı Program - Miyah.dc.html"><div class="program-image"></div><div class="program-body"><b>المياه النظيفة</b><span>حفر الآبار وشبكات المياه</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></i></div></a>
+        <a class="program" href="Toplum Vakfı Program - Aytam.dc.html"><div class="program-image"></div><div class="program-body"><b>رعاية الأيتام</b><span>كفالة ورعاية تعليمية وصحية</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></i></div></a>
+        <a class="program" href="Toplum Vakfı Program - Ighatha.dc.html"><div class="program-image"></div><div class="program-body"><b>الإغاثة الإنسانية</b><span>سلال غذائية واستجابة طارئة</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg></i></div></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="priority-projects">
+    <div class="container">
+      <div class="pp-grid">
+        <div class="pp-card" data-href="Toplum Vakfı Project - Dar Aytam.dc.html">
+          <div class="pp-image pp-image-1"></div>
+          <div class="pp-body">
+            <h3>بناء دار أيتام في سوريا</h3>
+            <p>دار رعاية متكاملة تجمع السكن والتعليم والرعاية الصحية والدعم النفسي في خان العسل بحلب.</p>
+            <div class="pp-progress-row"><b>62% مكتمل</b><span>48 طفلًا مستهدفًا · 6 أشهر</span></div>
+            <div class="pp-progress"><span style="width:62%"></span></div>
+            <div class="pp-amounts-row"><div class="pp-amounts"><button type="button" class="active" data-amt="100">$100</button><button type="button" data-amt="300">$300</button><button type="button" data-amt="500">$500</button></div><div class="pp-custom"><input type="number" placeholder="مبلغ آخر"></div></div>
+            <div class="pp-actions"><button class="pp-btn" type="button">تبرع للمشروع</button><button class="pp-cart" type="button" data-name="بناء دار أيتام في سوريا">+ أضف للسلة</button></div>
+          </div>
+        </div>
+        <div class="pp-card is-paused" data-href="Toplum Vakfı Project - Gharimin.dc.html">
+          <div class="pp-image pp-image-2"><span class="pp-state">متوقف مؤقتًا</span></div>
+          <div class="pp-body">
+            <h3>تسديد ديون الغارمين في أفريقيا</h3>
+            <p>وصل المشروع لعدد الحالات المستهدفة لهذه المرحلة. التبرعات متوقفة مؤقتًا لحين إعلان مرحلة جديدة.</p>
+            <div class="pp-progress-row"><b>40% مكتمل</b><span>1,000 سهم مستهدف · $250 / أسرة</span></div>
+            <div class="pp-progress"><span style="width:40%"></span></div>
+            <div class="pp-actions"><span class="pp-btn" style="background:#cfd8de;color:var(--ink);cursor:default;box-shadow:none">التبرع متوقف حاليًا</span></div>
+          </div>
+        </div>
+        <div class="pp-card" data-href="Toplum Vakfı Project - Schools Restoration.dc.html">
+          <div class="pp-image pp-image-3"></div>
+          <div class="pp-body">
+            <h3>ترميم وتأهيل المدارس والمساجد</h3>
+            <p>إعادة تأهيل مرافق تعليمية ودينية متضررة لتعود قادرة على استقبال المجتمع.</p>
+            <div class="pp-progress-row"><b>28% مكتمل</b><span>عدة مواقع · مستمر</span></div>
+            <div class="pp-progress"><span style="width:28%"></span></div>
+            <div class="pp-amounts-row"><div class="pp-amounts"><button type="button" class="active" data-amt="100">$100</button><button type="button" data-amt="300">$300</button><button type="button" data-amt="500">$500</button></div><div class="pp-custom"><input type="number" placeholder="مبلغ آخر"></div></div>
+            <div class="pp-actions"><button class="pp-btn" type="button">تبرع للمشروع</button><button class="pp-cart" type="button" data-name="ترميم وتأهيل المدارس والمساجد">+ أضف للسلة</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="impact-world">
+    <div class="impact-world-stats container">
+      <div class="stats">
+        <div class="stat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></i><b>1995</b><span>عام التأسيس</span></div>
+        <div class="stat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="9" width="17" height="11" rx="1.5"/><path d="M3.5 9 12 4l8.5 5M12 4v16"/></svg></i><b>3673</b><span>رقم السجل الوقفي</span></div>
+        <div class="stat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.4 3.5 5.4 3.5 8.5s-1.1 6.1-3.5 8.5c-2.4-2.4-3.5-5.4-3.5-8.5S9.6 5.9 12 3.5z"/></svg></i><b>+20</b><span>دولة ومجتمعًا</span></div>
+        <div class="stat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg></i><b>+55,000</b><span>مستفيد من السلال الغذائية</span></div>
+        <div class="stat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="3.2"/><path d="M5 20c0-3.6 3-6 7-6s7 2.4 7 6"/></svg></i><b>+100,000</b><span>مستفيد من ترميم المساجد</span></div>
+        <div class="stat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V8.5a1.5 1.5 0 0 1 1.5-1.5H10l1.5 2.5h7A1.5 1.5 0 0 1 20 11v9"/><path d="M4 20h16M8 20v-4h4v4"/></svg></i><b>+950</b><span>مشروعًا منفَّذًا</span></div>
+      </div>
+    </div>
+    <div class="impact-world-inner container">
+      <div class="iw-text">
+        <h2>أثرنا حول العالم</h2>
+        <p>من إسطنبول إلى العالم — تمتد برامجنا عبر أربع مناطق جغرافية في أكثر من عشرين دولة ومجتمعًا.</p>
+      </div>
+      <div class="iw-map">
+        <span class="iw-note">أكثر من<br />20 دولة</span>
+        <div id="worldMapCanvas" class="iw-map-frame"></div>
+        <span class="iw-caption">خريطة تفاعلية لانتشار أعمالنا حول العالم</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="monthly-strip">
+    <div class="container ms-inner">
+      <div class="ms-text">
+        <h2>تبرع شهري منتظم</h2>
+        <p>خطة شهرية ثابتة تمنح المشاريع استمرارية حقيقية، ويمكنك إيقافها في أي وقت.</p>
+      </div>
+      <div class="ms-side">
+        <div class="ms-plans" id="msPlans">
+          <div class="ms-plan active" data-amt="25" data-note="دعم برامج التحفيظ والقيم"><b>$25</b><span>شهريًا</span></div>
+          <div class="ms-plan" data-amt="50" data-note="دعم المياه والسكن"><b>$50</b><span>شهريًا</span></div>
+          <div class="ms-plan" data-amt="75" data-note="دعم الإغاثة والسلال الغذائية"><b>$75</b><span>شهريًا</span></div>
+          <div class="ms-plan" data-amt="100" data-note="دعم رعاية الأيتام والتعليم"><b>$100</b><span>شهريًا</span></div>
+          <div class="ms-plan ms-plan-custom">
+            <label class="ms-custom" data-no-currency><span data-currency-symbol>$</span><input id="msCustom" type="number" min="5" placeholder="آخر"></label>
+            <span>شهريًا</span>
+          </div>
+        </div>
+        <p class="ms-note" id="msNote">دعم برامج التحفيظ والقيم</p>
+        <button class="ms-cta" type="button" id="msCta">ابدأ تبرعك الشهري</button>
+        <p class="ms-fine"><a href="Toplum Vakfı Monthly Giving.dc.html">تعرّف على الخطة الشهرية بالتفصيل ←</a></p>
+      </div>
+    </div>
+  </section>
+
+
+
+  <section class="gift-sec">
+    <div class="container">
+      <div class="gift-card">
+        <div class="gift-text">
+          <h2>أهدِ تبرعًا باسم من تحب</h2>
+          <p>تبرع نيابة عن والديك أو صديق، وسنصدر الشهادة باسمه ونرسلها إلى بريده.</p>
+        </div>
+        <div class="gift-preview" aria-hidden="true">
+            <span class="gp-label">معاينة الشهادة</span>
+            <div class="gp-sheet">
+              <span class="gp-frame"></span>
+              <span class="gp-weave"></span>
+              <span class="gp-rule-box"></span>
+              <span class="gp-wash"></span>
+              <span class="gp-cnr tr"></span>
+              <span class="gp-cnr tl"></span>
+              <span class="gp-cnr br"></span>
+              <span class="gp-cnr bl"></span>
+              <div class="gp-body">
+                <img class="gp-logo" src="assets/logo-mark.png" alt="">
+                <b class="gp-title">شهادة شكر وتقدير</b>
+                <span class="gp-rule"></span>
+                <span class="gp-to">تشهد مؤسسة وقف التضامن الاجتماعي بأن</span>
+                <b class="gp-name" id="gpName">اسم المُهدى إليه</b>
+                <span class="gp-msg" id="gpMsg">تبرع أُهدي باسمك</span>
+                <div class="gp-foot">
+                  <span class="gp-sign"></span>
+                  <span class="gp-seal"><i>3673</i></span>
+                  <span class="gp-sign"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        <form class="gift-form" onsubmit="return false">
+          <div class="gift-occasions" id="giftOccasions">
+            <button type="button" class="active" data-occ="هدية">هدية</button>
+            <button type="button" data-occ="صدقة عن روح">عن روح</button>
+            <button type="button" data-occ="شفاء">شفاء</button>
+          </div>
+          <div class="gift-amounts" id="giftAmounts">
+            <button type="button" class="active" data-amt="100">$100</button>
+            <button type="button" data-amt="200">$200</button>
+            <button type="button" data-amt="300">$300</button>
+            <label class="gift-custom" data-no-currency><span data-currency-symbol>$</span><input type="number" min="5" id="giftCustom" placeholder="آخر"></label>
+          </div>
+          <input type="text" id="giftName" placeholder="اسم المُهدى إليه">
+          <input type="email" id="giftEmail" placeholder="بريده الإلكتروني (اختياري)">
+          <input type="text" id="giftMsg" placeholder="رسالة قصيرة على الشهادة (اختياري)" maxlength="60">
+          <button type="submit" id="giftSubmit">أضف الهدية للسلة</button>
+          <p class="gift-fine">تُصدر الشهادة باسم المُهدى إليه بعد اكتمال الدفع</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="our-story-teaser">
+    <div class="container ost-inner">
+      <div class="ost-media" style="background-image:url('assets/hero-bg.jpg')"></div>
+      <div class="ost-text">
+        <h2>من فكرة إلى وقف معتمد رسميًا</h2>
+        <p>تم اعتماد وقف التضامن الاجتماعي رسميًا وبدء نشاطه بموجب موافقة المديرية العامة للأوقاف في جمهورية تركيا بتاريخ 03/11/1995 تحت رقم السجل 3673، انطلاقًا من رغبة صادقة في تفعيل دور رواد المجتمع وتعزيز القيم السامية.</p>
+        <a href="Toplum Vakfı Our Story.dc.html" class="story-cta" style="display:inline-flex;align-items:center;justify-content:center">اقرأ قصتنا كاملة ←</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="stories" id="stories">
+    <div class="container stories-inner">
+      <div class="story-media">
+        <div class="sm-slide active" style="background-image:url('assets/hero-bg.jpg')"></div>
+        <div class="sm-slide" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1200&q=85')"></div>
+        <div class="sm-slide" style="background-image:url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=1200&q=85')"></div>
+        <div class="sm-dots" id="smDots"></div>
+        <span class="sm-cap" id="smCap">توزيع مساعدات ميدانية على الأسر الأكثر احتياجًا</span>
+      </div>
+      <div class="story-text">
+        <h2>من الميدان مباشرة</h2>
+        <p>قصة واحدة من مشاريع الإغاثة والتعليم، كما وثّقها فريقنا في موقع التنفيذ.</p>
+        <a href="Toplum Vakfı Stories.dc.html" class="story-cta" style="display:inline-flex;align-items:center;justify-content:center">شاهد المزيد من القصص ←</a>
+        <div class="field-update">
+          <span class="fu-date">آخر تحديث ميداني</span>
+          <span class="fu-text" id="fuText">متابعة أعمال دار الأيتام في خان العسل — مرحلة التشطيب الداخلي.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="news-teaser">
+    <div class="container">
+      <div class="nt-head">
+        <h2>آخر الأخبار والشراكات</h2>
+        <a class="nt-link" href="Toplum Vakfı News.dc.html">عرض أخبار الشراكات ←</a>
+      </div>
+      <div class="nt-grid">
+        <a class="nt-card" href="Toplum Vakfı News Article - Saudi Visit.dc.html">
+          <span class="nt-cat">الأخبار والشراكات</span>
+          <h3>وفد وقف التضامن الاجتماعي يبحث تعزيز الشراكة في المشاريع الإنسانية بالسعودية</h3>
+          <p>زيارة رسمية جمعت وفد الوقف مع الأمين العام للندوة العالمية للشباب الإسلامي.</p>
+        </a>
+        <a class="nt-card" href="Toplum Vakfı News.dc.html">
+          <span class="nt-cat">مشاريعنا</span>
+          <h3>دار أيتام في خان العسل: رعاية آمنة وتعليم يفتح آفاق المستقبل</h3>
+          <p>مشروع لإنشاء دار رعاية متكاملة للأيتام في حلب، يجمع السكن والتعليم والرعاية الصحية.</p>
+        </a>
+        <a class="nt-card" href="Toplum Vakfı News.dc.html">
+          <span class="nt-cat">التعليم والشراكات</span>
+          <h3>وقف التضامن الاجتماعي يعزز شراكاته الأكاديمية في إندونيسيا</h3>
+          <p>تعاون مع جامعة دار النجاح لدعم التعليم الإسلامي والتبادل الطلابي.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="volunteer">
+    <div class="container">
+      <div class="tb-head">
+        <h2>انضم إلينا في الميدان</h2>
+      </div>
+      <div class="vol-grid">
+        <div class="vol-card">
+          <h3>تطوّع معنا</h3>
+          <p>فرص تطوع ميدانية وإدارية للشباب والمتخصصين في مجالات التعليم والإغاثة.</p>
+          <a href="Toplum Vakfı Contact.dc.html">تقدّم للتطوع ←</a>
+        </div>
+        <div class="vol-card">
+          <h3>شراكة مؤسسية</h3>
+          <p>للمؤسسات والشركات الراغبة في تنفيذ مشاريع مشتركة أو رعاية برامج قائمة.</p>
+          <a href="Toplum Vakfı Partners.dc.html">تواصل للشراكة ←</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery">
+    <div class="container">
+      <div class="tb-head">
+        <h2>صور من مواقع التنفيذ</h2>
+      </div>
+      <div class="gal-grid">
+        <div class="gal-item"><img src="assets/hero-bg.jpg" alt="عمل ميداني"></div>
+        <div class="gal-item"><img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=700&q=80" alt="توزيع سلال غذائية"></div>
+        <div class="gal-item"><img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=700&q=80" alt="مياه نظيفة"></div>
+        <div class="gal-item"><img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=80" alt="تعليم"></div>
+        <div class="gal-item"><img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=700&q=80" alt="حلقات القرآن"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="partners-strip">
+    <div class="container">
+      <div class="ps-head">
+        <h2>نعمل مع جهات موثوقة</h2>
+        <p>منفّذة مع جهات رسمية ومنظمات ميدانية موثّقة.</p>
+      </div>
+      <div class="ps-grid">
+        <div class="ps-slot"><image-slot id="partner1" shape="rounded" radius="10" fit="contain" placeholder="شعار شريك معتمد"></image-slot></div>
+        <div class="ps-slot"><image-slot id="partner2" shape="rounded" radius="10" fit="contain" placeholder="شعار شريك معتمد"></image-slot></div>
+        <div class="ps-slot"><image-slot id="partner3" shape="rounded" radius="10" fit="contain" placeholder="شعار شريك معتمد"></image-slot></div>
+        <div class="ps-slot"><image-slot id="partner4" shape="rounded" radius="10" fit="contain" placeholder="شعار شريك معتمد"></image-slot></div>
+      </div>
+      <a class="ps-link" href="Toplum Vakfı Partners.dc.html">تعرف على شركائنا ←</a>
+    </div>
+  </section>
+
+  <section class="trust-band">
+    <div class="container">
+      <div class="tb-head">
+        <h2>كيف نتعامل مع تبرعك</h2>
+        <p>كل تبرع يمر بمسار موثّق: تسجيل، تنفيذ ميداني، ثم تقرير أثر.</p>
+      </div>
+      <div class="tb-grid">
+        <div class="tb-item">
+          <span class="tb-num">1</span>
+          <b>مؤسسة معتمدة رسميًا</b>
+          <span>مسجّلة في تركيا منذ 1995 وتعمل تحت الإشراف الرسمي للأوقاف.</span>
+        </div>
+        <div class="tb-item">
+          <span class="tb-num">2</span>
+          <b>تبرع إلكتروني آمن</b>
+          <span>بوابة دفع مشفّرة، وبيانات المتبرع لا تُطلب إلا في خطوة الدفع.</span>
+        </div>
+        <div class="tb-item">
+          <span class="tb-num">3</span>
+          <b>استخدام أمثل للتبرعات</b>
+          <span>توجيه التبرع للمشروع المحدد، ومراجعة دورية للمصروفات.</span>
+        </div>
+        <div class="tb-item">
+          <span class="tb-num">4</span>
+          <b>تقارير وأثر</b>
+          <span>تقارير ميدانية دورية توضح ما تم تنفيذه ولمن وصل.</span>
+        </div>
+      </div>
+      <div class="tb-links">
+        <a href="Toplum Vakfı Transparency.dc.html">التقارير والشفافية</a>
+        <a href="Toplum Vakfı Privacy Policy.dc.html">سياسة الخصوصية</a>
+        <a href="Toplum Vakfı Refund Policy.dc.html">الإلغاء والاسترداد</a>
+        <a href="Toplum Vakfı Payment Details.dc.html">تفاصيل التحويل البنكي</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="zakat-mini">
+    <div class="container zm-inner">
+      <div class="zm-head">
+        <h2>احسب زكاتك</h2>
+      </div>
+      <div class="zm-card">
+        <div class="zm-row">
+          <div class="zm-col">
+            <label for="zmWealth">صافي المال الزكوي</label>
+            <div class="zm-field" data-no-currency><span data-currency-symbol>$</span><input id="zmWealth" type="number" min="0" placeholder="0"></div>
+          </div>
+          <div class="zm-col zm-col-out">
+            <span class="zm-out-label">الزكاة المستحقة (2.5%)</span>
+            <b class="zm-out" data-no-currency><small data-currency-symbol>$</small><i id="zmOut">0</i></b>
+          </div>
+          <div class="zm-col zm-col-cta">
+            <button class="zm-cta" type="button" id="zmDonate">تبرع بمبلغ الزكاة</button>
+          </div>
+        </div>
+        <a class="zm-link" href="Toplum Vakfı Zakat Calculator.dc.html">الحاسبة الكاملة ←</a>
+        <p class="zm-nisab">تجب الزكاة عند بلوغ النصاب (ما يعادل 85 غرامًا من الذهب أو 595 غرامًا من الفضة) ومرور عام هجري. النتيجة تقديرية ولا تُعد فتوى شرعية.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-mini">
+    <div class="container">
+      <div class="tb-head">
+        <h2>الأسئلة الشائعة</h2>
+      </div>
+      <div class="fm-list">
+        <details class="fm-item"><summary>هل التبرع الإلكتروني آمن؟</summary><p>نعم، تمر المعاملة عبر بوابة دفع مشفّرة، ولا نطلب بياناتك إلا في خطوة الدفع.</p></details>
+        <details class="fm-item"><summary>هل يمكنني توجيه تبرعي لمشروع محدد؟</summary><p>نعم، اختر المشروع من شريط التبرع أو من صفحة المشروع مباشرة، ويُوجّه المبلغ له تحديدًا.</p></details>
+        <details class="fm-item"><summary>ما أوجه الدفع المتاحة؟</summary><p>الدفع بالبطاقة، أو التحويل البنكي مع رفع إيصال التحويل لمراجعته.</p></details>
+        <details class="fm-item"><summary>هل أستلم إيصالًا بتبرعي؟</summary><p>نعم، يُرسل إيصال برقم العملية بعد اكتمال التبرع، ويمكنك تحميله من ملفك الشخصي.</p></details>
+      </div>
+      <a class="fm-link" href="Toplum Vakfı FAQ.dc.html">كل الأسئلة الشائعة ←</a>
+    </div>
+  </section>
+
+  <section class="cta-final">
+    <div class="container cta-final-inner">
+      <h2>تبرع اليوم لمشروع قائم</h2>
+      <a class="cta-final-btn" href="Toplum Vakfı Cart.dc.html">تبرع الآن</a>
+    </div>
+  </section>
+
+  <button class="to-top" type="button" id="toTop" aria-label="العودة للأعلى">↑</button>
+  <div class="mobile-sticky-donate"><a href="Toplum Vakfı Cart.dc.html">تبرع الآن</a></div>
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    this.liftDonateBar();
+    this.setupPriorityCards();
+    this.setupHeroSlides();
+    this.setupStorySlides();
+    this.setupAlertBar();
+    this.setupZakatMini();
+    this.setupMonthly();
+    this.setupGift();
+    this.setupToTop();
+    this.setupCounters();
+    const amount = document.querySelector('#amount');
+    const customInput = document.querySelector('#customAmount');
+    let value = 100;
+    const disp = (usd) => (window.tvCurrency ? window.tvCurrency.fromUsd(usd) : usd);
+    const toUsd = (local) => (window.tvCurrency ? window.tvCurrency.toUsd(local) : local);
+    const render = () => {
+      amount.value = disp(value);
+      document.querySelectorAll('[data-amount]').forEach(b => b.classList.toggle('active', Number(b.dataset.amount) === value));
+    };
+    document.querySelectorAll('[data-amount]').forEach(button => button.addEventListener('click', () => { value = Number(button.dataset.amount); customInput.value = ''; render(); }));
+    document.querySelectorAll('[data-adjust]').forEach(button => button.addEventListener('click', () => { value = Math.max(1, value + Number(button.dataset.adjust)); customInput.value = ''; render(); }));
+    amount.addEventListener('input', () => {
+      const n = Number(amount.value.replace(/[^0-9.]/g, ''));
+      if (n > 0) { value = toUsd(n); document.querySelectorAll('[data-amount]').forEach(b => b.classList.toggle('active', Number(b.dataset.amount) === value)); }
+    });
+    customInput.addEventListener('input', () => {
+      const n = Number(customInput.value);
+      if (n > 0) { value = toUsd(n); render(); }
+    });
+    window.addEventListener('tv:currency', () => render());
+    render();
+
+
+
+    // Mobile drawer lives in the shared header component now.
+
+    document.querySelectorAll('.freq-btn').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cta = document.querySelector('.dw-cta');
+      if (cta && !cta.disabled) cta.textContent = btn.dataset.freq === 'monthly' ? 'تبرع شهريًا' : 'تبرع الآن';
+    }));
+    const dwCtaBtn = document.querySelector('.dw-cta');
+    const dwProject = document.getElementById('dwProject');
+    if (dwCtaBtn) dwCtaBtn.addEventListener('click', () => {
+      dwCtaBtn.disabled = true;
+      dwCtaBtn.innerHTML = '<span class="btn-spinner"></span>';
+      const freqBtn = document.querySelector('.freq-btn.active');
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name: dwProject.options[dwProject.selectedIndex].text, amount: value, freq: freqBtn && freqBtn.dataset.freq === 'monthly' ? 'تبرع شهري' : 'تبرع مرة واحدة' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+      setTimeout(() => {
+        window.location.href = 'Toplum Vakfı Cart.dc.html';
+      }, 500);
+    });
+    [amount, customInput].forEach(el => {
+      el.addEventListener('pointerdown', e => e.stopPropagation());
+      el.addEventListener('click', e => e.stopPropagation());
+    });
+    const dwValueWrap = document.querySelector('.dw-value');
+    if (dwValueWrap) dwValueWrap.addEventListener('click', (e) => {
+      if (e.target !== amount) { amount.focus(); amount.select(); }
+    });
+
+    this.waitForD3AndRenderMap();
+  }
+
+  waitForD3AndRenderMap(tries = 0) {
+    if (window.d3 && window.topojson) { this.renderWorldMap(); return; }
+    if (tries > 60) return;
+    setTimeout(() => this.waitForD3AndRenderMap(tries + 1), 100);
+  }
+
+  async renderWorldMap() {
+    const el = document.getElementById('worldMapCanvas');
+    if (!el || el.dataset.rendered) return;
+    el.dataset.rendered = '1';
+    const d3 = window.d3, topojson = window.topojson;
+    const width = el.clientWidth || 600, height = el.clientHeight || 260;
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${width} ${height}`).attr('width', '100%').attr('height', '100%')
+      .attr('style', 'opacity:0; transition: opacity 1s ease');
+    setTimeout(() => svg.attr('style', 'opacity:1; transition: opacity 1s ease'), 50);
+
+    const points = [
+      { name: 'تركيا', sub: 'مركز عملياتنا', lon: 32.86, lat: 39.93, hub: true },
+      { name: 'فلسطين', lon: 37.5, lat: 33.5, dy: 16 },
+      { name: 'الصومال', lon: 45.3, lat: 2.04 },
+      { name: 'إندونيسيا', lon: 106.85, lat: -6.2 },
+      { name: 'مصر', lon: 30, lat: 26, dy: 34 }
+    ];
+    const extraPoints = [
+      { lon: 44.2, lat: 15.5 }, { lon: 30.2, lat: 15.6 }, { lon: 18.7, lat: 15.5 },
+      { lon: 8.0, lat: 17.6 }, { lon: -8.0, lat: 17.6 }, { lon: 36.8, lat: 1.3 },
+      { lon: 38.7, lat: 9.1 }, { lon: 7.5, lat: 9.1 }, { lon: 19.8, lat: 41.3 },
+      { lon: 17.8, lat: 43.9 }, { lon: 74.6, lat: 41.2 }, { lon: 71.3, lat: 38.6 },
+      { lon: 69.2, lat: 34.5 }, { lon: 73.0, lat: 33.7 }, { lon: 90.4, lat: 23.7 },
+      { lon: 96.1, lat: 21.9 }, { lon: 121.0, lat: 14.6 }, { lon: 80.8, lat: 7.9 },
+      { lon: -6.8, lat: 33.6 }, { lon: 9.5, lat: 34.0 }, { lon: -10.9, lat: 20.9 },
+      { lon: 35.9, lat: 33.9 }, { lon: 35.9, lat: 31.9 }
+    ];
+
+    let world;
+    try {
+      world = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json').then(r => r.json());
+    } catch (e) { return; }
+    const countries = topojson.feature(world, world.objects.countries);
+
+    const projection = d3.geoNaturalEarth1().fitSize([width, height * 1.4], countries);
+    projection.translate([width / 2, height * 0.56]);
+    const path = d3.geoPath(projection);
+
+    svg.append('g').selectAll('path').data(countries.features).join('path')
+      .attr('fill', 'rgba(255,255,255,.1)').attr('stroke', 'rgba(255,255,255,.22)').attr('stroke-width', .7).attr('d', path);
+
+    const hub = points.find(p => p.hub);
+    const hubXY = projection([hub.lon, hub.lat]);
+    const g = svg.append('g');
+    const glow = g.append('circle').attr('cx', hubXY[0]).attr('cy', hubXY[1]).attr('r', 34)
+      .attr('fill', 'radial-gradient(circle, rgba(0,182,245,.35), transparent)');
+    svg.insert('defs', ':first-child').append('radialGradient').attr('id', 'hubGlow')
+      .selectAll('stop').data([{o:0,c:'rgba(0,182,245,.4)'},{o:1,c:'rgba(0,182,245,0)'}]).join('stop')
+      .attr('offset', d => d.o).attr('stop-color', d => d.c);
+    glow.attr('fill', 'url(#hubGlow)');
+
+    points.filter(p => !p.hub).forEach(p => {
+      const xy = projection([p.lon, p.lat]);
+      const dx = xy[0] - hubXY[0], dyy = xy[1] - hubXY[1];
+      const dist = Math.sqrt(dx * dx + dyy * dyy);
+      const arcLift = Math.max(24, dist * 0.35);
+      const mid = [(hubXY[0] + xy[0]) / 2, (hubXY[1] + xy[1]) / 2 - arcLift];
+      g.append('path').attr('fill', 'none').attr('stroke', 'rgba(0,182,245,.65)').attr('stroke-width', 1.5)
+        .attr('stroke-linecap', 'round').attr('style', 'filter:drop-shadow(0 0 3px rgba(0,182,245,.6))')
+        .attr('stroke-dasharray', '4 6')
+        .attr('d', d3.line().curve(d3.curveBasis)([hubXY, mid, xy]))
+        .append('animate').attr('attributeName', 'stroke-dashoffset').attr('from', 0).attr('to', -100).attr('dur', '3s').attr('repeatCount', 'indefinite');
+      g.append('circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 4.5).attr('fill', '#00a2e0')
+        .attr('style', 'filter:drop-shadow(0 0 5px rgba(0,182,245,.95))');
+      const labelDy = p.dy !== undefined ? p.dy : (xy[1] < hubXY[1] ? -10 : 14);
+      g.append('text').attr('x', xy[0]).attr('y', xy[1] + labelDy).attr('text-anchor', 'middle')
+        .attr('style', 'font:600 10px Cairo,Arial,sans-serif;fill:rgba(255,255,255,.85)').text(p.name);
+    });
+
+    extraPoints.forEach(p => {
+      const xy = projection([p.lon, p.lat]);
+      const dx = xy[0] - hubXY[0], dyy = xy[1] - hubXY[1];
+      const dist = Math.sqrt(dx * dx + dyy * dyy);
+      const arcLift = Math.max(14, dist * 0.22);
+      const mid = [(hubXY[0] + xy[0]) / 2, (hubXY[1] + xy[1]) / 2 - arcLift];
+      g.append('path').attr('fill', 'none').attr('stroke', 'rgba(0,182,245,.5)').attr('stroke-width', 1.2)
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-dasharray', '3 5')
+        .attr('d', d3.line().curve(d3.curveBasis)([hubXY, mid, xy]))
+        .append('animate').attr('attributeName', 'stroke-dashoffset').attr('from', 0).attr('to', -100).attr('dur', '3.6s').attr('repeatCount', 'indefinite');
+      g.append('circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 2.6).attr('fill', '#00a2e0').attr('style', 'filter:drop-shadow(0 0 3px rgba(0,182,245,.8))');
+    });
+
+    const pulse = g.append('circle').attr('cx', hubXY[0]).attr('cy', hubXY[1]).attr('r', 6)
+      .attr('fill', 'none').attr('stroke', 'rgba(0,182,245,.7)').attr('stroke-width', 1.5);
+    pulse.append('animate').attr('attributeName', 'r').attr('values', '6;20').attr('dur', '2.4s').attr('repeatCount', 'indefinite');
+    pulse.append('animate').attr('attributeName', 'opacity').attr('values', '.9;0').attr('dur', '2.4s').attr('repeatCount', 'indefinite');
+
+    g.append('circle').attr('cx', hubXY[0]).attr('cy', hubXY[1]).attr('r', 10).attr('fill', 'none').attr('stroke', 'rgba(0,182,245,.55)').attr('stroke-width', 1.5);
+    g.append('circle').attr('cx', hubXY[0]).attr('cy', hubXY[1]).attr('r', 5.5).attr('fill', '#fff').attr('style', 'filter:drop-shadow(0 0 6px rgba(255,255,255,.8))');
+
+    g.append('text').attr('x', hubXY[0]).attr('y', hubXY[1] - 30).attr('text-anchor', 'middle')
+      .attr('style', 'font:700 12px Cairo,Arial,sans-serif;fill:#fff').text(hub.name);
+    g.append('text').attr('x', hubXY[0]).attr('y', hubXY[1] - 16).attr('text-anchor', 'middle')
+      .attr('style', 'font:600 9px Cairo,Arial,sans-serif;fill:rgba(255,255,255,.65)').text(hub.sub);
+  }
+  // Publishes a fixed element's measured height as a CSS custom property.
+  // Re-queries the node on every call (a reference captured at mount is detached
+  // after a re-render and measures 0) and retries with setTimeout — rAF and
+  // ResizeObserver callbacks do not fire in this host.
+  publishHeight(selector, varName, isHidden) {
+    const tick = (tries) => {
+      const el = document.querySelector(selector);
+      if (el && isHidden && isHidden(el)) {
+        document.documentElement.style.setProperty(varName, '0px');
+        return;
+      }
+      const h = el ? el.offsetHeight : 0;
+      if (h > 0) { document.documentElement.style.setProperty(varName, h + 'px'); return; }
+      if (tries < 40) setTimeout(() => tick(tries + 1), 50);
+    };
+    tick(0);
+    window.addEventListener('resize', () => tick(39));
+    return () => tick(39);
+  }
+
+  setupMonthly() {
+    const plans = [...document.querySelectorAll('.ms-plan[data-amt]')];
+    const customWrap = document.querySelector('.ms-plan-custom');
+    const custom = document.getElementById('msCustom');
+    const note = document.getElementById('msNote');
+    const cta = document.getElementById('msCta');
+    if (!plans.length || !cta) return;
+    let amount = 25;
+    const setNote = (txt) => { if (note) note.textContent = txt || 'مبلغ شهري مخصّص، يوجَّه حيث الحاجة'; };
+    plans.forEach(p => p.addEventListener('click', () => {
+      plans.forEach(x => x.classList.remove('active'));
+      if (customWrap) customWrap.classList.remove('active');
+      p.classList.add('active');
+      if (custom) custom.value = '';
+      amount = Number(p.dataset.amt);
+      setNote(p.dataset.note);
+    }));
+    if (custom) custom.addEventListener('input', () => {
+      const n = Number(custom.value);
+      if (n > 0) {
+        plans.forEach(x => x.classList.remove('active'));
+        if (customWrap) customWrap.classList.add('active');
+        amount = n;
+        setNote('');
+      }
+    });
+    cta.addEventListener('click', () => {
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name: 'صدقة جارية — تبرع شهري', amount, freq: 'تبرع شهري' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+      window.location.href = 'Toplum Vakfı Cart.dc.html';
+    });
+  }
+
+  setupGift() {
+    const btn = document.getElementById('giftSubmit');
+    const name = document.getElementById('giftName');
+    const msg = document.getElementById('giftMsg');
+    const custom = document.getElementById('giftCustom');
+    const amounts = [...document.querySelectorAll('#giftAmounts button')];
+    const occasions = [...document.querySelectorAll('#giftOccasions button')];
+    const gpName = document.getElementById('gpName');
+    const gpMsg = document.getElementById('gpMsg');
+    const gpTitle = document.querySelector('.gp-title');
+    if (!btn || !name) return;
+    let amount = 100;
+    let occasion = 'هدية';
+    const DEFAULT_MSG = { 'هدية': 'تبرع أُهدي باسمك', 'صدقة عن روح': 'صدقة جارية عن روحه', 'شفاء': 'صدقة ودعاء بالشفاء' };
+
+    // Titles match the two real certificate types on the certificate page.
+    const TITLE = { 'هدية': 'شهادة شكر وتقدير', 'صدقة عن روح': 'شهادة صدقة جارية', 'شفاء': 'شهادة شكر وتقدير' };
+    const preview = () => {
+      if (gpName) gpName.textContent = name.value.trim() || 'اسم المُهدى إليه';
+      if (gpTitle) gpTitle.textContent = TITLE[occasion] || 'شهادة شكر وتقدير';
+      if (gpMsg) gpMsg.textContent = (msg && msg.value.trim()) || DEFAULT_MSG[occasion] || '';
+    };
+
+    occasions.forEach(b => b.addEventListener('click', () => {
+      occasions.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      occasion = b.dataset.occ;
+      preview();
+    }));
+    amounts.forEach(b => b.addEventListener('click', () => {
+      amounts.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      amount = Number(b.dataset.amt);
+      if (custom) custom.value = '';
+      preview();
+    }));
+    if (custom) custom.addEventListener('input', () => {
+      const n = Number(custom.value);
+      if (n > 0) { amounts.forEach(x => x.classList.remove('active')); amount = n; preview(); }
+    });
+    name.addEventListener('input', preview);
+    if (msg) msg.addEventListener('input', preview);
+    preview();
+
+    btn.addEventListener('click', () => {
+      const who = name.value.trim();
+      if (!who) { name.focus(); name.style.borderColor = '#d64545'; return; }
+      name.style.borderColor = '';
+      const label = occasion === 'هدية' ? 'تبرع بالنيابة عن ' + who : occasion + ' — ' + who;
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name: label, amount, freq: 'تبرع مرة واحدة' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+      window.location.href = 'Toplum Vakfı Cart.dc.html';
+    });
+  }
+
+  setupToTop() {
+    const btn = document.getElementById('toTop');
+    if (!btn) return;
+    const update = () => btn.classList.toggle('show', window.scrollY > 700);
+    window.addEventListener('scroll', update, { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    update();
+  }
+
+  setupCounters() {
+    const nums = [...document.querySelectorAll('.stat b')];
+    if (!nums.length) return;
+    const run = (el) => {
+      const raw = el.textContent.trim();
+      const digits = raw.replace(/[^0-9]/g, '');
+      if (!digits) return;
+      const target = Number(digits);
+      const prefix = raw.startsWith('+') ? '+' : '';
+      const dur = 1100;
+      const t0 = performance.now();
+      const tick = (t) => {
+        const p = Math.min(1, (t - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + Math.round(target * eased).toLocaleString('en-US');
+        if (p < 1) requestAnimationFrame(tick); else el.textContent = raw;
+      };
+      requestAnimationFrame(tick);
+    };
+    // Scroll events do not dispatch in the preview host, so run once at mount;
+    // the final value is written unconditionally, never left mid-count.
+    nums.forEach((el, i) => setTimeout(() => run(el), 120 + i * 90));
+  }
+
+  setupAlertBar() {
+    const bar = document.getElementById('alertBar');
+    const close = document.getElementById('alertClose');
+    if (!bar || !close) return;
+    // Publish only the bar's measured height; the stylesheet keeps ownership of the
+    // header offset and the responsive hero padding, so media rules still apply.
+    const sync = this.publishHeight('#alertBar', '--alert-h', (el) => el.hidden);
+    const hide = () => { bar.hidden = true; sync(); };
+    if (localStorage.getItem('tv_alert_closed') === '1') { hide(); return; }
+    close.addEventListener('click', () => { hide(); localStorage.setItem('tv_alert_closed', '1'); });
+  }
+
+  setupZakatMini() {
+    const input = document.getElementById('zmWealth');
+    const out = document.getElementById('zmOut');
+    const donate = document.getElementById('zmDonate');
+    if (input && donate) {
+      // No nisab gate: the threshold depends on the day's gold/silver rate and is a
+      // religious ruling, so the UI states it in grams (as the full calculator does)
+      // and never blocks the donor.
+      const refresh = () => {
+        const zakat = Math.max(0, Number(input.value) || 0) * 0.025;
+        donate.disabled = zakat <= 0;
+        donate.textContent = zakat > 0
+          ? 'تبرع بمبلغ الزكاة' + (window.tvCurrency ? ' · ' + window.tvCurrency.format(zakat) : ' · $' + Math.round(zakat))
+          : 'تبرع بمبلغ الزكاة';
+      };
+      input.addEventListener('input', refresh);
+      donate.addEventListener('click', () => {
+        const zakat = Math.max(0, Number(input.value) || 0) * 0.025;
+        if (zakat <= 0) return;
+        const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+        cart.push({ name: 'زكاة المال', amount: Math.round(zakat * 100) / 100, freq: 'تبرع مرة واحدة' });
+        localStorage.setItem('tv_cart', JSON.stringify(cart));
+        window.location.href = 'Toplum Vakfı Cart.dc.html';
+      });
+      refresh();
+    }
+    if (!input || !out) return;
+    input.addEventListener('input', () => {
+      const n = Math.max(0, Number(input.value) || 0);
+      out.textContent = (n * 0.025).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    });
+  }
+
+  setupStorySlides() {
+    const slides = [...document.querySelectorAll('.sm-slide')];
+    const dotsWrap = document.getElementById('smDots');
+    const cap = document.getElementById('smCap');
+    if (slides.length < 2 || !dotsWrap) return;
+    const caps = [
+      'توزيع مساعدات ميدانية على الأسر الأكثر احتياجًا',
+      'سلال غذائية تصل إلى المجتمعات المتضررة',
+      'مصادر مياه نظيفة دائمة في المناطق المحتاجة'
+    ];
+    let i = 0;
+    const dots = slides.map((_, n) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'قصة ' + (n + 1));
+      b.appendChild(document.createElement('i'));
+      if (n === 0) b.classList.add('active');
+      b.addEventListener('click', () => { show(n); restart(); });
+      dotsWrap.appendChild(b);
+      return b;
+    });
+    const show = (n) => {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle('active', k === i));
+      dots.forEach((d, k) => d.classList.toggle('active', k === i));
+      if (cap && caps[i]) cap.textContent = caps[i];
+    };
+    let timer = setInterval(() => show(i + 1), 5500);
+    const restart = () => { clearInterval(timer); timer = setInterval(() => show(i + 1), 5500); };
+  }
+
+  setupHeroSlides() {
+    const slides = [...document.querySelectorAll('.hero-slide')];
+    const dotsWrap = document.getElementById('heroDots');
+    if (slides.length < 2 || !dotsWrap) return;
+    let i = 0;
+    const dots = slides.map((_, n) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'صورة ' + (n + 1));
+      b.appendChild(document.createElement('i'));
+      if (n === 0) b.classList.add('active');
+      b.addEventListener('click', () => { show(n); restart(); });
+      dotsWrap.appendChild(b);
+      return b;
+    });
+    const show = (n) => {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle('active', k === i));
+      dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    };
+    let timer = setInterval(() => show(i + 1), 6500);
+    const restart = () => { clearInterval(timer); timer = setInterval(() => show(i + 1), 6500); };
+  }
+
+  setupPriorityCards() {
+    document.querySelectorAll('.pp-card').forEach(card => {
+      const amounts = card.querySelectorAll('.pp-amounts button');
+      const custom = card.querySelector('.pp-custom input');
+      let amount = 100;
+      amounts.forEach(btn => btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        amounts.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        amount = Number(btn.dataset.amt);
+        if (custom) custom.value = '';
+      }));
+      if (custom) {
+        custom.addEventListener('click', e => e.stopPropagation());
+        custom.addEventListener('input', () => {
+          if (custom.value) { amounts.forEach(b => b.classList.remove('active')); amount = Number(custom.value); }
+        });
+      }
+      const addToCart = (name) => {
+        const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+        cart.push({ name, amount, freq: 'تبرع مرة واحدة' });
+        localStorage.setItem('tv_cart', JSON.stringify(cart));
+      };
+      const title = card.querySelector('h3')?.textContent || '';
+      const cartBtn = card.querySelector('.pp-cart');
+      if (cartBtn) cartBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        addToCart(cartBtn.dataset.name || title);
+        cartBtn.textContent = '✓ تمت الإضافة';
+        setTimeout(() => { cartBtn.textContent = '+ أضف للسلة'; }, 1600);
+      });
+      const donateBtn = card.querySelector('button.pp-btn');
+      if (donateBtn) donateBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        addToCart(title);
+        window.location.href = 'Toplum Vakfı Cart.dc.html';
+      });
+      if (card.dataset.href && !card.classList.contains('is-paused')) {
+        card.addEventListener('click', () => { window.location.href = card.dataset.href; });
+      }
+    });
+  }
+
+  // Lift the fixed donate bar out of .impact-panel so no ancestor limits it.
+  liftDonateBar() {
+    const bar = document.querySelector('[data-dw-bar]');
+    const page = document.querySelector('.page');
+    if (!bar || !page) return;
+    if (bar.parentElement !== page) page.appendChild(bar);
+    // Mobile: compact collapsed bar that expands on demand.
+    const toggle = document.getElementById('dwToggle');
+    const scrim = document.getElementById('dwScrim');
+    const setOpen = (on) => {
+      bar.classList.toggle('expanded', on);
+      if (toggle) toggle.setAttribute('aria-expanded', on ? 'true' : 'false');
+    };
+    if (toggle) toggle.addEventListener('click', () => setOpen(!bar.classList.contains('expanded')));
+    if (scrim) scrim.addEventListener('click', () => setOpen(false));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+    // Publish the docked bar's measured height so the back-to-top button can sit
+    // above it instead of covering the primary donate CTA.
+    // Never publish a zero: a measurement taken before the fixed bar lays out would
+    // stick, dropping the back-to-top button on top of the donate CTA. Retry on
+    // animation frames until a real height appears.
+    this.publishHeight('.dw-wrap', '--dock-h');
+    // Height reservation for the fixed bar lives in CSS (.page padding-bottom),
+    // because an inline style set here does not survive a re-render.
+  }
+
+
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

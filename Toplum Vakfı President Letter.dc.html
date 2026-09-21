@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
+    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .page-banner-inner { position: relative; z-index: 1; }
+    .page-banner h1 { margin: 0 0 10px; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; }
+    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
+    .letter-card { max-width: 760px; margin: 64px auto 80px; background: #fff; border: 1px solid #e6eef3; border-radius: 16px; box-shadow: 0 12px 30px rgba(2,52,88,.06); padding: 44px 48px; }
+    .letter-card p { color: var(--muted); font-size: 15px; line-height: 2; margin: 0 0 18px; }
+    .signature { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e6eef3; }
+    .signature b { display: block; font-size: 15px; }
+    .signature span { color: var(--muted); font-size: 12.5px; }
+  </style>
+
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="about" hint-size="100%,78px"></dc-import>
+  <section class="page-banner">
+    <div class="container page-banner-inner">
+      <h1>رسالة الرئيس</h1>
+      <p>كلمة من رئيس الوقف حول مسيرة العمل والرؤية المستقبلية.</p>
+    </div>
+  </section>
+  <div class="container">
+    <div class="letter-card">
+      <p>بسم الله الرحمن الرحيم،</p>
+      <p>السلام والوئام الاجتماعيان يرتكزان على تنمية قيم الحق والعدالة والقناعة والأخوة. فالمحبة والعدل والإحسان واحترام الحقوق ليست شعارات، بل أسس عملية لبناء مجتمع مستقر يتجاوز أزماته بالتكافل لا بالتفكك.</p>
+      <p>منذ اعتماد وقف التضامن الاجتماعي رسميًا في عام 1995، حرصنا على أن يكون العمل الخيري وسيلة لغرس هذه القيم وبناء مجتمعات متماسكة قادرة على مواجهة التحديات بأخلاقية، لا مجرد استجابة عابرة للحاجة.</p>
+      <p>اليوم، وبفضل شراكاتنا المؤسسية والأكاديمية الممتدة من تركيا إلى السعودية وقطر وإندونيسيا وماليزيا، نواصل العمل على تفعيل دور رواد المجتمع من الدعاة والشباب والمؤثرين، وتبني المبادرات التي تخدم الإنسان أولًا.</p>
+      <p>نشكر كل من ساهم وتبرع وآمن برسالتنا، ونؤكد أن الطريق أمامنا طويل، وأن كل خطوة تحتاج إلى شراكتكم واستمراركم معنا.</p>
+      <div class="signature">
+        <b>د. عبد الصمد كوتشاك</b>
+        <span>رئيس مجلس الإدارة — وقف التضامن الاجتماعي</span>
+      </div>
+    </div>
+  </div>
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+</body>
+</html>

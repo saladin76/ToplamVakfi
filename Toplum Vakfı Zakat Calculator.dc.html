@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+
+    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 58px; color: #fff; position: relative; overflow: hidden; }
+    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .page-banner-inner { position: relative; z-index: 1; }
+    .page-banner h1 { margin: 0 0 10px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; }
+    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
+
+    .zk-wrap { padding: 50px 0 80px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 30px; align-items: start; }
+    .zk-form { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 28px 30px; box-shadow: 0 12px 28px rgba(2,52,88,.07); }
+    .zk-form h2 { margin: 0 0 6px; font-size: 17px; font-weight: 800; }
+    .zk-form > p { margin: 0 0 22px; color: var(--muted); font-size: 12.5px; line-height: 1.8; }
+    .zk-field { margin-bottom: 16px; }
+    .zk-field label { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+    .zk-field span.hint { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.7; }
+    .zk-input-wrap { display: flex; align-items: center; gap: 6px; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 10px; padding: 0 14px; min-height: 48px; direction: ltr; transition: border-color .2s, background .2s; }
+    .zk-input-wrap:focus-within { border-color: var(--brand); background: #fff; }
+    .zk-input-wrap span { color: var(--muted); font-weight: 800; font-size: 13px; }
+    /* The wrapper's height does not propagate to the input, so set the hit area here. */
+    .zk-input-wrap input { flex: 1; width: 100%; min-height: 46px; background: transparent; border: 0; outline: none; font-family: inherit; font-size: 14px; color: var(--ink); text-align: left; }
+    .zk-field.debt-owed .zk-input-wrap { border-color: rgba(0,162,224,.35); }
+    .zk-field.debt-due .zk-input-wrap { border-color: rgba(179,71,50,.3); }
+
+    .zk-result { position: sticky; top: 96px; background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 28px 26px; box-shadow: 0 18px 40px rgba(2,52,88,.12); text-align: center; }
+    .zk-result .rl { font-size: 12.5px; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+    .zk-result .rv { font-size: 40px; font-weight: 900; color: var(--brand-ink); direction: ltr; margin-bottom: 4px; }
+    .zk-result .rv small { font-size: 16px; color: var(--muted); }
+    .zk-result .rformula { font-size: 12px; color: var(--muted); margin-bottom: 20px; direction: ltr; }
+    .zk-cta { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 50px; text-align: center; background: linear-gradient(135deg, var(--brand-2), #0089cb); color: #fff; padding: 14px 10px; border: 0; cursor: pointer; font-family: inherit; border-radius: 999px; font-weight: 800; font-size: 14.5px; box-shadow: 0 9px 22px rgba(0,162,224,.35); }
+    .zk-cta:disabled { background: #cfd8de; color: var(--ink); box-shadow: none; cursor: default; }
+    .zk-cta:hover { transform: translateY(-1px); }
+    .zk-note { margin-top: 16px; padding-top: 16px; border-top: 1px solid #eef2f5; font-size: 12px; color: var(--muted); line-height: 1.8; text-align: start; }
+    .zk-note b { color: var(--ink); }
+
+    .zk-explain { max-width: 900px; margin: 0 auto 60px; padding: 0 32px; }
+    .zk-explain h3 { font-size: 15px; font-weight: 800; margin: 0 0 10px; }
+    .zk-explain p { font-size: 13px; color: var(--muted); line-height: 1.9; margin: 0 0 14px; }
+    .zk-disclaimer { background: #fff8ec; border: 1px solid #f3e2b8; color: #7a5b12; border-radius: 12px; padding: 14px 18px; font-size: 12.5px; line-height: 1.8; }
+
+    @media (max-width: 900px) {
+      .zk-wrap { grid-template-columns: 1fr; padding: 40px 20px 60px; }
+      .zk-result { position: static; }
+      .zk-explain { padding: 0 20px; }
+    }
+  </style>
+</helmet>
+
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="programs" hint-size="100%,78px"></dc-import>
+
+  <section class="page-banner">
+    <div class="container page-banner-inner">
+      <h1>حاسبة الزكاة</h1>
+      <p>احسب زكاة مالك بسهولة، وتبرع بها مباشرة لمن يستحقها.</p>
+    </div>
+  </section>
+
+  <div class="container zk-wrap">
+    <div class="zk-form">
+      <h2>بيانات حساب الزكاة</h2>
+      <p>أدخل قيمة أصولك وديونك بالعملة المختارة في الأعلى، وستُحدَّث النتيجة تلقائيًا.</p>
+
+      <div class="zk-field">
+        <label>النقد والحسابات البنكية</label>
+        <div class="zk-input-wrap" data-no-currency><span data-currency-symbol>$</span><input type="number" min="0" id="zkCash" placeholder="0" value="0"></div>
+      </div>
+      <div class="zk-field">
+        <label>قيمة الذهب والفضة</label>
+        <div class="zk-input-wrap" data-no-currency><span data-currency-symbol>$</span><input type="number" min="0" id="zkGold" placeholder="0" value="0"></div>
+      </div>
+      <div class="zk-field">
+        <label>الأسهم والاستثمارات</label>
+        <div class="zk-input-wrap" data-no-currency><span data-currency-symbol>$</span><input type="number" min="0" id="zkStocks" placeholder="0" value="0"></div>
+      </div>
+      <div class="zk-field debt-owed">
+        <label>ديون مستحقة لك (تُضاف)</label>
+        <div class="zk-input-wrap" data-no-currency><span data-currency-symbol>$</span><input type="number" min="0" id="zkOwed" placeholder="0" value="0"></div>
+      </div>
+      <div class="zk-field debt-due">
+        <label>ديون عليك (تُطرح)</label>
+        <div class="zk-input-wrap" data-no-currency><span data-currency-symbol>$</span><input type="number" min="0" id="zkDue" placeholder="0" value="0"></div>
+        <span class="hint">تشمل الديون المستحقة عليك خلال العام الحالي فقط.</span>
+      </div>
+    </div>
+
+    <div class="zk-result">
+      <div class="rl">الزكاة المستحقة عليك</div>
+      <div class="rv" data-no-currency><small data-currency-symbol>$</small><span id="zkResult">0</span></div>
+      <div class="rformula">(الأصول − الديون عليك) × 2.5%</div>
+      <button class="zk-cta" type="button" id="zkDonate" disabled="true">تبرع بمبلغ الزكاة</button>
+      <div class="zk-note">
+        <b>شرط النصاب:</b> تجب الزكاة إذا بلغ مالك حد النصاب (ما يعادل قيمة 85 غرامًا من الذهب أو 595 غرامًا من الفضة تقريبًا) وحال عليه عام هجري كامل وهو في ملكك.
+      </div>
+    </div>
+  </div>
+
+  <div class="zk-explain">
+    <h3>حول حساب الزكاة</h3>
+    <p>الزكاة فرض على من بلغ مالُه النصاب وحال عليه حَولٌ هجري كامل، وتُحسب بنسبة 2.5% من صافي المال الزكوي (الأصول القابلة للزكاة مطروحًا منها الديون الحالّة عليك خلال العام).</p>
+    <p class="zk-disclaimer">هذه الحاسبة تقديرية للمساعدة فقط، ولا تُعد فتوى شرعية. يُرجى مراجعة جهة شرعية موثوقة لتأكيد بلوغ النصاب وتفاصيل حالتك الخاصة قبل إخراج الزكاة.</p>
+  </div>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const ids = ['zkCash', 'zkGold', 'zkStocks', 'zkOwed', 'zkDue'];
+    const out = document.getElementById('zkResult');
+    const donate = document.getElementById('zkDonate');
+    // Inputs are entered in the currency chosen in the header; the cart stores USD.
+    const toUsd = (local) => (window.tvCurrency ? window.tvCurrency.toUsd(local) : local);
+    let zakatLocal = 0;
+
+    const calc = () => {
+      const v = (id) => Number(document.getElementById(id).value) || 0;
+      const assets = v('zkCash') + v('zkGold') + v('zkStocks') + v('zkOwed');
+      const net = Math.max(0, assets - v('zkDue'));
+      zakatLocal = net * 0.025;
+      out.textContent = zakatLocal.toLocaleString('en-US', { maximumFractionDigits: 2 });
+      if (donate) donate.disabled = !(zakatLocal > 0);
+    };
+    ids.forEach(id => document.getElementById(id).addEventListener('input', calc));
+    if (donate) donate.addEventListener('click', () => {
+      if (!(zakatLocal > 0)) return;
+      const usd = Math.round(toUsd(zakatLocal) * 100) / 100;
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name: 'زكاة المال', amount: usd, freq: 'تبرع مرة واحدة' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+      window.location.href = 'Toplum Vakfı Cart.dc.html';
+    });
+    window.addEventListener('tv:currency', calc);
+    calc();
+  }
+  renderVals() { return {}; }
+}
+
+</script>
+</body>
+</html>

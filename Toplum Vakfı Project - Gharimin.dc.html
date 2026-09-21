@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+
+    .proj-hero { padding-top: 0; }
+    .proj-hero-img { height: 492px; padding-top: 78px; box-sizing: border-box; background: linear-gradient(0deg, rgba(2,20,38,.75), rgba(2,20,38,.15)), url('assets/hero-bg.jpg') center 25% / cover; display: flex; align-items: flex-end; }
+    .proj-hero-inner { padding: 30px 0; color: #fff; }
+    .proj-tag-lg { display: inline-block; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+    .proj-hero-inner h1 { margin: 0; font-size: clamp(26px, 3vw, 38px); font-weight: 800; }
+
+    .proj-layout { display: grid; grid-template-columns: 1.7fr 1fr; gap: 40px; padding: 50px 0 70px; align-items: start; }
+    .proj-main h2 { font-size: 19px; font-weight: 800; margin: 36px 0 14px; }
+    .proj-main h2:first-child { margin-top: 0; }
+    .proj-main p { color: #33495e; font-size: 14.5px; line-height: 1.9; margin: 0 0 14px; }
+    .proj-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+    .proj-fact { background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px; text-align: center; }
+    .proj-fact b { display: block; font-size: 20px; color: var(--brand); direction: ltr; }
+    .proj-fact span { font-size: 12px; color: var(--muted); }
+    .proj-budget { background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px 18px; margin: 8px 0 20px; }
+    .proj-budget-bar { height: 8px; background: #eef3f7; border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+    .proj-budget-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), #4fc3f7); }
+    .proj-budget-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
+    .proj-budget-row b { color: var(--ink); direction: ltr; }
+    .proj-budget-note { font-size: 12px; color: #9fb0bd; }
+    .updates-list { display: flex; flex-direction: column; gap: 14px; }
+    .update-item { background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px 18px; }
+    .update-item time { display: block; color: var(--brand); font-size: 12px; font-weight: 800; margin-bottom: 6px; direction: ltr; text-align: right; }
+    .update-item p { margin: 0; font-size: 13px; color: var(--ink); }
+
+    .donate-sidebar { position: sticky; top: 130px; background: #fff; border-radius: 18px; border: 1px solid #e6eef3; box-shadow: 0 16px 34px rgba(2,52,88,.1); padding: 26px; }
+    .donate-sidebar h3 { margin: 0 0 4px; font-size: 16px; }
+    .donate-sidebar .ds-progress { height: 8px; background: #eef3f7; border-radius: 999px; overflow: hidden; margin: 14px 0 8px; }
+    .donate-sidebar .ds-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), #4fc3f7); width: 40%; }
+    .ds-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 18px; direction: ltr; white-space: nowrap; }
+    .ds-amounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
+    .ds-amounts button { min-height: 44px; padding: 9px 6px; border: 1px solid #e2eaf0; border-radius: 999px; font-size: 12px; font-weight: 800; background: #f7fafc; color: var(--ink); cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .ds-amounts button.active, .ds-amounts button:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .ds-custom { display: flex; align-items: center; gap: 6px; border: 1px solid #e2eaf0; border-radius: 999px; padding: 0 14px; min-height: 44px; margin-bottom: 12px; direction: ltr; }
+    .ds-custom span { color: var(--muted); font-weight: 800; font-size: 13px; }
+    .ds-custom input { border: 0; outline: none; flex: 1; min-width: 0; min-height: 42px; font-size: 13px; font-family: inherit; text-align: left; color: var(--ink); background: transparent; }
+    .ds-custom input::placeholder { direction: rtl; color: #9fb0bd; }
+    .ds-gift { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); margin-bottom: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid #e2eaf0; border-radius: 999px; transition: all .2s; }
+    .ds-gift svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--brand); }
+    .ds-gift input { display: none; }
+    .ds-gift.checked { background: #eaf6fd; border-color: var(--brand); color: var(--ink); }
+    .ds-gift-field { max-height: 0; overflow: hidden; transition: max-height .25s ease, margin .25s ease; }
+    .ds-gift-field.open { max-height: 50px; margin-bottom: 10px; }
+    .ds-gift-field input { width: 100%; padding: 10px 14px; border: 1px solid #e2eaf0; border-radius: 10px; font-size: 12.5px; outline: none; font-family: inherit; color: var(--ink); }
+    .ds-gift-field input:focus { border-color: var(--brand); }
+    .ds-btn-row { display: flex; gap: 8px; }
+    .ds-btn { flex: 1.3; display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px 8px; border-radius: 999px; font-weight: 800; font-size: 13.5px; white-space: nowrap; transition: transform .2s, box-shadow .2s; }
+    .ds-btn:hover { background: #0089cb; transform: translateY(-1px); }
+    .ds-cart { flex: 1; background: #f2f6f9; color: var(--ink); border: 1px solid #e2eaf0; padding: 13px 6px; border-radius: 999px; font-weight: 800; font-size: 12px; white-space: nowrap; min-height: 44px; }
+    .ds-cart:hover { background: #eaf6fd; border-color: var(--brand); color: var(--brand); }
+    .ds-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+    @media (max-width: 900px) {
+      .proj-layout { grid-template-columns: 1fr; }
+      .donate-sidebar { position: static; }
+      .proj-facts { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 560px) { .proj-facts { grid-template-columns: 1fr; } }
+      .mobile-sticky-donate { display: none; }
+    @media (max-width: 760px) {
+      .mobile-sticky-donate { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500; padding: 12px 16px; background: #fff; box-shadow: 0 -8px 24px rgba(2,20,38,.15); }
+      .mobile-sticky-donate a { display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 14px; min-height: 44px; }
+      body { padding-bottom: 70px; }
+    }
+  </style>
+</helmet>
+
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="projects" hint-size="100%,78px"></dc-import>
+  <div class="mobile-sticky-donate"><a href="Toplum Vakfı Cart.dc.html">تبرع الآن</a></div>
+
+  <section class="proj-hero">
+    <div class="proj-hero-img">
+      <div class="container proj-hero-inner">
+        <span class="proj-tag-lg">التمكين الاجتماعي</span>
+        <h1>تسديد ديون الغارمين في أفريقيا</h1>
+      </div>
+    </div>
+  </section>
+
+  <div class="container proj-layout">
+    <div class="proj-main">
+      <h2>القصة</h2>
+      <p>قد يتحول الدين إلى عبء يقيّد حياة الأفراد والأسر. يقدم مشروع تسديد ديون الغارمين في أفريقيا نموذجًا للمساندة المنضبطة: دراسة حالة المستفيدين، تحديد المساعدة المناسبة، التنسيق مع الدائنين، ثم متابعة الحالة بما يدعم الاستقرار ويقلل خطر العودة إلى الدين.</p>
+
+      <h2>الاحتياج</h2>
+      <p>يستهدف المشروع دعم 1,000 أسرة من المدينين، بقيمة دعم للأسرة الواحدة تبلغ 250 دولارًا.</p>
+      <div class="proj-facts">
+        <div class="proj-fact"><b>1,000</b><span>سهم مستهدف</span></div>
+        <div class="proj-fact"><b>$250</b><span>للأسرة الواحدة</span></div>
+        <div class="proj-fact"><b>مستمر</b><span>مدة المشروع</span></div>
+      </div>
+
+      <h2>الميزانية</h2>
+      <div class="proj-budget">
+        <div class="proj-budget-bar"><span style="width:40%"></span></div>
+        <div class="proj-budget-row"><span>الهدف: <b>$250,000</b></span><span>تم جمعه: <b>$100,000</b></span><span>40% مكتمل</span></div>
+        <span class="proj-budget-note">أرقام توضيحية قيد الاعتماد النهائي من فريق المؤسسة.</span>
+      </div>
+
+      <h2>الأثر</h2>
+      <p>مساندة منضبطة تحفظ الكرامة وتعيد الاستقرار للأسر التي ثقلتها الديون، دون المساس بكرامة المستفيدين.</p>
+
+      <h2>آخر التحديثات</h2>
+      <div class="updates-list">
+        <div class="update-item"><time>10 سبتمبر 2026</time><p>البدء في دراسة الدفعة الأولى من الأسر المستهدفة.</p></div>
+        <div class="update-item"><time>20 أول 2026</time><p>اعتماد معايير دراسة الحالات والتنسيق مع الدائنين.</p></div>
+      </div>
+    </div>
+
+    <aside class="donate-sidebar">
+      <h3>تبرع لهذا المشروع</h3>
+      <div class="ds-progress"><span></span></div>
+      <div class="ds-meta"><span>40% مكتمل</span><span>مستمر</span></div>
+      <div class="ds-amounts">
+        <button type="button" data-amt="100" class="active">$100</button>
+        <button type="button" data-amt="200">$200</button>
+        <button type="button" data-amt="300">$300</button>
+        <button type="button" data-amt="500">$500</button>
+        <button type="button" data-amt="700">$700</button>
+        <button type="button" data-amt="1000">$1000</button>
+      </div>
+      <div class="ds-custom"><span>$</span><input type="number" id="dsCustomAmt" placeholder="مبلغ آخر" min="1"></div>
+      <label class="ds-gift" id="dsGiftWrap"><input type="checkbox" id="dsGift"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18M12 8v13M8 8a2.5 2.5 0 1 1 0-5c1.5 0 3 1.5 4 5-1 0 2.5 0 4-5a2.5 2.5 0 1 1 0 5"/></svg><span>تبرع بهدية</span></label>
+      <div id="dsGiftField" class="ds-gift-field"><input type="text" placeholder="اسم المتبرع له (اختياري)"></div>
+      <div class="ds-btn-row">
+        <button class="ds-btn" type="button" id="dsDonateBtn">تبرع الآن</button>
+        <button class="ds-cart" type="button">أضف للسلة</button>
+      </div>
+      <p class="ds-note">تبرع آمن ومباشر لهذا المشروع</p>
+    </aside>
+  </div>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const dsCustom = document.getElementById('dsCustomAmt');
+    document.querySelectorAll('.ds-amounts button').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.ds-amounts button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      dsCustom.value = '';
+    }));
+    dsCustom.addEventListener('input', () => {
+      if (Number(dsCustom.value) > 0) document.querySelectorAll('.ds-amounts button').forEach(b => b.classList.remove('active'));
+    });
+    const dsDonateBtn = document.getElementById('dsDonateBtn');
+    if (dsDonateBtn) dsDonateBtn.addEventListener('click', () => {
+      const activeBtn = document.querySelector('.ds-amounts button.active');
+      const amt = Number(dsCustom.value) > 0 ? Number(dsCustom.value) : (activeBtn ? Number(activeBtn.dataset.amt) : 100);
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name: document.querySelector('h1').textContent.trim(), amount: amt, freq: 'تبرع مرة واحدة' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+      window.location.href = 'Toplum Vakfı Cart.dc.html';
+    });
+    const dsCartBtn = document.querySelector('.ds-cart');
+    if (dsCartBtn) dsCartBtn.addEventListener('click', () => {
+      const activeBtn2 = document.querySelector('.ds-amounts button.active');
+      const amt2 = Number(dsCustom.value) > 0 ? Number(dsCustom.value) : (activeBtn2 ? Number(activeBtn2.dataset.amt) : 100);
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name: document.querySelector('h1').textContent.trim(), amount: amt2, freq: 'تبرع مرة واحدة' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+      dsCartBtn.textContent = 'أُضيف ✓';
+      setTimeout(() => { window.location.href = 'Toplum Vakfı Cart.dc.html'; }, 700);
+    });
+    const dsGift = document.getElementById('dsGift');
+    if (dsGift) dsGift.addEventListener('change', () => {
+      document.getElementById('dsGiftWrap').classList.toggle('checked', dsGift.checked);
+      document.getElementById('dsGiftField').classList.toggle('open', dsGift.checked);
+    });
+  }
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

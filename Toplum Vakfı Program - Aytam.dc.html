@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+
+    .prog-hero { padding-top: 0; }
+    .prog-hero-img { height: 452px; padding-top: 78px; box-sizing: border-box; background: linear-gradient(0deg, rgba(2,20,38,.75), rgba(2,20,38,.15)), url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1400&q=80') center / cover; display: flex; align-items: flex-end; }
+    .prog-hero-inner { padding: 30px 0; color: #fff; }
+    .prog-hero-inner span { display: inline-block; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+    .prog-hero-inner h1 { margin: 0; font-size: clamp(26px, 3vw, 38px); font-weight: 800; }
+
+    .section { padding: 56px 0; }
+    .section h2 { font-size: 20px; font-weight: 800; margin: 0 0 16px; text-align: center; }
+    .intro-text { max-width: 700px; margin: 0 auto 10px; text-align: center; color: #33495e; font-size: 14.5px; line-height: 1.9; }
+
+    .areas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 30px; }
+    .area-card { background: #fff; border: 1px solid #e6eef3; border-radius: 14px; padding: 20px; text-align: center; }
+    .area-card svg { width: 26px; height: 26px; color: var(--brand); margin-bottom: 10px; }
+    .area-card h3 { margin: 0; font-size: 13.5px; }
+
+    .linked-projects { background: #fff; }
+    .lp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .lp-card { display: block; border: 1px solid #e6eef3; border-radius: 14px; overflow: hidden; background: var(--page-bg); }
+    .lp-image { height: 120px; background-position: center; background-size: cover; }
+    .lp-body { padding: 16px; }
+    .lp-body h4 { margin: 0; font-size: 13.5px; }
+
+    .prog-cta { text-align: center; padding: 60px 0; background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); color: #fff; }
+    .prog-cta h2 { color: #fff; margin-bottom: 20px; }
+    .prog-cta a { display: inline-flex; align-items: center; background: var(--brand); color: #fff; padding: 13px 32px; border-radius: 999px; font-weight: 800; font-size: 14px; white-space: nowrap; }
+
+    @media (max-width: 900px) {
+      .areas-grid { grid-template-columns: repeat(2, 1fr); }
+      .lp-grid { grid-template-columns: 1fr; }
+    }
+      .mobile-sticky-donate { display: none; }
+    @media (max-width: 760px) {
+      .mobile-sticky-donate { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500; padding: 12px 16px; background: #fff; box-shadow: 0 -8px 24px rgba(2,20,38,.15); }
+      .mobile-sticky-donate a { display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 14px; min-height: 44px; }
+      body { padding-bottom: 70px; }
+    }
+  </style>
+</helmet>
+
+<svg style="position:absolute; width:0; height:0" aria-hidden="true">
+  <defs>
+    <clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="programs" hint-size="100%,78px"></dc-import>
+  <div class="mobile-sticky-donate"><a href="Toplum Vakfı Cart.dc.html">تبرع الآن</a></div>
+
+  <section class="prog-hero">
+    <div class="prog-hero-img">
+      <div class="container prog-hero-inner">
+        <span>برنامج</span>
+        <h1>رعاية الأيتام</h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>مستقبل يبدأ بالأمان</h2>
+      <p class="intro-text">نعمل على توفير بيئة رعاية آمنة ومتكاملة للأطفال الأيتام تجمع السكن، التعليم، الرعاية الصحية، والدعم النفسي، بما يمنحهم بداية أكثر استقرارًا نحو المستقبل.</p>
+      <div class="areas-grid">
+        <div class="area-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20v-6a8 8 0 0 1 16 0v6"/><path d="M4 20h16"/></svg><h3>السكن الآمن</h3></div>
+        <div class="area-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3L2 8l10 5 10-5-10-5z"/></svg><h3>التعليم المستمر</h3></div>
+        <div class="area-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><h3>الرعاية الصحية</h3></div>
+        <div class="area-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/></svg><h3>الدعم النفسي</h3></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section linked-projects">
+    <div class="container">
+      <h2>مشاريع مرتبطة بهذا البرنامج</h2>
+      <div class="lp-grid">
+        <a class="lp-card" href="Toplum Vakfı Project - Dar Aytam.dc.html">
+          <div class="lp-image" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80')"></div>
+          <div class="lp-body"><h4>بناء دار أيتام في سوريا</h4></div>
+        </a>
+        <a class="lp-card" href="Toplum Vakfı Projects.dc.html">
+          <div class="lp-image" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=500&q=80')"></div>
+          <div class="lp-body"><h4>ترميم وتأهيل المدارس والمساجد</h4></div>
+        </a>
+        <a class="lp-card" href="Toplum Vakfı Projects.dc.html">
+          <div class="lp-image" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=500&q=80')"></div>
+          <div class="lp-body"><h4>منح تعليمية لطلبة القرآن الكريم</h4></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="prog-cta">
+    <div class="container">
+      <h2>كن جزءًا من هذا البرنامج</h2>
+      <a href="Toplum Vakfı Cart.dc.html">تبرع الآن</a>
+    </div>
+  </section>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

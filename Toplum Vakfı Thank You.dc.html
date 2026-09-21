@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-ink: #0077b3; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a, button { font-family: inherit; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(720px, calc(100% - 48px)); margin: 0 auto; }
+    .secure-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
+    .secure-badge svg { width: 15px; height: 15px; color: var(--brand); }
+    /* Steps bar carries the security cue, as on the payment step. */
+    .steps { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 26px 0 12px; flex-wrap: wrap; }
+    .steps-dots { display: flex; align-items: center; gap: 6px; }
+    .step-dot { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); font-weight: 700; }
+    .step-dot .circle { width: 24px; height: 24px; border-radius: 50%; background: #e9eff3; color: var(--muted); display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+    .step-dot.active .circle, .step-dot.done .circle { background: var(--brand); color: #fff; }
+    .step-dot.active { color: var(--ink); }
+    .step-sep { width: 24px; height: 1px; background: #dbe6ee; align-self: center; }
+    .panel { background: #fff; border: 1px solid #e6eef3; border-radius: 18px; box-shadow: 0 16px 34px rgba(2,52,88,.08); padding: 34px; margin: 20px 0 60px; text-align: center; }
+    .success-icon { width: 68px; height: 68px; border-radius: 50%; background: #e6f9ee; color: #1a9d5c; display: grid; place-items: center; margin: 0 auto 18px; }
+    .success-icon svg { width: 32px; height: 32px; }
+    .panel h2 { margin: 0 0 22px; font-size: 19px; font-weight: 800; }
+    .panel > p { color: var(--muted); font-size: 13.5px; margin: -14px 0 22px; line-height: 1.85; }
+    .review-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eef3f7; font-size: 13.5px; text-align: right; }
+    .review-row:last-child { border-bottom: 0; }
+    .review-row b { color: var(--ink); direction: ltr; }
+    .review-row span:first-child { color: var(--muted); }
+    .receipt-box { background: var(--page-bg); border-radius: 12px; padding: 6px 18px; margin-bottom: 24px; }
+    .certificate { border: 1.5px dashed rgba(0,162,224,.4); border-radius: 14px; padding: 22px 18px; margin-bottom: 24px; background: linear-gradient(135deg, #f2fbff, #fff); }
+    .cert-badge { width: 44px; height: 44px; border-radius: 50%; background: #eaf6fd; color: var(--brand); display: grid; place-items: center; margin: 0 auto 10px; }
+    .cert-badge svg { width: 22px; height: 22px; }
+    .certificate h3 { margin: 0 0 8px; font-size: 15px; font-weight: 800; }
+    .cert-text { font-size: 12.5px; color: var(--muted); margin: 0 0 14px; line-height: 1.8; }
+    .btn-outline-full { display: flex; align-items: center; justify-content: center; width: 100%; border: 1.5px solid var(--brand); background: #fff; color: var(--brand-ink); padding: 13px; border-radius: 999px; font-weight: 800; font-size: 13.5px; margin-top: 10px; min-height: 44px; cursor: pointer; }
+    .btn-outline-full:hover { background: var(--brand); color: #fff; }
+    /* Miniature of the real certificate sheet, so the page shows what it offers. */
+    .cert-mini { position: relative; display: grid; justify-items: center; gap: 6px; background: #fff; border: 1px solid #cfe3ef; border-radius: 10px; padding: 16px 14px 14px; margin-bottom: 4px; overflow: hidden; }
+    .cert-mini .cm-rule { position: absolute; inset: 0 0 auto 0; height: 4px; background: linear-gradient(90deg, var(--brand), #7fd6f5); }
+    .cert-mini .cm-logo { height: 30px; width: auto; margin-top: 4px; }
+    .cert-mini b { font-size: 13px; font-weight: 900; color: var(--ink); }
+    .cert-mini i { font-style: normal; font-size: 12.5px; font-weight: 800; color: var(--brand-ink); padding-bottom: 5px; border-bottom: 1.5px dotted #9fc0d6; min-width: 150px; max-width: 100%; word-break: break-word; }
+    .cert-mini .cm-seal { margin-top: 4px; width: 34px; height: 34px; display: grid; place-items: center; border: 1.5px solid var(--brand); border-radius: 50%; font-size: 12px; font-weight: 800; color: var(--brand-ink); direction: ltr; }
+    .btn-row { display: flex; gap: 10px; }
+    .btn-row a { flex: 1; display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 13.5px; min-height: 44px; }
+    .btn-row a.outline { background: transparent; color: var(--muted); border: 1.5px solid #e2eaf0; }
+    @media (max-width: 480px) { .step-dot span:not(.circle) { display: none; } .step-sep { width: 14px; } .panel { padding: 22px; } .certificate { padding: 18px 14px; } }
+  </style>
+</helmet>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+  <div style="height:78px"></div>
+  <div class="container">
+    <div class="steps">
+      <div class="steps-dots">
+      <div class="step-dot done"><span class="circle">✓</span><span>السلة</span></div>
+      <div class="step-sep"></div>
+      <div class="step-dot done"><span class="circle">✓</span><span>الدفع</span></div>
+      <div class="step-sep"></div>
+      <div class="step-dot active"><span class="circle">✓</span><span>التأكيد</span></div>
+      </div>
+      <div class="secure-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>عملية موثّقة</span></div>
+    </div>
+    <div class="panel">
+      <div class="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg></div>
+      <h2>شكرًا لك، تم استلام تبرعك</h2>
+      <p>سيصلك إيصال التبرع على بريدك الإلكتروني قريبًا.</p>
+      <div class="receipt-box">
+        <div class="review-row"><span>المتبرع</span><b id="refDonor">—</b></div>
+        <div class="review-row"><span>رقم المرجع</span><b id="refNum">TV-482913</b></div>
+        <div class="review-row"><span>المبلغ الإجمالي</span><b id="refAmount">$300</b></div>
+        <div class="review-row" id="refMonthlyRow" style="display:none"><span>مبلغ شهري متكرر</span><b id="refMonthly">$0</b></div>
+        <div class="review-row"><span>طريقة الدفع</span><b id="refMethod">بطاقة ائتمان</b></div>
+      </div>
+      <div class="certificate">
+        <div class="cert-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="5"/><path d="M8.5 13 7 21l5-3 5 3-1.5-8"/></svg></div>
+        <h3 id="certHeading">شهادة شكر وتقدير</h3>
+        <p class="cert-text" id="certText">شهادة رسمية باسمك تحمل رقم العملية وتاريخ الإصدار، جاهزة للطباعة على مقاس A4 عرضي.</p>
+        <div class="cert-mini" aria-hidden="true">
+          <span class="cm-rule"></span>
+          <img class="cm-logo" src="assets/logo-mark.png" alt="">
+          <b id="certMiniTitle">شهادة شكر وتقدير</b>
+          <i id="certMiniName">—</i>
+          <span class="cm-seal">3673</span>
+        </div>
+        <a class="btn-outline-full" href="Toplum Vakfı Certificate.dc.html">عرض الشهادة وتحميلها</a>
+      </div>
+      <div class="btn-row">
+        <a href="Toplum Vakfı Homepage.dc.html">العودة للرئيسية</a>
+        <a class="outline" href="Toplum Vakfı Projects.dc.html">تصفح مشاريع أخرى</a>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const order = JSON.parse(localStorage.getItem('tv_last_order') || 'null');
+    if (order) {
+      document.getElementById('refNum').textContent = order.ref;
+      // Amounts are stored in USD; show them in the currency chosen in the header.
+      const money = (v) => (window.tvCurrency ? window.tvCurrency.format(Number(v)) : '$' + v);
+      // Older orders carry only `total`; newer ones split one-time from recurring.
+      const once = order.onceTotal != null ? order.onceTotal : order.total;
+      const monthly = Number(order.monthlyTotal || 0);
+      document.getElementById('refAmount').textContent = money(once);
+      if (monthly > 0) {
+        document.getElementById('refMonthly').textContent = money(monthly) + ' / شهريًا';
+        document.getElementById('refMonthlyRow').style.display = 'flex';
+      }
+      document.getElementById('refMethod').textContent = order.method;
+
+      const donor = order.donor || {};
+      const name = (donor.name || '').trim();
+      // Receipt row and certificate need different grammar: the row is a label,
+      // the certificate sentence needs an accusative object.
+      document.getElementById('refDonor').textContent =
+        donor.anonymous ? 'متبرع يفضّل عدم ذكر اسمه' : (name || '—');
+      // The preview mirrors the real certificate sheet, so it shows the same name
+      // and switches title the same way the certificate page does.
+      const miniName = document.getElementById('certMiniName');
+      if (miniName) miniName.textContent = donor.anonymous
+        ? 'متبرع يفضّل عدم ذكر اسمه'
+        : (name || '—');
+      const isWaqf = (order.items || []).some(it => /صدقة جارية|وقف/.test(it.name || ''));
+      if (isWaqf) {
+        const t = 'شهادة صدقة جارية';
+        const h = document.getElementById('certHeading');
+        const mt = document.getElementById('certMiniTitle');
+        if (h) h.textContent = t;
+        if (mt) mt.textContent = t;
+      }
+    }
+  }
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

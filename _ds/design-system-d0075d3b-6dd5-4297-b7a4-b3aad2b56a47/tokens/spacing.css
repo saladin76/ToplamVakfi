@@ -1,0 +1,41 @@
+/* ============================================================
+   Minber-i Aksa — Spacing, radius, elevation & layout tokens
+   ============================================================ */
+:root {
+  /* Radius — the whole system uses a single restrained 8px radius (--r) */
+  --r: 8px;
+  --radius: 8px;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 82px;   /* .band vertical rhythm */
+
+  /* Section padding */
+  --band-y: 82px;       /* standard section */
+  --band-y-tight: 58px; /* mobile / compact */
+
+  /* Container */
+  --container: 1180px;  /* content width */
+  --container-nav: 1240px;
+  --gutter: 32px;
+
+  /* Control sizing (a11y: 44–46px min touch target) */
+  --control-h: 44px;
+  --btn-h: 46px;
+
+  /* Elevation */
+  --shadow-sm: 0 2px 8px rgba(16, 33, 43, .06);
+  --shadow: 0 18px 50px rgba(16, 33, 43, .12);
+  --shadow-cta: 0 12px 24px rgba(179, 71, 50, .24);
+}

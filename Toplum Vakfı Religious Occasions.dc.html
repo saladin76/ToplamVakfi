@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+
+    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 58px; color: #fff; position: relative; overflow: hidden; }
+    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .page-banner-inner { position: relative; z-index: 1; }
+    .page-banner h1 { margin: 0 0 10px; font-size: clamp(28px, 3.4vw, 40px); font-weight: 800; }
+    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 640px; line-height: 1.8; }
+
+    .ro-tabs { display: flex; justify-content: center; gap: 8px; margin: 40px auto 0; flex-wrap: wrap; }
+    .ro-tabs button { padding: 11px 22px; border-radius: 999px; border: 1px solid #e2eaf0; background: #fff; color: var(--ink); font-size: 13.5px; font-weight: 800; }
+    .ro-tabs button.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+    .ro-panel { display: none; max-width: 900px; margin: 30px auto 70px; padding: 0 24px; }
+    .ro-panel.active { display: grid; grid-template-columns: 1.3fr 1fr; gap: 26px; align-items: start; }
+    .ro-info h2 { font-size: 18px; font-weight: 800; margin: 0 0 12px; }
+    .ro-info p { color: var(--muted); font-size: 13.5px; line-height: 1.9; margin: 0 0 12px; }
+    .ro-form { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 24px 26px; box-shadow: 0 12px 28px rgba(2,52,88,.07); }
+    .ro-field { margin-bottom: 14px; }
+    .ro-field label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; }
+    .ro-field input { width: 100%; padding: 10px 13px; border-radius: 9px; background: #f2f6f9; border: 1px solid #e2eaf0; font-size: 13px; font-family: inherit; outline: none; color: var(--ink); }
+    .ro-amounts { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+    .ro-amounts button { flex: 1; min-width: 70px; padding: 9px 6px; border-radius: 8px; border: 1px solid #e2eaf0; background: #f2f6f9; color: var(--ink); font-size: 12.5px; font-weight: 800; }
+    .ro-amounts button.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+    .ro-cta { display: block; width: 100%; text-align: center; background: linear-gradient(135deg, var(--brand-2), #0089cb); color: #fff; padding: 13px 10px; border-radius: 999px; font-weight: 800; font-size: 14px; border: 0; cursor: pointer; }
+    .ro-disclaimer { background: #fff8ec; border: 1px solid #f3e2b8; color: #7a5b12; border-radius: 10px; padding: 12px 16px; font-size: 12px; line-height: 1.8; margin-top: 14px; }
+
+    @media (max-width: 760px) {
+      .ro-panel.active { grid-template-columns: 1fr; padding: 0 20px; }
+    }
+  </style>
+</helmet>
+
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="programs" hint-size="100%,78px"></dc-import>
+
+  <section class="page-banner">
+    <div class="container page-banner-inner">
+      <h1>مناسبات شرعية</h1>
+      <p>كفّارة، فدية، وعقيقة — أدِّ ما عليك ببساطة وتبرع بها مباشرة.</p>
+    </div>
+  </section>
+
+  <div class="ro-tabs">
+    <button type="button" class="active" data-panel="kaffarah">كفّارة</button>
+    <button type="button" data-panel="fidya">فدية الصيام</button>
+    <button type="button" data-panel="aqiqah">عقيقة</button>
+  </div>
+
+  <div class="ro-panel active" id="panel-kaffarah">
+    <div class="ro-info">
+      <h2>الكفّارة</h2>
+      <p>الكفّارة واجب شرعي يلزم في حالات معينة مثل الحلف بالله كذبًا أو حنث اليمين، أو إفساد الصيام في رمضان بلا عذر. من صورها إطعام أو كسوة عشرة مساكين، أو تحرير رقبة، فمن لم يستطع فصيام ثلاثة أيام.</p>
+      <p class="ro-disclaimer">راجع جهة شرعية موثوقة لتحديد نوع الكفّارة الواجبة عليك ومقدارها الدقيق قبل التبرع.</p>
+    </div>
+    <div class="ro-form">
+      <div class="ro-field"><label>عدد الأيام/الحالات</label><input type="number" min="1" value="1"></div>
+      <div class="ro-amounts">
+        <button type="button" class="active" data-amount="50">$50</button>
+        <button type="button" data-amount="100">$100</button>
+        <button type="button" data-amount="200">$200</button>
+      </div>
+      <button class="ro-cta" data-label="كفّارة" type="button">تبرع بالكفّارة</button>
+    </div>
+  </div>
+
+  <div class="ro-panel" id="panel-fidya">
+    <div class="ro-info">
+      <h2>فدية الصيام</h2>
+      <p>الفدية تلزم من عجز عن الصيام عجزًا دائمًا (كبر السن أو مرض لا يُرجى شفاؤه)، وتكون بإطعام مسكين عن كل يوم فائت.</p>
+      <p class="ro-disclaimer">راجع جهة شرعية موثوقة لتأكيد عدد الأيام والمقدار الواجب عليك.</p>
+    </div>
+    <div class="ro-form">
+      <div class="ro-field"><label>عدد الأيام الفائتة</label><input type="number" min="1" value="1"></div>
+      <div class="ro-amounts">
+        <button type="button" class="active" data-amount="10">$10</button>
+        <button type="button" data-amount="30">$30</button>
+        <button type="button" data-amount="60">$60</button>
+      </div>
+      <button class="ro-cta" data-label="فدية الصيام" type="button">تبرع بالفدية</button>
+    </div>
+  </div>
+
+  <div class="ro-panel" id="panel-aqiqah">
+    <div class="ro-info">
+      <h2>العقيقة</h2>
+      <p>العقيقة سنة عند ولادة المولود: شاتان للذكر وشاة للأنثى، تُذبح ويوزَّع لحمها على الفقراء والمحتاجين.</p>
+      <p class="ro-disclaimer">التبرع هنا يوجَّه لتنفيذ العقيقة وتوزيعها على المحتاجين ميدانيًا.</p>
+    </div>
+    <div class="ro-form">
+      <div class="ro-field"><label>اسم المولود (اختياري)</label><input type="text" placeholder="اسم المولود"></div>
+      <div class="ro-amounts">
+        <button type="button" class="active" data-amount="120">$120</button>
+        <button type="button" data-amount="240">$240</button>
+      </div>
+      <button class="ro-cta" data-label="عقيقة" type="button">تبرع بالعقيقة</button>
+    </div>
+  </div>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    document.querySelectorAll('.ro-tabs button').forEach(tab => tab.addEventListener('click', () => {
+      document.querySelectorAll('.ro-tabs button').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.ro-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+    }));
+    document.querySelectorAll('.ro-panel').forEach(panel => {
+      let amount = Number(panel.querySelector('.ro-amounts button.active').dataset.amount);
+      panel.querySelectorAll('.ro-amounts button').forEach(btn => btn.addEventListener('click', () => {
+        panel.querySelectorAll('.ro-amounts button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        amount = Number(btn.dataset.amount);
+      }));
+      panel.querySelector('.ro-cta').addEventListener('click', (e) => {
+        const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+        cart.push({ name: e.target.dataset.label, amount, freq: 'تبرع مرة واحدة' });
+        localStorage.setItem('tv_cart', JSON.stringify(cart));
+        window.location.href = 'Toplum Vakfı Cart.dc.html';
+      });
+    });
+  }
+  renderVals() { return {}; }
+}
+
+</script>
+</body>
+</html>

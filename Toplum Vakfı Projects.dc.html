@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-ink: #0077b3; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - clamp(32px, 5vw, 64px))); margin: 0 auto; }
+
+    .proj-slider { padding-top: 26px; position: relative; }
+    .slider-viewport { width: 100%; overflow: hidden; border-radius: clamp(14px, 1.4vw, 24px); box-shadow: 0 24px 50px rgba(2,52,88,.18); }
+    .slider-track { display: flex; direction: ltr; width: 100%; will-change: transform; }
+    .slide-info { direction: rtl; }
+    .slide { flex: 0 0 100%; width: 100%; min-width: 100%; height: clamp(240px, 34vw, 520px); position: relative; overflow: hidden; }
+    .slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.02); }
+    .slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(2,20,38,.86) 8%, rgba(2,20,38,.35) 45%, rgba(2,20,38,.08)); }
+    .slide-info { position: absolute; z-index: 1; bottom: clamp(22px, 3vw, 48px); right: clamp(20px, 3vw, 56px); color: #fff; max-width: min(520px, 70%); display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+    .slide-info h3 { margin: 0; font-size: clamp(20px, 2.6vw, 40px); font-weight: 900; line-height: 1.25; text-wrap: pretty; }
+    .slide-info a { color: #fff; background: linear-gradient(135deg, var(--brand), #0089cb); padding: clamp(10px, 1vw, 14px) clamp(20px, 2vw, 30px); border-radius: 999px; font-weight: 800; font-size: clamp(12px, 1vw, 14.5px); display: inline-block; box-shadow: 0 10px 24px rgba(0,162,224,.42); transition: transform .2s, box-shadow .2s; }
+    .slide-info a:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,162,224,.55); }
+    .slider-dots { display: flex; gap: 8px; justify-content: center; margin-top: 18px; }
+    .slider-dots span { width: 9px; height: 9px; border-radius: 50%; background: #d3e3ec; cursor: pointer; transition: background .25s, width .25s; }
+    .slider-dots span.active { background: var(--brand); width: 26px; border-radius: 999px; }
+    .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: clamp(40px, 3.2vw, 54px); height: clamp(40px, 3.2vw, 54px); display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.94); box-shadow: 0 10px 24px rgba(2,52,88,.24); border: 0; font-size: clamp(20px, 1.8vw, 26px); line-height: 1; color: var(--ink); cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+    .slider-arrow:hover { background: var(--brand); color: #fff; transform: translateY(-50%) scale(1.06); }
+    .slider-arrow.prev { right: clamp(28px, 3vw, 56px); }
+    .slider-arrow.next { left: clamp(28px, 3vw, 56px); }
+    .filters { display: flex; gap: 6px; flex-wrap: wrap; padding: 6px; margin: 26px 0 24px; background: #fff; border: 1px solid #e6eef3; border-radius: 999px; box-shadow: 0 6px 18px rgba(2,52,88,.06); width: fit-content; max-width: 100%; }
+    .filter-chip { background: transparent; border: 0; color: var(--muted); padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; white-space: nowrap; transition: background .2s, color .2s; }
+    .filter-chip:hover { background: #f2f7fa; color: var(--ink); }
+    .filter-chip.active { background: var(--brand); color: #fff; box-shadow: 0 4px 12px rgba(0,162,224,.32); }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: clamp(14px, 1.3vw, 22px); padding: 30px 0 50px; }
+    .proj-card { background: #fff; border-radius: clamp(14px, 1.2vw, 22px); overflow: hidden; border: 1px solid #eef2f6; box-shadow: 0 10px 26px rgba(2,52,88,.07); transition: transform .25s, box-shadow .25s, border-color .25s; cursor: pointer; display: flex; flex-direction: column; }
+    .proj-card:hover { transform: translateY(-6px); box-shadow: 0 26px 52px rgba(2,52,88,.16); border-color: rgba(0,162,224,.28); }
+    .proj-image { aspect-ratio: 16/10; background-position: center; background-size: cover; position: relative; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+    .proj-card:hover .proj-image { transform: scale(1.06); }
+    .proj-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,20,38,0) 55%, rgba(2,20,38,.4)); }
+    .proj-state { position: absolute; top: 14px; right: 16px; font-size: 12px; font-weight: 800; padding: 6px 13px; border-radius: 999px; color: #fff; }
+    .proj-state.urgent { background: #d64545; }
+    .proj-state.paused { background: #8a97a3; }
+    .proj-card.is-paused { opacity: .75; cursor: default; }
+    .proj-card.is-paused .proj-btn { background: #cfd8de !important; pointer-events: none; }
+    .proj-body { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.2vw, 20px) clamp(13px, 1.1vw, 18px); display: flex; flex-direction: column; flex: 1; }
+    .proj-body h3 { margin: 0 0 6px; font-size: clamp(14.5px, 1vw, 17px); font-weight: 800; color: var(--ink); line-height: 1.4; text-wrap: pretty; }
+    .proj-body p { margin: 0 0 13px; color: var(--muted); font-size: 12px; line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .proj-progress-row { margin-top: auto; }
+    .proj-progress-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 7px; }
+    .proj-progress-row b { font-size: 13px; font-weight: 800; color: var(--brand-ink); white-space: nowrap; }
+    .proj-progress-row span { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .proj-progress { height: 7px; background: #eef3f7; border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+    .proj-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), #4fc3f7); border-radius: 999px; box-shadow: 0 0 10px rgba(0,162,224,.5); }
+    .proj-amounts-row { display: flex; gap: 6px; margin-bottom: 12px; }
+    .proj-amounts { display: flex; gap: 6px; flex: 3; }
+    .proj-amounts button { flex: 1; position: relative; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 999px; padding: 9px 4px; font-size: 12.5px; font-weight: 800; color: var(--ink); cursor: pointer; transition: background .15s, border-color .15s, color .15s, transform .15s; direction: ltr; font-family: inherit; }
+    .proj-amounts button:hover { border-color: var(--brand); transform: translateY(-1px); }
+    .proj-amounts button.active { background: linear-gradient(135deg, var(--brand), #0089cb); border-color: var(--brand); color: #fff; box-shadow: 0 8px 18px rgba(0,162,224,.38); }
+    .proj-custom { position: relative; flex: 1.6; }
+    .proj-custom input { width: 100%; height: 100%; box-sizing: border-box; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 999px; padding: 9px 10px; font-size: 12px; font-weight: 700; color: var(--ink); font-family: inherit; text-align: center; outline: none; transition: border-color .15s, background .15s; }
+    .proj-custom input::placeholder { color: var(--muted); font-weight: 600; }
+    .proj-custom input:focus { border-color: var(--brand); background: #fff; }
+    .proj-actions { display: flex; gap: 8px; }
+    .proj-btn { flex: 1.3; display: flex; align-items: center; justify-content: center; gap: 6px; background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; padding: 11px; border: 0; border-radius: 999px; font-weight: 800; font-size: 13px; white-space: nowrap; cursor: pointer; font-family: inherit; box-shadow: 0 8px 18px rgba(0,162,224,.3); transition: box-shadow .2s, transform .2s; }
+    .proj-btn:hover { box-shadow: 0 12px 26px rgba(0,162,224,.42); transform: translateY(-1px); }
+    .proj-cart { flex: 1.1; display: flex; align-items: center; justify-content: center; background: #f2f6f9; color: var(--ink); border: 1px solid #e2eaf0; padding: 11px 6px; border-radius: 999px; font-weight: 700; font-size: 12px; white-space: nowrap; cursor: pointer; font-family: inherit; transition: background .15s, border-color .15s, color .15s, transform .15s; }
+    .proj-cart:hover { background: #eaf6fd; border-color: var(--brand); color: var(--brand); transform: translateY(-1px); }
+
+    .mobile-sticky-donate { display: none; }
+    @media (max-width: 900px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .proj-progress-row span, .proj-state { font-size: 12px; }
+      .slide { height: 260px; }
+      .slider-arrow { width: 36px; height: 36px; font-size: 15px; }
+      .slider-arrow.prev { right: 12px; } .slider-arrow.next { left: 12px; }
+      .slide-info { right: 18px; bottom: 18px; max-width: calc(100% - 36px); }
+      .slide-info h3 { font-size: 18px; }
+      .filters { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 5px; margin: 20px 0; gap: 4px; scroll-snap-type: x mandatory; width: 100%; border-radius: 999px; mask-image: linear-gradient(to left, transparent, black 20px, black calc(100% - 20px), transparent); }
+      .filters::-webkit-scrollbar { display: none; }
+      .filter-chip { flex-shrink: 0; scroll-snap-align: start; padding: 11px 16px; font-size: 12.5px; }
+      .mobile-sticky-donate { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500; padding: 12px 16px; background: #fff; box-shadow: 0 -8px 24px rgba(2,20,38,.15); }
+      .mobile-sticky-donate a { display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 14px; min-height: 44px; }
+      body { padding-bottom: 70px; }
+    }
+  </style>
+
+<div dir="rtl">
+<dc-import name="Toplum Vakfı Header" active-key="projects" hint-size="100%,78px"></dc-import>
+<div class="mobile-sticky-donate"><a href="Toplum Vakfı Cart.dc.html">تبرع الآن</a></div>
+<div style="padding-top:78px">
+
+  <section class="proj-slider">
+    <div class="container">
+      <div class="slider-viewport">
+      <div class="slider-track" id="sliderTrack">
+        <div class="slide">
+          <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1600&q=85" alt="" crossorigin="anonymous">
+          <div class="slide-info"><h3>بناء دار أيتام في سوريا</h3><a href="Toplum Vakfı Project - Dar Aytam.dc.html">عرض المشروع ←</a></div>
+        </div>
+        <div class="slide">
+          <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1600&q=85" alt="" crossorigin="anonymous">
+          <div class="slide-info"><h3>تسديد ديون الغارمين في أفريقيا</h3><a href="Toplum Vakfı Project - Gharimin.dc.html">عرض المشروع ←</a></div>
+        </div>
+        <div class="slide">
+          <img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=1600&q=85" alt="" crossorigin="anonymous">
+          <div class="slide-info"><h3>ترميم مدرسة الإبداع في سوريا</h3><a href="Toplum Vakfı Project - Schools Restoration.dc.html">عرض المشروع ←</a></div>
+        </div>
+      </div>
+      </div>
+      <div class="slider-dots" id="sliderDots"></div>
+      <button class="slider-arrow prev" id="sliderPrev" aria-label="السابق">›</button>
+      <button class="slider-arrow next" id="sliderNext" aria-label="التالي">‹</button>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="filters">
+      <button class="filter-chip active" type="button" data-filter="الكل">الكل</button>
+      <button class="filter-chip" type="button" data-filter="حملة أمل">حملة أمل</button>
+      <button class="filter-chip" type="button" data-filter="بناء الإنسان">بناء الإنسان</button>
+      <button class="filter-chip" type="button" data-filter="المياه والسكن">المياه والسكن</button>
+      <button class="filter-chip" type="button" data-filter="التمكين الاجتماعي">التمكين الاجتماعي</button>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+      <div class="proj-card" data-href="Toplum Vakfı Project - Dar Aytam.dc.html" data-category="بناء الإنسان">
+        <div class="proj-image" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80')"></div>
+        <div class="proj-body">
+          <h3>بناء دار أيتام في سوريا</h3>
+          <p>دار رعاية متكاملة تجمع السكن والتعليم والرعاية الصحية والدعم النفسي في خان العسل بحلب.</p>
+          <div class="proj-progress-row"><b>62% مكتمل</b><span>48 طفلًا مستهدفًا · 6 أشهر</span></div>
+          <div class="proj-progress"><span style="width:62%"></span></div>
+          <div class="proj-amounts-row"><div class="proj-amounts"><button type="button" class="active" data-amt="100">$100</button><button type="button" data-amt="300">$300</button><button type="button" data-amt="500">$500</button></div><div class="proj-custom"><input type="number" placeholder="مبلغ آخر"></div></div>
+          <div class="proj-actions"><button class="proj-btn" type="button">تبرع للمشروع</button><button class="proj-cart" type="button" title="أضف للسلة" data-name="بناء دار أيتام في سوريا">+ أضف للسلة</button></div>
+        </div>
+      </div>
+      <div class="proj-card is-paused" data-href="Toplum Vakfı Project - Gharimin.dc.html" data-category="التمكين الاجتماعي">
+        <div class="proj-image" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80')"><span class="proj-state paused">متوقف مؤقتًا</span></div>
+        <div class="proj-body">
+          <h3>تسديد ديون الغارمين في أفريقيا</h3>
+          <p>وصل المشروع لعدد الحالات المستهدفة لهذه المرحلة. التبرعات متوقفة مؤقتًا لحين إعلان مرحلة جديدة.</p>
+          <div class="proj-progress-row"><b>40% مكتمل</b><span>1,000 سهم مستهدف · $250 / أسرة</span></div>
+          <div class="proj-progress"><span style="width:40%"></span></div>
+          <div class="proj-actions"><span class="proj-btn" style="background:#cfd8de;color:#5d7187;cursor:default">التبرع متوقف حاليًا</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-href="Toplum Vakfı Project - Schools Restoration.dc.html" data-category="بناء الإنسان">
+        <div class="proj-image" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80')"></div>
+        <div class="proj-body">
+          <h3>ترميم مدرسة الإبداع في سوريا</h3>
+          <p>إعادة تأهيل مرافق تعليمية ودينية متضررة لتعود قادرة على استقبال المجتمع.</p>
+          <div class="proj-progress-row"><b>28% مكتمل</b><span>عدة مواقع · مستمر</span></div>
+          <div class="proj-progress"><span style="width:28%"></span></div>
+          <div class="proj-amounts-row"><div class="proj-amounts"><button type="button" class="active" data-amt="100">$100</button><button type="button" data-amt="300">$300</button><button type="button" data-amt="500">$500</button></div><div class="proj-custom"><input type="number" placeholder="مبلغ آخر"></div></div>
+          <div class="proj-actions"><button class="proj-btn" type="button">تبرع للمشروع</button><button class="proj-cart" type="button" title="أضف للسلة" data-name="ترميم مدرسة الإبداع في سوريا">+ أضف للسلة</button></div>
+        </div>
+      </div>
+      <div class="proj-card" data-href="Toplum Vakfı Project - Food Baskets.dc.html" data-category="حملة أمل">
+        <div class="proj-image" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80')"><span class="proj-state urgent">عاجل</span></div>
+        <div class="proj-body">
+          <h3>وجبات الإفطار - فلسطين</h3>
+          <p>توزيع مساعدات غذائية أساسية للأسر الأكثر حاجة في مواقع الأزمات.</p>
+          <div class="proj-progress-row"><b>75% مكتمل</b><span>موسمي · عاجل</span></div>
+          <div class="proj-progress"><span style="width:75%"></span></div>
+          <div class="proj-amounts-row"><div class="proj-amounts"><button type="button" class="active" data-amt="50">$50</button><button type="button" data-amt="100">$100</button><button type="button" data-amt="250">$250</button></div><div class="proj-custom"><input type="number" placeholder="مبلغ آخر"></div></div>
+          <div class="proj-actions"><button class="proj-btn" type="button">تبرع للمشروع</button><button class="proj-cart" type="button" title="أضف للسلة" data-name="وجبات الإفطار - فلسطين">+ أضف للسلة</button></div>
+        </div>
+      </div>
+      <div class="proj-card" data-href="Toplum Vakfı Project - Water Wells.dc.html" data-category="المياه والسكن">
+        <div class="proj-image" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80')"></div>
+        <div class="proj-body">
+          <h3>حفر آبار مياه في القرى النائية</h3>
+          <p>توفير مصدر مياه نظيفة ومستدامة للمجتمعات التي تعاني من نقص المياه.</p>
+          <div class="proj-progress-row"><b>50% مكتمل</b><span>عدة قرى · مستمر</span></div>
+          <div class="proj-progress"><span style="width:50%"></span></div>
+          <div class="proj-amounts-row"><div class="proj-amounts"><button type="button" class="active" data-amt="100">$100</button><button type="button" data-amt="300">$300</button><button type="button" data-amt="700">$700</button></div><div class="proj-custom"><input type="number" placeholder="مبلغ آخر"></div></div>
+          <div class="proj-actions"><button class="proj-btn" type="button">تبرع للمشروع</button><button class="proj-cart" type="button" title="أضف للسلة" data-name="حفر آبار مياه في القرى النائية">+ أضف للسلة</button></div>
+        </div>
+      </div>
+      <div class="proj-card" data-href="Toplum Vakfı Project - Quran Scholarships.dc.html" data-category="حملة أمل">
+        <div class="proj-image" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80')"></div>
+        <div class="proj-body">
+          <h3>تحفيظ القرآن الكريم - فلسطين</h3>
+          <p>دعم مسار تعليمي متكامل لحفظة القرآن الكريم من الأسر ذات الدخل المحدود.</p>
+          <div class="proj-progress-row"><b>35% مكتمل</b><span>عدة طلاب · سنوي</span></div>
+          <div class="proj-progress"><span style="width:35%"></span></div>
+          <div class="proj-amounts-row"><div class="proj-amounts"><button type="button" class="active" data-amt="100">$100</button><button type="button" data-amt="250">$250</button><button type="button" data-amt="500">$500</button></div><div class="proj-custom"><input type="number" placeholder="مبلغ آخر"></div></div>
+          <div class="proj-actions"><button class="proj-btn" type="button">تبرع للمشروع</button><button class="proj-cart" type="button" title="أضف للسلة" data-name="تحفيظ القرآن الكريم - فلسطين">+ أضف للسلة</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px"><dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    document.querySelectorAll('.filter-chip').forEach(chip => chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const filter = chip.dataset.filter;
+      document.querySelectorAll('#projectsGrid .proj-card').forEach(card => {
+        card.style.display = (filter === 'الكل' || card.dataset.category === filter) ? '' : 'none';
+      });
+    }));
+
+    const track = document.getElementById('sliderTrack');
+    const dotsWrap = document.getElementById('sliderDots');
+    const slides = track ? track.children.length : 0;
+    let current = 0;
+    if (track) {
+      for (let i = 0; i < slides; i++) {
+        const dot = document.createElement('span');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(dot);
+      }
+      function goTo(i) {
+        current = (i + slides) % slides;
+        track.style.transform = `translateX(${current * 100}%)`;
+        [...dotsWrap.children].forEach((d, idx) => d.classList.toggle('active', idx === current));
+      }
+      track.style.transition = 'transform .65s cubic-bezier(.4,0,.2,1)';
+      document.getElementById('sliderPrev').addEventListener('click', () => { goTo(current - 1); restart(); });
+      document.getElementById('sliderNext').addEventListener('click', () => { goTo(current + 1); restart(); });
+      let timer = setInterval(() => goTo(current + 1), 6000);
+      function restart() { clearInterval(timer); timer = setInterval(() => goTo(current + 1), 6000); }
+      const viewport = track.parentElement;
+      viewport.addEventListener('mouseenter', () => clearInterval(timer));
+      viewport.addEventListener('mouseleave', restart);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { goTo(current + 1); restart(); }
+        if (e.key === 'ArrowRight') { goTo(current - 1); restart(); }
+      });
+      let startX = null;
+      viewport.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend', (e) => {
+        if (startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 45) { goTo(current + (dx > 0 ? -1 : 1)); restart(); }
+        startX = null;
+      });
+    }
+    document.querySelectorAll('.proj-card[data-href]').forEach(card => card.addEventListener('click', (e) => {
+      if (e.target.closest('.proj-actions') || e.target.closest('.proj-amounts')) return;
+      window.location.href = card.dataset.href;
+    }));
+    document.querySelectorAll('.proj-amounts').forEach(wrap => wrap.querySelectorAll('button').forEach(btn => btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      wrap.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const customInput = wrap.parentElement.querySelector('.proj-custom input');
+      if (customInput) customInput.value = '';
+    })));
+    document.querySelectorAll('.proj-custom input').forEach(input => {
+      input.addEventListener('click', (e) => e.stopPropagation());
+      input.addEventListener('input', () => {
+        const card = input.closest('.proj-card');
+        if (input.value) card.querySelectorAll('.proj-amounts button').forEach(b => b.classList.remove('active'));
+      });
+    });
+    document.querySelectorAll('.proj-card .proj-btn').forEach(btn => {
+      if (btn.tagName !== 'BUTTON') return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.proj-card');
+        const activeAmt = card.querySelector('.proj-amounts button.active');
+        const customInput = card.querySelector('.proj-custom input');
+        const amt = customInput && Number(customInput.value) > 0 ? Number(customInput.value) : (activeAmt ? Number(activeAmt.dataset.amt) : 100);
+        const name = card.querySelector('h3').textContent.trim();
+        const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+        cart.push({ name, amount: amt, freq: 'تبرع مرة واحدة' });
+        localStorage.setItem('tv_cart', JSON.stringify(cart));
+        window.location.href = 'Toplum Vakfı Cart.dc.html';
+      });
+    });
+    document.querySelectorAll('.proj-cart').forEach(btn => btn.addEventListener('click', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const card = btn.closest('.proj-card');
+      const activeAmt = card.querySelector('.proj-amounts button.active');
+      const customInput = card.querySelector('.proj-custom input');
+      const amt = customInput && Number(customInput.value) > 0 ? Number(customInput.value) : (activeAmt ? Number(activeAmt.dataset.amt) : 100);
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name: btn.dataset.name || 'مشروع', amount: amt, freq: 'تبرع مرة واحدة' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+      btn.textContent = 'أُضيف ✓';
+      setTimeout(() => { window.location.href = 'Toplum Vakfı Cart.dc.html'; }, 700);
+    }));
+  }
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

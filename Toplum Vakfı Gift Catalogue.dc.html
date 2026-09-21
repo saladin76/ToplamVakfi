@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; }
+    .container { width: min(1180px, calc(100% - clamp(32px, 5vw, 64px))); margin: 0 auto; }
+
+    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
+    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
+    .page-banner-inner { position: relative; z-index: 1; }
+    .page-banner h1 { margin: 0 0 10px; font-size: clamp(28px, 3.4vw, 42px); font-weight: 800; }
+    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
+
+    .gc-note { display: flex; align-items: flex-start; gap: 10px; background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px 20px; margin: 30px auto 0; box-shadow: 0 8px 20px rgba(2,52,88,.06); }
+    .gc-note svg { width: 18px; height: 18px; color: var(--brand); flex-shrink: 0; margin-top: 2px; }
+    .gc-note p { margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+
+    .gc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: clamp(16px, 1.6vw, 26px); padding: 30px 0 70px; }
+    .gc-card { background: #fff; border: 1px solid #eef2f6; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 26px rgba(2,52,88,.07); display: flex; flex-direction: column; transition: transform .25s, box-shadow .25s, border-color .25s; }
+    .gc-card:hover { transform: translateY(-5px); box-shadow: 0 24px 48px rgba(2,52,88,.15); border-color: rgba(0,162,224,.28); }
+    .gc-img { aspect-ratio: 16/10; background-position: center; background-size: cover; position: relative; }
+    .gc-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(2,20,38,0) 55%, rgba(2,20,38,.38)); }
+    .gc-body { padding: 20px 22px 22px; display: flex; flex-direction: column; flex: 1; }
+    .gc-body h3 { margin: 0 0 7px; font-size: 16.5px; font-weight: 800; line-height: 1.4; }
+    .gc-body p { margin: 0 0 16px; color: var(--muted); font-size: 12.5px; line-height: 1.8; }
+    .gc-price { margin-top: auto; display: flex; align-items: baseline; gap: 6px; margin-bottom: 14px; padding-top: 14px; border-top: 1px solid #eef2f5; }
+    .gc-price b { font-size: 24px; font-weight: 900; color: var(--brand); direction: ltr; }
+    .gc-price span { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .gc-actions { display: flex; gap: 8px; }
+    .gc-btn { flex: 1.4; display: flex; align-items: center; justify-content: center; min-height: 46px; background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; border: 0; border-radius: 999px; font-weight: 800; font-size: 13.5px; cursor: pointer; box-shadow: 0 8px 18px rgba(0,162,224,.3); transition: transform .2s, box-shadow .2s; }
+    .gc-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(0,162,224,.42); }
+    .gc-cart { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 46px; background: #f2f6f9; border: 1px solid #e2eaf0; color: var(--ink); border-radius: 999px; font-weight: 700; font-size: 12.5px; cursor: pointer; transition: background .2s, border-color .2s, color .2s; }
+    .gc-cart:hover { background: #eaf6fd; border-color: var(--brand); color: var(--brand); }
+
+    .gc-dedicate { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 26px 28px; margin-bottom: 60px; box-shadow: 0 12px 28px rgba(2,52,88,.07); }
+    .gc-dedicate h2 { margin: 0 0 6px; font-size: 16px; font-weight: 800; }
+    .gc-dedicate > p { margin: 0 0 18px; color: var(--muted); font-size: 12.5px; line-height: 1.8; }
+    .gc-field { margin-bottom: 14px; }
+    .gc-field label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; }
+    .gc-field input { width: 100%; min-height: 46px; padding: 11px 14px; border-radius: 10px; background: #f2f6f9; border: 1.5px solid #e2eaf0; font-size: 13px; color: var(--ink); font-family: inherit; outline: none; transition: border-color .2s, background .2s; }
+    .gc-field input:focus { border-color: var(--brand); background: #fff; }
+
+    @media (max-width: 600px) { .gc-actions { flex-direction: column; } .gc-btn, .gc-cart { flex: 0 0 auto; width: 100%; } }
+  </style>
+</helmet>
+
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="projects" hint-size="100%,78px"></dc-import>
+
+  <section class="page-banner">
+    <div class="container page-banner-inner">
+      <h1>تبرع بهدية</h1>
+      <p>اختر عطاءً محددًا تُهديه باسمك أو باسم من تحب — تصل قيمته إلى الميدان كبند مخصص.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="gc-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
+      <p>القيم المعروضة تقديرية لتوجيه التبرع، وتتغير بحسب الدولة وتكاليف التنفيذ الفعلية وقت التوزيع. القيمة النهائية تعتمدها المؤسسة عند تنفيذ البند.</p>
+    </div>
+
+    <div class="gc-grid">
+      <div class="gc-card">
+        <div class="gc-img" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=700&q=85')"></div>
+        <div class="gc-body">
+          <h3>سلة غذائية لأسرة</h3>
+          <p>مواد غذائية أساسية تكفي أسرة لمدة شهر، تُسلَّم ميدانيًا عبر فريق التوزيع.</p>
+          <div class="gc-price"><b>$75</b><span>للسلة الواحدة</span></div>
+          <div class="gc-actions">
+            <button class="gc-btn" type="button" data-name="سلة غذائية لأسرة" data-amount="75">تبرع بهذه الهدية</button>
+            <button class="gc-cart" type="button" data-name="سلة غذائية لأسرة" data-amount="75">أضف للسلة</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gc-card">
+        <div class="gc-img" style="background-image:url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=700&q=85')"></div>
+        <div class="gc-body">
+          <h3>بئر مياه نظيفة</h3>
+          <p>مصدر مياه دائم لمجتمع محتاج، بلوحة تحمل اسمك أو اسم من تُهديه.</p>
+          <div class="gc-price"><b>$1,500</b><span>للبئر الواحدة</span></div>
+          <div class="gc-actions">
+            <button class="gc-btn" type="button" data-name="بئر مياه نظيفة" data-amount="1500">تبرع بهذه الهدية</button>
+            <button class="gc-cart" type="button" data-name="بئر مياه نظيفة" data-amount="1500">أضف للسلة</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gc-card">
+        <div class="gc-img" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=85')"></div>
+        <div class="gc-body">
+          <h3>حقيبة مدرسية لطالب</h3>
+          <p>حقيبة وأدوات دراسية وزيّ مدرسي تُهيّئ الطالب لعام دراسي كامل.</p>
+          <div class="gc-price"><b>$40</b><span>للطالب الواحد</span></div>
+          <div class="gc-actions">
+            <button class="gc-btn" type="button" data-name="حقيبة مدرسية لطالب" data-amount="40">تبرع بهذه الهدية</button>
+            <button class="gc-cart" type="button" data-name="حقيبة مدرسية لطالب" data-amount="40">أضف للسلة</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gc-card">
+        <div class="gc-img" style="background-image:url('https://images.unsplash.com/photo-1542601098-8fc114e148f1?auto=format&fit=crop&w=700&q=85')"></div>
+        <div class="gc-body">
+          <h3>غرس شجرة</h3>
+          <p>صدقة جارية تبقى أثرها: شجرة مثمرة في أرض محتاجة تحمل لوحة باسم من تختار.</p>
+          <div class="gc-price"><b>$25</b><span>للشجرة الواحدة</span></div>
+          <div class="gc-actions">
+            <button class="gc-btn" type="button" data-name="غرس شجرة" data-amount="25">تبرع بهذه الهدية</button>
+            <button class="gc-cart" type="button" data-name="غرس شجرة" data-amount="25">أضف للسلة</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gc-card">
+        <div class="gc-img" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=700&q=85')"></div>
+        <div class="gc-body">
+          <h3>مصحف ومنحة تحفيظ</h3>
+          <p>مصحف وأدوات ودعم حلقة تحفيظ لطالب واحد خلال فصل دراسي.</p>
+          <div class="gc-price"><b>$60</b><span>للطالب الواحد</span></div>
+          <div class="gc-actions">
+            <button class="gc-btn" type="button" data-name="مصحف ومنحة تحفيظ" data-amount="60">تبرع بهذه الهدية</button>
+            <button class="gc-cart" type="button" data-name="مصحف ومنحة تحفيظ" data-amount="60">أضف للسلة</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gc-card">
+        <div class="gc-img" style="background-image:url('assets/hero-bg.jpg')"></div>
+        <div class="gc-body">
+          <h3>كسوة شتوية لطفل</h3>
+          <p>معطف وحذاء وملابس شتوية تحمي طفلًا من برد الشتاء في مناطق النزوح.</p>
+          <div class="gc-price"><b>$50</b><span>للطفل الواحد</span></div>
+          <div class="gc-actions">
+            <button class="gc-btn" type="button" data-name="كسوة شتوية لطفل" data-amount="50">تبرع بهذه الهدية</button>
+            <button class="gc-cart" type="button" data-name="كسوة شتوية لطفل" data-amount="50">أضف للسلة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gc-dedicate">
+      <h2>إهداء التبرع</h2>
+      <p>اكتب اسم من تُهديه هذا العطاء، وسيُسجَّل مع بند تبرعك.</p>
+      <div class="gc-field">
+        <label for="gcName">اسم المُهدى إليه (اختياري)</label>
+        <input type="text" id="gcName" placeholder="اسم من تُهديه هذا التبرع">
+      </div>
+    </div>
+  </div>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const label = (base) => {
+      const n = (document.getElementById('gcName').value || '').trim();
+      return n ? base + ' — إهداء إلى ' + n : base;
+    };
+    const push = (name, amount) => {
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name, amount: Number(amount), freq: 'تبرع مرة واحدة' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+    };
+    document.querySelectorAll('.gc-btn').forEach(btn => btn.addEventListener('click', () => {
+      push(label(btn.dataset.name), btn.dataset.amount);
+      window.location.href = 'Toplum Vakfı Cart.dc.html';
+    }));
+    document.querySelectorAll('.gc-cart').forEach(btn => btn.addEventListener('click', () => {
+      push(label(btn.dataset.name), btn.dataset.amount);
+      const t = btn.textContent;
+      btn.textContent = '✓ أُضيف';
+      setTimeout(() => { btn.textContent = t; }, 1500);
+    }));
+  }
+  renderVals() { return {}; }
+}
+
+</script>
+</body>
+</html>

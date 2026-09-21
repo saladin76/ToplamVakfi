@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-ink: #0077b3; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; }
+    * { box-sizing: border-box; }
+    .tv-header-root, .tv-header-root * { font-family: Cairo, Arial, sans-serif; }
+    .tv-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 78px; background: #fff; border-bottom: 1px solid rgba(6,36,66,.08); box-shadow: 0 2px 24px rgba(6,36,66,.05); }
+    .tv-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #0089cb, var(--brand) 45%, #7fd6f5); opacity: .9; }
+    .tv-header-shell { height: 100%; padding: 0 40px; background: transparent; }
+    .tv-header-row { position: relative; height: 100%; display: flex; align-items: center; gap: 16px; max-width: 1140px; margin: 0 auto; }
+    .tv-brand-lang { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .tv-brand { display: inline-flex; align-items: center; color: var(--brand); text-decoration: none; }
+    .tv-brand-logo { height: 40px; width: auto; filter: drop-shadow(0 2px 5px rgba(0,16,33,.10)); }
+    .tv-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .tv-lang, .tv-curr { position: relative; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; color: #33495e; background: transparent; border: 0; cursor: pointer; padding: 0; transition: background .2s, color .2s; }
+    .tv-lang:hover, .tv-curr:hover { background: #f5f8fa; color: var(--brand); }
+    .tv-lang svg { width: 19px; height: 19px; }
+    .tv-curr-symbol { font-size: 15px; font-weight: 800; }
+    .tv-dd-label { display: none; }
+    .tv-dropdown-menu { position: fixed; min-width: 130px; background: #fff; border: 1px solid #e6eef3; border-radius: 12px; box-shadow: 0 16px 32px rgba(2,52,88,.16); padding: 6px; display: none; flex-direction: column; gap: 2px; z-index: 2000; }
+    .tv-dropdown-menu.open { display: flex; }
+    .tv-dropdown-menu button { text-align: right; background: transparent; border: 0; padding: 8px 12px; font-size: 13px; font-weight: 600; color: var(--ink); border-radius: 8px; cursor: pointer; }
+    .tv-dropdown-menu button:hover { background: #eaf6fd; color: var(--brand); }
+    .tv-search-field { position: fixed; top: 78px; left: 0; right: 0; z-index: 1500; background: #fff; border-bottom: 1px solid #e6eef3; box-shadow: 0 14px 30px rgba(6,36,66,.1); padding: 14px 20px; display: none; }
+    .tv-search-field.open { display: block; }
+    .tv-search-field form { display: flex; gap: 8px; max-width: 620px; margin: 0 auto; background: #f5f8fa; border: 1.5px solid #e2eaf0; border-radius: 999px; padding: 4px 4px 4px 16px; }
+    .tv-search-field input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; font-family: inherit; font-size: 14px; color: var(--ink); text-align: right; }
+    .tv-search-field button { background: var(--brand); color: #fff; border: 0; border-radius: 999px; padding: 10px 22px; font-family: inherit; font-weight: 800; font-size: 13px; cursor: pointer; }
+    .tv-icon-badge { position: absolute; top: 2px; inset-inline-end: 2px; min-width: 17px; height: 17px; padding: 0 4px; display: none; place-items: center; border-radius: 999px; background: #b3391f; color: #fff; font-size: 11px; font-weight: 800; line-height: 17px; text-align: center; }
+    .tv-icon-badge.show { display: block; }
+    .tv-nav { display: flex; align-items: center; justify-content: center; gap: clamp(10px, 1.6vw, 22px); flex: 1; min-width: 0; padding-inline: 8px; }
+    .tv-nav a { position: relative; color: #23405c; font-size: 14px; text-decoration: none; font-weight: 600; letter-spacing: .1px; white-space: nowrap; padding: 6px 2px; transition: color .2s; }
+    .tv-nav a::after { content: ""; position: absolute; right: 0; left: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--brand); transform: scaleX(0); transform-origin: center; transition: transform .25s ease; }
+    .tv-nav a:hover { color: var(--brand); }
+    .tv-nav a:hover::after, .tv-nav a.active::after { transform: scaleX(1); }
+    .tv-nav a.active { color: var(--brand); font-weight: 700; }
+    .tv-divider { width: 1px; height: 26px; background: rgba(6,36,66,.12); flex-shrink: 0; }
+    .tv-icon-group { display: flex; align-items: center; gap: 2px; background: #f5f8fa; border-radius: 999px; padding: 3px; }
+    .tv-search { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; color: #33495e; background: transparent; border: 0; cursor: pointer; transition: background .2s, color .2s; }
+    .tv-search:hover { background: #fff; color: var(--brand); box-shadow: 0 2px 8px rgba(6,36,66,.1); }
+    .tv-search svg { width: 18px; height: 18px; }
+    .tv-icon-btn { position: relative; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; color: #33495e; background: transparent; text-decoration: none; transition: background .2s, color .2s; }
+    .tv-icon-btn:hover { background: #fff; color: var(--brand); box-shadow: 0 2px 8px rgba(6,36,66,.1); }
+    .tv-icon-btn svg { width: 19px; height: 19px; }
+    .tv-donate-top { display: inline-flex; align-items: center; color: #fff; background: linear-gradient(135deg, var(--brand), #0089cb); padding: 11px 24px; border-radius: 999px; font-weight: 800; font-size: 13.5px; white-space: nowrap; box-shadow: 0 8px 18px rgba(0,162,224,.3); border: 0; cursor: pointer; text-decoration: none; transition: box-shadow .2s, transform .2s; }
+    .tv-donate-top:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,162,224,.42); }
+    .tv-mobile-menu { display: none; }
+    .tv-mobile-menu svg { width: 21px; height: 21px; }
+    .tv-drawer-group { margin-top: 18px; }
+    .tv-drawer-group > span { display: block; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .4px; margin-bottom: 6px; }
+    .tv-drawer-picks { display: flex; gap: 8px; margin-top: 14px; }
+    .tv-drawer-picks select { flex: 1; min-width: 0; background: #f5f8fa; border: 1px solid #e2eaf0; border-radius: 10px; padding: 11px 10px; font-family: inherit; font-size: 12.5px; font-weight: 700; color: var(--ink); outline: none; }
+    .tv-drawer-overlay { position: fixed; inset: 0; background: rgba(2,20,38,.5); z-index: 1999; opacity: 0; pointer-events: none; transition: opacity .25s; }
+    .tv-drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .tv-drawer { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #fff; z-index: 2000; box-shadow: -10px 0 30px rgba(0,0,0,.2); transition: right .3s ease; display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
+    .tv-drawer.open { right: 0; }
+    .tv-drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e6eef3; }
+    .tv-drawer-head button { width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: 0; font-size: 18px; color: var(--ink); cursor: pointer; }
+    .tv-drawer a { display: block; padding: 13px 6px; color: #17324c; font-size: 14.5px; font-weight: 700; text-decoration: none; border-bottom: 1px solid #f0f4f7; }
+    .tv-drawer a:hover { color: var(--brand); }
+    .tv-drawer-donate { margin-top: 16px; background: var(--brand); color: #fff !important; text-align: center; border-radius: 999px; border-bottom: 0 !important; }
+    @media (max-width: 1180px) { .tv-header-shell { padding-inline: 18px 14px; } .tv-nav { gap: 10px; } .tv-nav a { font-size: 12px; } }
+    @media (max-width: 860px) { .tv-nav { gap: 7px; } .tv-nav a { font-size: 11.5px; } .tv-actions { gap: 7px; } .tv-donate-top { padding: 0 16px; font-size: 12.5px; } .tv-icon-group { gap: 0; } }
+    .tv-mcluster { display: flex; align-items: center; gap: inherit; }
+    .tv-mhome, .tv-mrail, .dn-short { display: none; }
+    /* Single compact-layout block. The desktop row needs 810px min-content, so this
+       takes over just below that; edges stay anchored so the header never floats.
+       Control heights are unified at 40px per the user's «صغر الايقونات». */
+    @media (max-width: 828px) {
+      .tv-lang, .tv-curr, .tv-nav, .tv-search, .tv-divider, .tv-icon-group { display: none; }
+      .tv-header { height: 66px; }
+      .tv-header-shell { padding: 0 14px; }
+      .tv-header-row { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .tv-brand-logo { height: 40px; }
+      /* Donate is hidden at this width, so spread the remaining controls instead of
+         letting the freed width collect as one void beside the logo. */
+      .tv-mcluster { flex: 1; justify-content: space-between; gap: 8px; min-width: 0; }
+      .tv-mrail { flex: 1; justify-content: space-around; }
+      .tv-actions { margin-inline-start: 0; gap: 8px; }
+      .tv-donate-top { height: 44px; padding: 0 18px; font-size: 13px; border-radius: 12px; box-shadow: 0 6px 14px rgba(0,162,224,.28); }
+
+      .tv-mhome { flex-shrink: 0; }
+      .tv-mhome svg { width: 18px; height: 18px; }
+
+      /* 44px buttons + 2px pill padding = a 48px pill, inside the 66px header. */
+      .tv-mrail { display: flex; align-items: center; gap: 0; background: #f5f8fa; border: 1px solid #e6eef3; border-radius: 999px; padding: 2px; }
+      .tv-mrail-btn { position: relative; width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: transparent; border-radius: 50%; color: #33495e; cursor: pointer; text-decoration: none; transition: background .2s, color .2s; }
+      .tv-mrail-btn:hover { background: #fff; color: var(--brand); box-shadow: 0 2px 6px rgba(6,36,66,.1); }
+      .tv-mrail-btn svg { width: 17px; height: 17px; }
+      .tv-mrail-curr span { font-size: 13.5px; font-weight: 800; }
+      .tv-mrail-badge { position: absolute; top: 0; inset-inline-end: 0; min-width: 14px; height: 14px; padding: 0 3px; display: none; place-items: center; border-radius: 999px; background: #b3391f; color: #fff; font-size: 9px; font-weight: 800; line-height: 14px; text-align: center; }
+      .tv-mrail-badge.show { display: block; }
+
+      .tv-mobile-menu { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; color: var(--ink); background: #f5f8fa; border: 1px solid #e6eef3; cursor: pointer; }
+      .tv-mobile-menu:hover { background: #eaf6fd; color: var(--brand); }
+      .tv-mobile-menu svg { width: 19px; height: 19px; }
+
+      .tv-search-field { top: 66px; padding: 12px 14px; }
+      .tv-drawer { width: min(86vw, 320px); right: calc(-1 * min(86vw, 320px)); padding: 18px; }
+      .tv-drawer a { padding: 15px 6px; font-size: 15px; }
+      .tv-drawer-head button { width: 44px; height: 44px; }
+    }
+    /* Home is the first item of the control pill, so the compact header is two stable
+       islands — logo at one edge, one unified control cluster at the other. It no
+       longer changes behaviour between width bands. */
+    /* 562–828px: the row has only two islands, so space-between would collect all
+       slack into one void. A reduced nav fills it, stepped at the measured min-content
+       thresholds (1 link needs 470px · 2→517 · 3→564 · 4→608 · 6→688 · 7→734 · 8→802) so
+       the links, which are nowrap and cannot shrink, never exceed the shell. */
+    @media (min-width: 470px) and (max-width: 828px) {
+      .tv-nav { display: flex; flex: 1; justify-content: center; gap: 8px; }
+      .tv-nav a { font-size: 11.5px; }
+    }
+    @media (min-width: 470px) and (max-width: 516px) { .tv-nav a:nth-child(n+2) { display: none; } }
+    @media (min-width: 517px) and (max-width: 563px) { .tv-nav a:nth-child(n+3) { display: none; } }
+    @media (min-width: 564px) and (max-width: 607px) { .tv-nav a:nth-child(n+4) { display: none; } }
+    @media (min-width: 608px) and (max-width: 687px) { .tv-nav a:nth-child(n+5) { display: none; } }
+    @media (min-width: 688px) and (max-width: 733px) { .tv-nav a:nth-child(n+7) { display: none; } }
+    @media (min-width: 734px) and (max-width: 801px) { .tv-nav a:nth-child(n+8) { display: none; } }
+
+    @media (max-width: 420px) {
+      .tv-header-shell { padding: 0 10px; }
+      .tv-header-row { gap: 6px; }
+      .tv-brand-logo { height: 36px; }
+      .tv-mcluster { gap: 6px; min-width: 0; }
+      .tv-mrail { gap: 0; padding: 2px; }
+      .tv-mrail-btn svg { width: 18px; height: 18px; }
+      .tv-mrail-curr span { font-size: 14px; }
+      .tv-donate-top { padding: 0 14px; font-size: 12.5px; }
+      /* Measured min-content at the ≤420px styles: all four rail buttons + home +
+         text donate needs 440px, which no common phone has. Cart + profile + home +
+         full-text donate fits 352px at the 44px tap floor, so only the language
+         button (disabled — "قريبًا") and the currency picker move to the drawer,
+         where both already exist. */
+      .tv-mrail-btn[data-dropdown="tvLangMenu"], .tv-mrail-btn[data-dropdown="tvCurrMenu"] { display: none; }
+    }
+    /* At 44px targets the row needs 317px of content; below 360px the profile
+       button is dropped from the rail (it remains in the drawer) rather than
+       shrinking any control under the floor. */
+    @media (max-width: 359px) {
+      .tv-mrail-profile { display: none; }
+      .tv-donate-top { padding: 0 12px; font-size: 12px; }
+    }
+    @media (max-width: 380px) {
+      .dn-full { display: none; }
+      .dn-short { display: inline; }
+      .tv-donate-top { padding: 0 16px; }
+    }
+    .tv-lang-suggest { position: fixed; top: 0; left: 0; right: 0; z-index: 1001; display: none; align-items: center; justify-content: center; gap: 14px; background: #eaf6fd; border-bottom: 1px solid #cfe9f7; color: var(--ink); font-size: 12.5px; font-weight: 700; padding: 9px 16px; }
+    .tv-lang-suggest.show { display: flex; }
+    .tv-lang-suggest button { border: 0; cursor: pointer; font-family: inherit; }
+    .tv-lang-suggest .ls-yes { background: var(--brand); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 12px; font-weight: 800; min-height: 34px; }
+    .tv-lang-suggest .ls-no { background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; text-decoration: underline; min-height: 34px; padding: 0 4px; }
+    .tv-dropdown-menu button:disabled { opacity: .5; cursor: default; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .tv-dropdown-menu button:disabled span { font-size: 11px; font-weight: 700; color: var(--muted); }
+    .tv-dropdown-menu button:disabled:hover { background: transparent; color: var(--ink); }
+    /* Text on light surfaces uses the accessible blue; --brand stays for fills. */
+    .tv-nav a:hover, .tv-nav a.active, .tv-search:hover, .tv-icon-btn:hover,
+    .tv-lang:hover, .tv-curr:hover, .tv-dropdown-menu button:hover,
+    .tv-drawer a:hover, .tv-mrail-btn:hover, .tv-mobile-menu:hover,
+    .tv-mhome:hover { color: var(--brand-ink); }
+  </style>
+  <script src="./currency.js"></script>
+</helmet>
+<div class="tv-header-root" dir="rtl" data-no-currency>
+<div class="tv-lang-suggest" id="tvLangSuggest">
+  <span id="tvLangSuggestText"></span>
+  <button class="ls-yes" type="button" id="tvLangYes"></button>
+  <button class="ls-no" type="button" id="tvLangNo">البقاء بالعربية</button>
+</div>
+<header class="tv-header">
+  <div class="tv-header-shell">
+    <div class="tv-header-row">
+      <div class="tv-brand-lang">
+        <a class="tv-brand" href="Toplum Vakfı Homepage.dc.html" aria-label="Toplum Vakfı"><img class="tv-brand-logo" src="assets/logo-mark.png" alt="Toplum Vakfı"></a>
+        <div style="position:relative">
+          <button class="tv-lang" type="button" data-dropdown="tvLangMenu" aria-label="اللغة" title="اللغة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 5.6 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.6-3.5-9s1-6.5 3.5-9z"/></svg><span class="tv-dd-label">العربية</span></button>
+          <div class="tv-dropdown-menu" id="tvLangMenu"><button type="button" data-value="العربية">العربية</button><button type="button" disabled="true" data-value="English">English<span>قريبًا</span></button><button type="button" disabled="true" data-value="Türkçe">Türkçe<span>قريبًا</span></button><button type="button" disabled="true" data-value="Shqip">Shqip<span>قريبًا</span></button></div>
+        </div>
+        <div style="position:relative">
+          <button class="tv-curr" type="button" data-dropdown="tvCurrMenu" aria-label="العملة" title="العملة"><span class="tv-curr-symbol" id="tvCurrSymbol">$</span><span class="tv-dd-label">USD</span></button>
+          <div class="tv-dropdown-menu" id="tvCurrMenu"><button type="button" data-value="USD" data-symbol="$">USD $</button><button type="button" data-value="EUR" data-symbol="€">EUR €</button><button type="button" data-value="TRY" data-symbol="₺">TRY ₺</button></div>
+        </div>
+      </div>
+      <div class="tv-divider"></div>
+      <nav class="tv-nav">
+        <a href="Toplum Vakfı About.dc.html" data-key="about">من نحن</a>
+        <a href="Toplum Vakfı Programs.dc.html" data-key="programs">برامجنا</a>
+        <a href="Toplum Vakfı Projects.dc.html" data-key="projects">مشاريعنا</a>
+        <a href="Toplum Vakfı News.dc.html" data-key="news">الأخبار</a>
+        <a href="Toplum Vakfı Homepage.dc.html#impact" data-key="impact">أثرنا</a>
+        <a href="Toplum Vakfı Stories.dc.html" data-key="stories">قصصنا</a>
+        <a href="Toplum Vakfı Partners.dc.html" data-key="partners">الشركاء</a>
+        <a href="Toplum Vakfı Contact.dc.html" data-key="contact">تواصل معنا</a>
+      </nav>
+      <div class="tv-divider"></div>
+      <div class="tv-mcluster">
+      <div class="tv-actions">
+        <div class="tv-icon-group">
+          <button class="tv-search" type="button" aria-label="بحث" id="tvSearchBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+          <a class="tv-icon-btn" href="Toplum Vakfı Profile.dc.html" aria-label="الملف الشخصي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.4-5.6 7.5-5.6s6.1 2 7.5 5.6"/></svg></a>
+          <a class="tv-icon-btn" href="Toplum Vakfı Cart.dc.html" aria-label="السلة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.4 12.2a1.8 1.8 0 0 0 1.8 1.5h7.9a1.8 1.8 0 0 0 1.77-1.47L21 8H6"/></svg><span class="tv-icon-badge" id="tvCartBadge">0</span></a>
+        </div>
+        <a class="tv-donate-top" href="Toplum Vakfı Cart.dc.html"><span class="dn-full">تبرع الآن</span><span class="dn-short">تبرع</span></a>
+      </div>
+      <div class="tv-mrail">
+        <a class="tv-mrail-btn tv-mhome" href="Toplum Vakfı Homepage.dc.html" aria-label="الصفحة الرئيسية" title="الرئيسية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.2 12 3.5l9 6.7V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"/></svg></a>
+        <button class="tv-mrail-btn" type="button" data-dropdown="tvLangMenu" aria-label="اللغة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 5.6 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.6-3.5-9s1-6.5 3.5-9z"/></svg></button>
+        <button class="tv-mrail-btn tv-mrail-curr" type="button" data-dropdown="tvCurrMenu" aria-label="العملة"><span id="tvMCurrSymbol">$</span></button>
+        <a class="tv-mrail-btn tv-mrail-profile" href="Toplum Vakfı Profile.dc.html" aria-label="الملف الشخصي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.4-5.6 7.5-5.6s6.1 2 7.5 5.6"/></svg></a>
+        <a class="tv-mrail-btn" href="Toplum Vakfı Cart.dc.html" aria-label="السلة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.4 12.2a1.8 1.8 0 0 0 1.8 1.5h7.9a1.8 1.8 0 0 0 1.77-1.47L21 8H6"/></svg><span class="tv-mrail-badge" id="tvMCartBadge">0</span></a>
+      </div>
+      <button class="tv-mobile-menu" type="button" id="tvMobileMenuBtn" aria-label="فتح القائمة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h11"/></svg></button>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="tv-search-field" id="tvSearchField">
+  <form id="tvSearchForm">
+    <input type="text" id="tvSearchInput" placeholder="ابحث في المشاريع والبرامج...">
+    <button type="submit">بحث</button>
+  </form>
+</div>
+<div class="tv-drawer-overlay" id="tvDrawerOverlay"></div>
+<nav class="tv-drawer" id="tvDrawer">
+  <div class="tv-drawer-head">
+    <img class="tv-brand-logo" src="assets/logo-mark.png" alt="Toplum Vakfı" style="height:38px">
+    <button id="tvDrawerClose" aria-label="إغلاق">✕</button>
+  </div>
+  <a href="Toplum Vakfı About.dc.html">من نحن</a>
+  <a href="Toplum Vakfı Programs.dc.html">برامجنا</a>
+  <a href="Toplum Vakfı Projects.dc.html">مشاريعنا</a>
+  <a href="Toplum Vakfı News.dc.html">الأخبار</a>
+  <a href="Toplum Vakfı Homepage.dc.html#impact">أثرنا</a>
+  <a href="Toplum Vakfı Stories.dc.html">قصصنا</a>
+  <a href="Toplum Vakfı Partners.dc.html">الشركاء</a>
+  <a href="Toplum Vakfı Contact.dc.html">تواصل معنا</a>
+  <div class="tv-drawer-group">
+    <span>حسابي</span>
+    <a href="Toplum Vakfı Cart.dc.html">السلة</a>
+    <a href="Toplum Vakfı Profile.dc.html">الملف الشخصي</a>
+    <a href="Toplum Vakfı Search Results.dc.html">البحث</a>
+  </div>
+  <div class="tv-drawer-picks">
+    <select id="tvDrawerLang" aria-label="اللغة"><option>العربية</option><option disabled="true">English — قريبًا</option><option disabled="true">Türkçe — قريبًا</option><option disabled="true">Shqip — قريبًا</option></select>
+    <select id="tvDrawerCurr" aria-label="العملة"><option value="USD">USD $</option><option value="EUR">EUR €</option><option value="TRY">TRY ₺</option></select>
+  </div>
+  <a class="tv-drawer-donate" href="Toplum Vakfı Cart.dc.html">تبرع الآن</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;activeKey&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;&quot;, &quot;about&quot;, &quot;programs&quot;, &quot;projects&quot;, &quot;news&quot;, &quot;impact&quot;, &quot;stories&quot;, &quot;partners&quot;, &quot;contact&quot;]}}">
+class Component extends DCLogic {
+  // Inlined rather than read from currency.js: that file loads as an external
+  // script tag, so the global is not yet defined when this mount runs.
+  detectLanguage() {
+    const LANGS = { tr: 'Türkçe', en: 'English', sq: 'Shqip' };
+    try {
+      if (localStorage.getItem('tv_lang')) return null;
+      if (localStorage.getItem('tv_lang_dismissed') === '1') return null;
+    } catch (e) { return null; }
+    const list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+    for (const entry of list) {
+      const code = String(entry).slice(0, 2).toLowerCase();
+      if (code === 'ar') return null;
+      if (LANGS[code]) return { code, name: LANGS[code] };
+    }
+    return null;
+  }
+
+  componentDidMount() {
+    const active = this.props.activeKey;
+    if (active) {
+      const link = document.querySelector(`.tv-nav a[data-key="${active}"]`);
+      if (link) link.classList.add('active');
+    }
+    document.querySelectorAll('.tv-dropdown-menu').forEach(menu => document.body.appendChild(menu));
+    document.querySelectorAll('[data-dropdown]').forEach(btn => btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const menu = document.getElementById(btn.dataset.dropdown);
+      const isOpen = menu.classList.contains('open');
+      document.querySelectorAll('.tv-dropdown-menu.open').forEach(m => m.classList.remove('open'));
+      if (!isOpen) {
+        const rect = btn.getBoundingClientRect();
+        menu.style.top = (rect.bottom + 8) + 'px'; menu.style.left = 'auto';
+        menu.style.right = Math.max(8, window.innerWidth - rect.right) + 'px';
+        menu.classList.add('open');
+      }
+    }));
+    document.querySelectorAll('.tv-dropdown-menu button').forEach(opt => opt.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const menu = opt.closest('.tv-dropdown-menu');
+      const trigger = document.querySelector(`[data-dropdown="${menu.id}"]`);
+      // Desktop and the mobile rail both trigger this menu, so update every label/symbol.
+      document.querySelectorAll(`[data-dropdown="${menu.id}"] .tv-dd-label`).forEach(l => { l.textContent = opt.dataset.value; });
+      if (opt.dataset.symbol) {
+        ['tvCurrSymbol', 'tvMCurrSymbol'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = opt.dataset.symbol;
+        });
+        if (window.tvCurrency) window.tvCurrency.set(opt.dataset.value);
+      }
+      menu.classList.remove('open');
+    }));
+    document.addEventListener('click', () => document.querySelectorAll('.tv-dropdown-menu.open').forEach(m => m.classList.remove('open')));
+
+    if (window.tvCurrency) {
+      const cur = window.tvCurrency.get();
+      ['tvCurrSymbol', 'tvMCurrSymbol'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = window.tvCurrency.symbol(cur);
+      });
+      const currTrigger = document.querySelector('.tv-curr .tv-dd-label');
+      if (currTrigger) currTrigger.textContent = cur;
+    }
+
+    // Cart count badge
+    const badges = [document.getElementById('tvCartBadge'), document.getElementById('tvMCartBadge')].filter(Boolean);
+    const syncBadge = () => {
+      if (!badges.length) return;
+      let n = 0;
+      try { n = (JSON.parse(localStorage.getItem('tv_cart') || '[]') || []).length; } catch (e) { n = 0; }
+      badges.forEach(b => { b.textContent = n; b.classList.toggle('show', n > 0); });
+    };
+    syncBadge();
+    window.addEventListener('storage', syncBadge);
+
+    // Inline search field
+    const suggest = this.detectLanguage();
+    const bar = document.getElementById('tvLangSuggest');
+    if (suggest && bar) {
+      const header = document.querySelector('.tv-header');
+      // No translated pages exist yet, so the bar acknowledges the visitor's
+      // language and records interest — it never promises a switch.
+      document.getElementById('tvLangSuggestText').textContent = 'نسخة ' + suggest.name + ' قيد الإعداد. الموقع متاح بالعربية حاليًا.';
+      document.getElementById('tvLangYes').textContent = 'أبلغوني عند توفرها';
+      bar.classList.add('show');
+      const h = Math.round(bar.getBoundingClientRect().height);
+      if (header) header.style.top = h + 'px';
+      document.body.style.paddingTop = h + 'px';
+      const dismiss = () => {
+        bar.classList.remove('show');
+        if (header) header.style.top = '0px';
+        document.body.style.paddingTop = '';
+        localStorage.setItem('tv_lang_dismissed', '1');
+      };
+      document.getElementById('tvLangNo').addEventListener('click', dismiss);
+      document.getElementById('tvLangYes').addEventListener('click', () => {
+        localStorage.setItem('tv_lang_interest', suggest.code);
+        dismiss();
+      });
+    }
+
+    const searchBtn = document.getElementById('tvSearchBtn');
+    const field = document.getElementById('tvSearchField');
+    const input = document.getElementById('tvSearchInput');
+    const go = () => {
+      const q = (input && input.value.trim()) || '';
+      window.location.href = 'Toplum Vakfı Search Results.dc.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+    };
+    if (searchBtn && field) searchBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      field.classList.toggle('open');
+      if (field.classList.contains('open') && input) input.focus();
+    });
+    const form = document.getElementById('tvSearchForm');
+    if (form) form.addEventListener('submit', (e) => { e.preventDefault(); go(); });
+
+    // Drawer language / currency pickers
+    const dLang = document.getElementById('tvDrawerLang');
+    const dCurr = document.getElementById('tvDrawerCurr');
+    if (dCurr) {
+      if (window.tvCurrency) dCurr.value = window.tvCurrency.get();
+      dCurr.addEventListener('change', () => {
+        if (window.tvCurrency) window.tvCurrency.set(dCurr.value);
+        const sym = document.getElementById('tvCurrSymbol');
+        if (sym && window.tvCurrency) sym.textContent = window.tvCurrency.symbol(dCurr.value);
+      });
+    }
+    if (dLang) dLang.addEventListener('change', () => {
+      const label = document.querySelector('.tv-lang .tv-dd-label');
+      if (label) label.textContent = dLang.value;
+    });
+
+    const btn = document.getElementById('tvMobileMenuBtn'), overlay = document.getElementById('tvDrawerOverlay'), drawer = document.getElementById('tvDrawer');
+    const open = () => { drawer.classList.add('open'); overlay.classList.add('open'); };
+    const close = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
+    if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); open(); });
+    const closeBtn = document.getElementById('tvDrawerClose');
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (overlay) overlay.addEventListener('click', close);
+    if (drawer) drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      close();
+      if (field) field.classList.remove('open');
+    });
+  }
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

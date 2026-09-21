@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-ink: #0077b3; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    button, input { font-family: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+
+    .profile-hero { padding: 150px 0 30px; }
+    .ph-card { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); border-radius: 20px; padding: 32px 36px; color: #fff; display: flex; align-items: center; gap: 22px; position: relative; overflow: hidden; }
+    .ph-card::before { content: ""; position: absolute; inset: 0; opacity: .14; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 30px 30px; }
+    .ph-avatar { position: relative; z-index: 1; width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #4fc3f7); display: grid; place-items: center; font-size: 26px; font-weight: 800; flex-shrink: 0; }
+    .ph-info { position: relative; z-index: 1; flex: 1; min-width: 0; }
+    .ph-info h1 { margin: 0 0 4px; font-size: 21px; font-weight: 800; }
+    .ph-info span { font-size: 12.5px; color: #b9d3e6; }
+    .ph-badge { position: relative; z-index: 1; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+
+    .profile-layout { display: grid; grid-template-columns: 260px 1fr; gap: 28px; padding: 26px 0 80px; align-items: start; }
+    .p-sidebar { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 12px; position: sticky; top: 130px; }
+    .p-sidebar button { width: 100%; display: flex; align-items: center; gap: 12px; text-align: right; background: transparent; border: 0; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; font-weight: 700; color: var(--muted); cursor: pointer; }
+    .p-sidebar button svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .p-sidebar button.active { background: #eaf6fd; color: var(--brand); }
+    .p-sidebar button:hover:not(.active) { background: #f7fafc; color: var(--ink); }
+    .p-sidebar hr { border: 0; border-top: 1px solid #edf2f6; margin: 8px 6px; }
+    .p-sidebar .logout { color: #c62828; }
+
+    .p-section { display: none; }
+    .p-section.active { display: block; }
+    .p-panel { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 26px; margin-bottom: 20px; }
+    .p-panel h2 { margin: 0 0 4px; font-size: 17px; font-weight: 800; }
+    .p-panel .sub { color: var(--muted); font-size: 12.5px; margin: 0 0 20px; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: #fff; border: 1px solid #e6eef3; border-radius: 14px; padding: 18px; }
+    .stat-card b { display: block; font-size: 22px; color: var(--brand); direction: ltr; text-align: right; }
+    .stat-card span { font-size: 12px; color: var(--muted); }
+
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th { text-align: right; font-size: 12px; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid #edf2f6; }
+    .history-table td { font-size: 13px; padding: 12px 10px; border-bottom: 1px solid #f2f6f9; }
+    .history-table td.amt { direction: ltr; text-align: right; font-weight: 800; color: var(--ink); }
+    .history-table td.date { direction: ltr; text-align: right; color: var(--muted); font-size: 12px; }
+    .status-pill { padding: 4px 11px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+    .status-pill.done { background: #e6f9ee; color: #12844c; }
+    .status-pill.recurring { background: #eaf6fd; color: var(--brand-ink); }
+    .status-pill.pending { background: #fff3d6; color: #a1690a; }
+    .status-pill.rejected { background: #fde8e8; color: #c62828; }
+    .row-actions a { font-size: 12px; color: var(--brand-ink); font-weight: 700; }
+
+    .saved-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .saved-card { display: flex; gap: 12px; border: 1px solid #e6eef3; border-radius: 12px; padding: 12px; align-items: center; }
+    .saved-card img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+    .saved-card h3 { margin: 0 0 4px; font-size: 13px; }
+    .saved-card a.btn-mini { font-size: 12px; color: var(--brand-ink); font-weight: 800; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+    .field input { width: 100%; padding: 12px 14px; border: 1.5px solid #e2eaf0; border-radius: 10px; font-size: 13.5px; outline: none; color: var(--ink); }
+    .field input:focus { border-color: var(--brand); }
+    .save-btn { background: var(--brand); color: #fff; padding: 12px 28px; border-radius: 999px; font-weight: 800; font-size: 13.5px; border: 0; cursor: pointer; }
+    .save-btn:hover { background: #0089cb; }
+
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f2f6f9; }
+    .toggle-row:last-child { border-bottom: 0; }
+    .toggle-row b { font-size: 13px; display: block; }
+    .toggle-row span { font-size: 12px; color: var(--muted); }
+    .switch { position: relative; width: 42px; height: 24px; border-radius: 999px; background: #e2eaf0; flex-shrink: 0; cursor: pointer; transition: background .2s; }
+    .switch.on { background: var(--brand); }
+    .switch::after { content: ""; position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: right .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .switch.on::after { right: 21px; }
+
+    .cert-row { display: flex; align-items: center; justify-content: space-between; border: 1px solid #e6eef3; border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+    .cert-row b { font-size: 13px; display: block; }
+    .cert-row span { font-size: 12px; color: var(--muted); }
+    .cert-row a { font-size: 12px; font-weight: 800; color: var(--brand-ink); }
+
+    @media (max-width: 760px) {
+      .status-pill, .saved-card a.btn-mini, .cert-row a { font-size: 12px; }
+      .history-table thead { display: none; }
+      .history-table, .history-table tbody, .history-table tr { display: block; width: 100%; }
+      .history-table tr:first-child { display: none; }
+      .history-table tr:not(:first-child) { border: 1px solid #e6eef3; border-radius: 12px; margin-bottom: 10px; padding: 4px 14px; background: #fff; }
+      .history-table td { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f2f6f9; padding: 9px 0; font-size: 13px; min-height: 20px; }
+      .history-table td:last-child { border-bottom: 0; justify-content: center; padding: 10px 0; }
+      .history-table td::before { content: ""; color: var(--muted); font-weight: 700; font-size: 12px; }
+      .history-table td:nth-child(1)::before { content: "المشروع"; }
+      .history-table td:nth-child(2)::before { content: "المبلغ"; }
+      .history-table td:nth-child(3)::before { content: "التاريخ"; }
+      .history-table td:nth-child(4)::before { content: "الحالة"; }
+      .row-actions a { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; background: var(--page-bg); border-radius: 999px; }
+    }
+    @media (max-width: 900px) {
+      .profile-layout { grid-template-columns: 1fr; }
+      .p-sidebar { position: static; display: flex; overflow-x: auto; gap: 4px; }
+      .p-sidebar button { white-space: nowrap; width: auto; }
+      .stat-grid, .field-row, .saved-grid { grid-template-columns: 1fr; }
+      .ph-card { flex-wrap: wrap; }
+    }
+  </style>
+</helmet>
+<svg style="position:absolute; width:0; height:0" aria-hidden="true">
+  <defs><clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox"><path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/></clipPath></defs>
+</svg>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+
+  <section class="profile-hero container">
+    <div class="ph-card">
+      <div class="ph-avatar">ل.س</div>
+      <div class="ph-info">
+        <h1>مرحبًا، ليلى سالم</h1>
+        <span>عضو منذ يناير 2024 — leila.salem@email.com</span>
+      </div>
+      <span class="ph-badge">داعم مستمر ✦</span>
+    </div>
+  </section>
+
+  <div class="container profile-layout">
+    <aside class="p-sidebar">
+      <button class="active" data-tab="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>نظرة عامة</button>
+      <button data-tab="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>سجل التبرعات</button>
+      <button data-tab="saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg>المشاريع المحفوظة</button>
+      <button data-tab="certs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>الشهادات والإيصالات</button>
+      <button data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.98 19a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15z"/></svg>الإعدادات والأمان</button>
+      <hr>
+      <button class="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>تسجيل الخروج</button>
+    </aside>
+
+    <div class="p-content">
+      <section class="p-section active" data-panel="overview">
+        <div class="stat-grid">
+          <div class="stat-card"><b>$1,240</b><span>إجمالي التبرعات</span></div>
+          <div class="stat-card"><b>7</b><span>مشاريع دعمتها</span></div>
+          <div class="stat-card"><b>$60</b><span>تبرع شهري نشط</span></div>
+        </div>
+        <div class="p-panel">
+          <h2>آخر التبرعات</h2>
+          <p class="sub">أحدث 3 عمليات على حسابك</p>
+          <table class="history-table">
+            <tr><th>المشروع</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th></tr>
+            <tr><td>بناء دار أيتام في سوريا</td><td class="amt">$100</td><td class="date">2026/09/01</td><td><span class="status-pill done">مكتمل</span></td></tr>
+            <tr><td>الصندوق العام</td><td class="amt">$60</td><td class="date">2026/08/01</td><td><span class="status-pill recurring">شهري</span></td></tr>
+            <tr><td>سلال غذائية عاجلة</td><td class="amt">$200</td><td class="date">2026/07/12</td><td><span class="status-pill done">مكتمل</span></td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="p-section" data-panel="history">
+        <div class="p-panel">
+          <h2>سجل التبرعات الكامل</h2>
+          <p class="sub">جميع عمليات التبرع المرتبطة بحسابك</p>
+          <table class="history-table">
+            <tr><th>المشروع</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th><th></th></tr>
+            <tr><td>بناء دار أيتام في سوريا</td><td class="amt">$100</td><td class="date">2026/09/01</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
+            <tr><td>الصندوق العام</td><td class="amt">$60</td><td class="date">2026/08/01</td><td><span class="status-pill recurring">شهري</span></td><td class="row-actions"><a href="#">إدارة</a></td></tr>
+            <tr><td>سلال غذائية عاجلة</td><td class="amt">$200</td><td class="date">2026/07/12</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
+            <tr><td>تسديد ديون الغارمين</td><td class="amt">$250</td><td class="date">2026/05/20</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
+            <tr><td>حفر آبار مياه</td><td class="amt">$150</td><td class="date">2026/03/09</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
+            <tr><td>منح طلبة القرآن الكريم</td><td class="amt">$400</td><td class="date">2026/01/15</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
+            <tr><td>ترميم المدارس والمساجد</td><td class="amt">$120</td><td class="date">2026/09/10</td><td><span class="status-pill pending">قيد المراجعة</span></td><td class="row-actions"><a href="#">تفاصيل</a></td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="p-section" data-panel="saved">
+        <div class="p-panel">
+          <h2>المشاريع المحفوظة</h2>
+          <p class="sub">مشاريع أضفتها للمتابعة</p>
+          <div class="saved-grid">
+            <div class="saved-card"><img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=200&q=80" alt=""><div><h3>بناء دار أيتام في سوريا</h3><a class="btn-mini" href="Toplum Vakfı Project - Dar Aytam.dc.html">عرض المشروع ←</a></div></div>
+            <div class="saved-card"><img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=200&q=80" alt=""><div><h3>ترميم المدارس والمساجد</h3><a class="btn-mini" href="Toplum Vakfı Project - Schools Restoration.dc.html">عرض المشروع ←</a></div></div>
+            <div class="saved-card"><img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=200&q=80" alt=""><div><h3>منح طلبة القرآن الكريم</h3><a class="btn-mini" href="Toplum Vakfı Project - Quran Scholarships.dc.html">عرض المشروع ←</a></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="p-section" data-panel="certs">
+        <div class="p-panel">
+          <h2>الشهادات والإيصالات</h2>
+          <p class="sub">مستندات قابلة للتحميل والطباعة</p>
+          <div class="cert-row"><div><b>شهادة شكر — بناء دار أيتام</b><span>صادرة 2026/09/01</span></div><a href="Toplum Vakfı Thank You.dc.html">عرض ↗</a></div>
+          <div class="cert-row"><div><b>إيصال تبرع — الصندوق العام</b><span>2026/08/01 · $60</span></div><a href="#">تحميل PDF</a></div>
+          <div class="cert-row"><div><b>إيصال تبرع — سلال غذائية عاجلة</b><span>2026/07/12 · $200</span></div><a href="#">تحميل PDF</a></div>
+        </div>
+      </section>
+
+      <section class="p-section" data-panel="settings">
+        <div class="p-panel">
+          <h2>البيانات الشخصية</h2>
+          <div class="field-row">
+            <div class="field"><label>الاسم الأول</label><input type="text" value="ليلى"></div>
+            <div class="field"><label>اسم العائلة</label><input type="text" value="سالم"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>البريد الإلكتروني</label><input type="email" value="leila.salem@email.com"></div>
+            <div class="field"><label>رقم الهاتف</label><input type="tel" value="+90 532 000 00 00"></div>
+          </div>
+          <button class="save-btn" type="button">حفظ التغييرات</button>
+        </div>
+        <div class="p-panel">
+          <h2>الأمان والإشعارات</h2>
+          <div class="toggle-row"><div><b>المصادقة الثنائية</b><span>حماية إضافية عند تسجيل الدخول</span></div><div class="switch on" data-switch></div></div>
+          <div class="toggle-row"><div><b>إشعارات البريد الإلكتروني</b><span>تحديثات المشاريع والإيصالات</span></div><div class="switch on" data-switch></div></div>
+          <div class="toggle-row"><div><b>رسائل نصية عند التبرع الشهري</b><span>تنبيه قبل كل عملية تجديد</span></div><div class="switch" data-switch></div></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    document.querySelectorAll('.p-sidebar button[data-tab]').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.p-sidebar button[data-tab]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.p-section').forEach(s => s.classList.toggle('active', s.dataset.panel === btn.dataset.tab));
+    }));
+    document.querySelectorAll('[data-switch]').forEach(sw => sw.addEventListener('click', () => sw.classList.toggle('on')));
+  }
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

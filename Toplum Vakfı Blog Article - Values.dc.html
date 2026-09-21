@@ -1,0 +1,86 @@
+git status<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
+    .article-hero { padding-top: 104px; }
+    .article-meta-top { display: flex; gap: 14px; align-items: center; font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+    .article-cat { color: var(--brand); font-weight: 800; }
+    .article-hero h1 { font-size: clamp(24px, 3vw, 36px); font-weight: 800; margin: 0 0 20px; line-height: 1.4; }
+    .article-cover { height: 360px; border-radius: 16px; background: linear-gradient(0deg, rgba(2,20,38,.2), rgba(2,20,38,0)), url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&q=80') center / cover; margin-bottom: 30px; }
+    .article-body { max-width: 720px; margin: 0 auto 60px; }
+    .article-body p { color: #33495e; font-size: 15px; line-height: 2; margin: 0 0 20px; }
+    .article-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 30px 0; }
+    .article-gallery div { height: 100px; border-radius: 10px; background-position: center; background-size: cover; }
+    .related-news { background: #fff; padding: 50px 0 60px; }
+    .related-news h2 { text-align: center; font-size: 19px; font-weight: 800; margin: 0 0 26px; }
+    .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .related-card { display: block; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px; background: var(--page-bg); }
+    .related-card span { color: var(--brand); font-size: 10.5px; font-weight: 800; display: block; margin-bottom: 8px; }
+    .related-card h4 { margin: 0; font-size: 13px; }
+    @media (max-width: 900px) { .related-grid { grid-template-columns: 1fr; } .article-gallery { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 760px) { .related-card span { font-size: 12px; } }
+  </style>
+</helmet>
+<svg style="position:absolute; width:0; height:0" aria-hidden="true">
+  <defs><clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox"><path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/></clipPath></defs>
+</svg>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="news" hint-size="100%,78px"></dc-import>
+
+  <section class="article-hero">
+    <div class="container">
+      <div class="article-meta-top"><span class="article-cat">القيم والشباب</span><span>·</span><span>مدونة الوقف</span></div>
+      <h1>القيم التي تصنع مجتمعًا قادرًا على مواجهة التحديات</h1>
+      <div class="article-cover"></div>
+    </div>
+  </section>
+
+  <div class="container article-body">
+    <p>يترجم رسالة الوقف إلى طرح إنساني عملي: تمكين الشباب ورواد المجتمع، دعم التعليم، المبادرات القائمة على القيم، والتضامن الاجتماعي.</p>
+    <p>يعمل الوقف على تفعيل وتعزيز دور رواد المجتمع، بما في ذلك الدعاة والشباب والمؤثرون، وتبني المبادرات والمشاريع التي تسعى إلى إرساء روح القيم السامية في المجتمعات من خلال تأصيلها ونشرها بشكل فعال.</p>
+    <div class="article-gallery">
+      <div style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400&q=80')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=400&q=80')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=400&q=80')"></div>
+    </div>
+    <p>يهدف هذا الطرح إلى إيمان راسخ بأن التمكين الحقيقي يبدأ من الداخل، وأن التضامن الاجتماعي ليس متلقيًا للمساعدة، بل ممارسة يومية تبدأ من الفرد وتمتد لتشمل المجتمع برمته.</p>
+  </div>
+
+  <section class="related-news">
+    <div class="container">
+      <h2>مقالات ذات صلة</h2>
+      <div class="related-grid">
+        <a class="related-card" href="Toplum Vakfı News.dc.html"><span>شراكات</span><h4>زيارة وفد وقف التضامن الاجتماعي للسفير التركي بالرياض</h4></a>
+        <a class="related-card" href="Toplum Vakfı News.dc.html"><span>شراكات</span><h4>وفد وقف التضامن الاجتماعي يزور قطر برئاسة د. أحمد حمدي يلدرم</h4></a>
+        <a class="related-card" href="Toplum Vakfı News.dc.html"><span>تعليم وشراكات</span><h4>وقف التضامن الاجتماعي يعزز شراكاته الأكاديمية في إندونيسيا</h4></a>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

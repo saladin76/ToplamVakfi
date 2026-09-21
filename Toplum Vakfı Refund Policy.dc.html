@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand: #00a2e0; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 122px 24px 80px; }
+    h1 { font-size: 24px; font-weight: 800; margin: 0 0 20px; }
+    h2 { font-size: 16px; font-weight: 800; margin: 28px 0 10px; }
+    p, li { color: #33495e; font-size: 14px; line-height: 1.9; }
+    ul { padding-inline-start: 20px; }
+    .back { display: inline-block; margin-top: 30px; color: var(--brand); font-weight: 700; font-size: 13px; }
+  </style>
+</helmet>
+<div dir="rtl">
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
+  <div class="wrap">
+    <h1>سياسة الإلغاء والاسترداد</h1>
+    <p>نتفهم أن الظروف قد تستدعي إلغاء تبرع أو طلب استرداده، ونتعامل مع هذه الطلبات بمرونة وشفافية.</p>
+    <h2>إلغاء التبرع الشهري</h2>
+    <p>يمكن إلغاء أي تبرع شهري في أي وقت دون رسوم، ويسري الإلغاء قبل موعد الخصم التالي.</p>
+    <h2>طلبات الاسترداد</h2>
+    <ul>
+      <li>يمكن طلب استرداد التبرع خلال 14 يومًا من تاريخ العملية إذا لم يكن المبلغ قد صُرف على المشروع بعد.</li>
+      <li>في حال حدوث خطأ تقني أو خصم مضاعف، يُرد المبلغ كاملًا فور التأكد من الخطأ.</li>
+    </ul>
+    <h2>كيفية تقديم الطلب</h2>
+    <p>يُرسل طلب الاسترداد عبر صفحة تواصل معنا مع ذكر رقم المرجع الموجود في إيصال التبرع.</p>
+    <a class="back" href="Toplum Vakfı Transparency.dc.html">← العودة للتقارير والشفافية</a>
+  </div>
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
+</div>
+</x-dc>
+</body>
+</html>
