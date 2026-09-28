@@ -45,17 +45,27 @@
     .anon-row input { accent-color: var(--brand); width: 17px; height: 17px; }
     .donor-note { margin: 2px 0 0; font-size: 12px; color: var(--muted); line-height: 1.75; }
 
-    .pay-options { display: grid; gap: 8px; }
-    .pay-option { display: flex; align-items: center; gap: 12px; border: 1.5px solid #e2eaf0; border-radius: 12px; padding: 12px 16px; min-height: 62px; cursor: pointer; transition: border-color .2s, background .2s, box-shadow .2s; }
-    .pay-option:hover { border-color: rgba(0,162,224,.45); }
-    .pay-option.active { border-color: var(--brand); background: #f6fcff; box-shadow: 0 6px 16px rgba(0,162,224,.12); }
-    .pay-option input { accent-color: var(--brand); width: 18px; height: 18px; flex-shrink: 0; }
-    .po-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-    .po-body b { font-size: 13.5px; font-weight: 800; }
-    .po-body i { font-style: normal; font-size: 12px; color: var(--muted); font-weight: 600; }
-    .po-icon { flex-shrink: 0; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; background: #f2f6f9; color: #6a8298; transition: background .2s, color .2s; }
-    .po-icon svg { width: 20px; height: 20px; }
-    .pay-option.active .po-icon { background: #e4f5fd; color: var(--brand-ink); }
+    /* Three side-by-side tiles; the native radio stays for keyboard/screen readers but
+       is visually replaced by a corner check on the selected tile. */
+    .pay-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .pay-option { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8px; text-align: center; padding-inline: 8px !important; border: 1.5px solid #e2eaf0; border-radius: 14px; padding: 18px 12px 16px; min-height: 124px; cursor: pointer; background: #fff; transition: border-color .2s, background .2s, box-shadow .2s, transform .2s; }
+    .pay-option:hover { border-color: rgba(28,163,236,.55); transform: translateY(-2px); }
+    .pay-option.active { border-color: #1ca3ec; background: linear-gradient(180deg, #f2f9ff, #fff); box-shadow: 0 10px 24px rgba(27,111,224,.16); }
+    .pay-option input { position: absolute; opacity: 0; pointer-events: none; }
+    .pay-option::after { content: "✓"; position: absolute; top: 10px; inset-inline-end: 10px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; font-size: 12px; font-weight: 900; opacity: 0; transform: scale(.6); transition: opacity .2s, transform .2s; }
+    .pay-option.active::after { opacity: 1; transform: scale(1); }
+    .pay-option:has(input:focus-visible) { outline: 2px solid #1ca3ec; outline-offset: 2px; }
+    .po-body { order: 2; display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
+    .po-body b { font-size: 13px; font-weight: 800; color: var(--ink); white-space: nowrap; }
+    .po-body i { font-style: normal; font-size: 12px; color: var(--muted); font-weight: 600; line-height: 1.5; text-wrap: balance; }
+    .po-icon { order: 1; flex-shrink: 0; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: #f2f6f9; color: #5d7187; transition: background .2s, color .2s; }
+    .po-icon svg { width: 22px; height: 22px; }
+    .pay-option.active .po-icon { background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; }
+    @media (max-width: 560px) {
+      .pay-options { grid-template-columns: minmax(0, 1fr); }
+      .pay-option { flex-direction: row; justify-content: flex-start; text-align: start; min-height: 68px; padding: 12px 16px; }
+      .po-body { align-items: flex-start; }
+    }
 
     /* Interactive card preview — mirrors the fields as they are typed */
     .cc { margin-bottom: 20px; perspective: 900px; }
@@ -94,7 +104,7 @@
     .trust-strip a:hover { color: var(--brand-ink); }
     .trust-strip svg { width: 14px; height: 14px; color: var(--brand); }
 
-    .btn-primary { width: 100%; background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; padding: 15px; border-radius: 999px; font-weight: 800; font-size: 15px; margin-top: 16px; border: 0; cursor: pointer; min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,162,224,.3); transition: transform .2s, box-shadow .2s; }
+    .btn-primary { width: 100%; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; padding: 15px; border-radius: 999px; font-weight: 800; font-size: 15px; margin-top: 16px; border: 0; cursor: pointer; min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,162,224,.3); transition: transform .2s, box-shadow .2s; }
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(0,162,224,.42); }
     .btn-primary:disabled { opacity: .75; pointer-events: none; transform: none; }
     .btn-spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
@@ -105,6 +115,17 @@
     .order-item b { direction: ltr; color: var(--ink); white-space: nowrap; }
     .order-total { display: flex; justify-content: space-between; align-items: baseline; font-weight: 800; font-size: 17px; padding-top: 16px; }
     .order-total b { direction: ltr; color: var(--brand-ink); }
+    .sm-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .sm-head h2 { margin: 0; }
+    .sm-head a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; font-size: 12.5px; font-weight: 800; }
+    .summary { border-top: 4px solid var(--brand); }
+    .sm-promise { list-style: none; margin: 18px 0 0; padding: 16px 0 0; border-top: 1px solid #eef3f7; display: grid; gap: 9px; }
+    .sm-promise li { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: var(--ink); line-height: 1.6; }
+    .sm-promise svg { flex-shrink: 0; width: 16px; height: 16px; margin-top: 2px; color: #1a7f4b; }
+    .sm-help { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: var(--page-bg); font-size: 12.5px; color: var(--muted); font-weight: 700; }
+    .sm-help a { font-weight: 800; min-height: 44px; display: inline-flex; align-items: center; }
+    .order-item span { display: flex; flex-direction: column; gap: 3px; color: var(--ink); font-weight: 700; }
+    .order-item small { display: inline-flex; align-self: flex-start; padding: 1px 9px; border-radius: 999px; background: #e6f4fb; color: var(--brand-ink); font-size: 12px; font-weight: 800; }
     .back-cart { display: block; margin-top: 16px; text-align: center; font-size: 12.5px; font-weight: 700; }
 
     @media (max-width: 860px) {
@@ -181,7 +202,7 @@
         <div class="pay-options">
           <label class="pay-option active" data-pay="card">
             <input type="radio" name="pay" checked="true">
-            <span class="po-body"><b>بطاقة ائتمان / خصم</b><i>Visa · Mastercard · Troy</i></span>
+            <span class="po-body"><b>بطاقة بنكية</b><i>Visa · Mastercard · Troy</i></span>
             <span class="po-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19"/></svg></span>
           </label>
           <label class="pay-option" data-pay="bank">
@@ -260,11 +281,16 @@
       </div>
 
       <div class="panel summary">
-        <h2>ملخص الطلب</h2>
+        <div class="sm-head"><h2>ملخص التبرع</h2><a href="Toplum Vakfı Cart.dc.html">تعديل</a></div>
         <div id="orderItems"></div>
         <div class="order-total" id="orderOnceRow"><span>إجمالي لمرة واحدة</span><b id="orderTotal">$0</b></div>
         <div class="order-total" id="orderMonthlyRow" style="display:none"><span>شهريًا</span><b id="orderMonthly">$0</b></div>
-        <a class="back-cart" href="Toplum Vakfı Cart.dc.html">← تعديل السلة</a>
+        <ul class="sm-promise">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>إيصال فوري على بريدك بعد الدفع</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>يُوجَّه كل بند إلى المشروع الذي اخترته</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>وقف مسجّل رسميًا برقم 3673 منذ 1995</li>
+        </ul>
+        <div class="sm-help"><span>تحتاج مساعدة؟</span><a href="https://wa.me/902125827970" target="_blank" rel="noopener" dir="ltr">+90 212 582 79 70</a></div>
       </div>
     </div>
   </div>
@@ -274,6 +300,32 @@
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
   componentDidMount() {
+    // Pre-select the donor's country from the browser's region/time zone; the
+    // donor can still change it. Unknown regions fall back to "دولة أخرى".
+    (() => {
+      const sel = document.getElementById('donorCountry');
+      if (!sel || sel.dataset.touched) return;
+      // Full world list (all ISO 3166-1 regions), named in the page language and
+      // sorted alphabetically for that language.
+      const ISO = 'AD AE AF AG AI AL AM AO AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GT GU GW GY HK HN HR HT HU ID IE IL IM IN IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG US UY UZ VA VC VE VG VI VN VU WF WS XK YE YT ZA ZM ZW'.split(' ');
+      const lang = (window.tvI18n && window.tvI18n.get && window.tvI18n.get()) || 'ar';
+      let dn = null;
+      try { dn = new Intl.DisplayNames([lang], { type: 'region' }); } catch (e) {}
+      if (dn) {
+        const items = ISO.map(c => { let n = c; try { n = dn.of(c) || c; } catch (e) {} return [c, n]; })
+          .sort((a, b) => a[1].localeCompare(b[1], lang));
+        sel.innerHTML = items.map(([c, n]) => `<option value="${c}">${n}</option>`).join('');
+      }
+      let region = '';
+      try { region = (new Intl.Locale(navigator.language || '').maximize().region || '').toUpperCase(); } catch (e) {}
+      let tz = '';
+      try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+      const TZ = { 'Europe/Istanbul': 'TR', 'Asia/Riyadh': 'SA', 'Asia/Dubai': 'AE', 'Asia/Qatar': 'QA', 'Asia/Kuwait': 'KW', 'Europe/Berlin': 'DE', 'Europe/London': 'GB' };
+      const code = TZ[tz] || region;
+      const has = [...sel.options].some(o => o.value === code);
+      if (has) sel.value = code;
+      sel.addEventListener('change', () => { sel.dataset.touched = '1'; }, { once: true });
+    })();
     const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
     if (!cart.length) { window.location.href = 'Toplum Vakfı Cart.dc.html'; return; }
 
@@ -286,7 +338,11 @@ class Component extends DCLogic {
     const total = onceTotal + monthlyTotal;
     const paint = () => {
       document.getElementById('orderItems').innerHTML = cart
-        .map(it => `<div class="order-item"><span>${it.name}${it.freq === 'تبرع شهري' ? ' · شهريًا' : ''}</span><b>${money(it.amount)}</b></div>`).join('');
+        .map(it => {
+          const L = s => (window.tvI18n && window.tvI18n.t ? window.tvI18n.t(s) : s);
+          const rec = /شهري/.test(it.freq || '') ? 'شهريًا' : /أسبوع/.test(it.freq || '') ? 'أسبوعيًا' : '';
+          return `<div class="order-item"><span>${it.name}${rec ? `<small>${L(rec)}</small>` : ''}</span><b>${money(it.amount)}</b></div>`;
+        }).join('');
       document.getElementById('orderTotal').textContent = money(onceTotal);
       document.getElementById('orderMonthly').textContent = money(monthlyTotal) + ' / شهريًا';
       document.getElementById('orderOnceRow').style.display = onceTotal > 0 || monthlyTotal === 0 ? 'flex' : 'none';

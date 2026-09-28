@@ -36,8 +36,8 @@
     .tv-search-field.open { display: block; }
     .tv-search-field form { display: flex; gap: 8px; max-width: 620px; margin: 0 auto; background: #f5f8fa; border: 1.5px solid #e2eaf0; border-radius: 999px; padding: 4px 4px 4px 16px; }
     .tv-search-field input { flex: 1; min-width: 0; background: transparent; border: 0; outline: none; font-family: inherit; font-size: 14px; color: var(--ink); text-align: right; }
-    .tv-search-field button { background: var(--brand); color: #fff; border: 0; border-radius: 999px; padding: 10px 22px; font-family: inherit; font-weight: 800; font-size: 13px; cursor: pointer; }
-    .tv-icon-badge { position: absolute; top: 2px; inset-inline-end: 2px; min-width: 17px; height: 17px; padding: 0 4px; display: none; place-items: center; border-radius: 999px; background: #b3391f; color: #fff; font-size: 11px; font-weight: 800; line-height: 17px; text-align: center; }
+    .tv-search-field button { background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; border: 0; border-radius: 999px; padding: 10px 22px; font-family: inherit; font-weight: 800; font-size: 13px; cursor: pointer; }
+    .tv-icon-badge { position: absolute; top: 2px; inset-inline-end: 2px; min-width: 17px; height: 17px; padding: 0 4px; display: none; place-items: center; border-radius: 999px; background: #0077b3; color: #fff; font-size: 11px; font-weight: 800; line-height: 17px; text-align: center; }
     .tv-icon-badge.show { display: block; }
     .tv-nav { display: flex; align-items: center; justify-content: center; gap: clamp(10px, 1.6vw, 22px); flex: 1; min-width: 0; padding-inline: 8px; }
     .tv-nav a { position: relative; color: #23405c; font-size: 14px; text-decoration: none; font-weight: 600; letter-spacing: .1px; white-space: nowrap; padding: 6px 2px; transition: color .2s; }
@@ -46,6 +46,47 @@
     .tv-nav a:hover::after, .tv-nav a.active::after { transform: scaleX(1); }
     .tv-nav a.active { color: var(--brand); font-weight: 700; }
     .tv-divider { width: 1px; height: 26px; background: rgba(6,36,66,.12); flex-shrink: 0; }
+
+    /* Dropdown groups, as on the reference build. Submenus open on hover and on
+       keyboard focus (:focus-within), never on a timer. */
+    .tv-ni { position: relative; display: flex; align-items: center; }
+    .tv-ni > a { display: inline-flex; align-items: center; gap: 4px; }
+    .tv-caret { width: 12px; height: 12px; opacity: .6; transition: transform .2s; }
+    .tv-ni:hover .tv-caret, .tv-ni:focus-within .tv-caret { transform: rotate(180deg); }
+    /* No transition on opacity/visibility: animation frames do not complete in this
+       host, so a tweened reveal would leave every submenu stuck hidden. */
+    .tv-sub { position: absolute; top: calc(100% + 14px); inset-inline-start: -20px; z-index: 30; width: 270px; padding: 12px; background: #fff; border: 1px solid #e6eef3; border-radius: 18px; box-shadow: 0 24px 50px rgba(2,36,66,.18); opacity: 0; visibility: hidden; }
+    .tv-sub--2 { width: 500px; }
+    .tv-sub-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 8px 12px; margin-bottom: 8px; border-bottom: 1px solid #eef2f5; }
+    .tv-sub-head b { color: var(--ink); font-size: 14px; font-weight: 800; }
+    .tv-nav .tv-sub .tv-sub-all { display: inline-flex; align-items: center; min-height: 34px; line-height: 1; padding: 0 14px; border-radius: 999px; background: #eaf6fd; color: var(--ink); font-size: 12.5px; font-weight: 800; }
+    .tv-nav .tv-sub .tv-sub-all:hover { background: #dcf0fb; }
+    .tv-sub-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 4px; }
+    .tv-sub--2 .tv-sub-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .tv-nav .tv-sub-grid a { display: flex; align-items: center; gap: 12px; min-height: 52px; line-height: 1.3; padding: 6px 8px; border-radius: 12px; }
+    .tv-sub-grid i { display: grid; place-items: center; flex-shrink: 0; width: 38px; height: 38px; border-radius: 10px; background: #eaf6fd; color: var(--brand); }
+    .tv-sub-grid i svg { width: 19px; height: 19px; }
+    .tv-nav .tv-sub-grid a:hover i { background: var(--brand); color: #fff; }
+    .tv-sub::before { content: ""; position: absolute; inset: -12px 0 auto; height: 12px; }
+    .tv-ni:hover .tv-sub, .tv-ni:focus-within .tv-sub { opacity: 1; visibility: visible; }
+    .tv-nav .tv-sub a { font-size: 13.5px; font-weight: 800; color: var(--ink); }
+    .tv-nav .tv-sub a::after { display: none; }
+    .tv-nav .tv-sub a:hover { background: #f2f8fb; color: var(--brand-ink); }
+
+    /* Mobile bottom navigation */
+    .tv-bnav { display: none; }
+    @media (max-width: 760px) {
+      :root { --bnav-h: calc(62px + env(safe-area-inset-bottom)); }
+      .tv-bnav { position: fixed; inset: auto 0 0 0; z-index: 1300; display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; height: var(--bnav-h); padding: 0 6px env(safe-area-inset-bottom); background: #fff; border-top: 1px solid #e6eef3; box-shadow: 0 -6px 20px rgba(2,36,66,.08); }
+      .tv-bnav a, .tv-bnav button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; height: 62px; min-width: 44px; border: 0; background: none; color: #4a6276; font-family: inherit; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
+      .tv-bnav svg { width: 22px; height: 22px; }
+      .tv-bnav a:hover, .tv-bnav button:hover { color: var(--brand-ink); }
+      .tv-bnav .tv-bnav-give { color: var(--brand-ink); font-weight: 800; }
+      .tv-bnav .tv-bnav-give svg { width: 46px; height: 46px; padding: 12px; margin-top: -26px; border-radius: 50%; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; box-shadow: 0 8px 20px rgba(0,162,224,.4); box-sizing: border-box; }
+      body { padding-bottom: var(--bnav-h); }
+      /* The bottom bar carries the donate action, so page-level sticky bars step aside. */
+      .mobile-sticky-donate { display: none !important; }
+    }
     .tv-icon-group { display: flex; align-items: center; gap: 2px; background: #f5f8fa; border-radius: 999px; padding: 3px; }
     .tv-search { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; color: #33495e; background: transparent; border: 0; cursor: pointer; transition: background .2s, color .2s; }
     .tv-search:hover { background: #fff; color: var(--brand); box-shadow: 0 2px 8px rgba(6,36,66,.1); }
@@ -53,7 +94,7 @@
     .tv-icon-btn { position: relative; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; color: #33495e; background: transparent; text-decoration: none; transition: background .2s, color .2s; }
     .tv-icon-btn:hover { background: #fff; color: var(--brand); box-shadow: 0 2px 8px rgba(6,36,66,.1); }
     .tv-icon-btn svg { width: 19px; height: 19px; }
-    .tv-donate-top { display: inline-flex; align-items: center; color: #fff; background: linear-gradient(135deg, var(--brand), #0089cb); padding: 11px 24px; border-radius: 999px; font-weight: 800; font-size: 13.5px; white-space: nowrap; box-shadow: 0 8px 18px rgba(0,162,224,.3); border: 0; cursor: pointer; text-decoration: none; transition: box-shadow .2s, transform .2s; }
+    .tv-donate-top { display: inline-flex; align-items: center; color: #fff; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); padding: 11px 24px; border-radius: 999px; font-weight: 800; font-size: 13.5px; white-space: nowrap; box-shadow: 0 8px 18px rgba(0,162,224,.3); border: 0; cursor: pointer; text-decoration: none; transition: box-shadow .2s, transform .2s; }
     .tv-donate-top:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,162,224,.42); }
     .tv-mobile-menu { display: none; }
     .tv-mobile-menu svg { width: 21px; height: 21px; }
@@ -67,12 +108,15 @@
     .tv-drawer.open { right: 0; }
     .tv-drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e6eef3; }
     .tv-drawer-head button { width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: 0; font-size: 18px; color: var(--ink); cursor: pointer; }
-    .tv-drawer a { display: block; padding: 13px 6px; color: #17324c; font-size: 14.5px; font-weight: 700; text-decoration: none; border-bottom: 1px solid #f0f4f7; }
-    .tv-drawer a:hover { color: var(--brand); }
-    .tv-drawer-donate { margin-top: 16px; background: var(--brand); color: #fff !important; text-align: center; border-radius: 999px; border-bottom: 0 !important; }
+    .tv-drawer a { display: block; padding: 13px 6px; color: var(--ink); font-size: 14.5px; font-weight: 700; text-decoration: none; border-bottom: 1px solid #f0f4f7; }
+    .tv-drawer a:hover { color: var(--brand-ink); }
+    .tv-drawer-donate { margin-top: 16px; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff !important; text-align: center; border-radius: 999px; border-bottom: 0 !important; }
     @media (max-width: 1180px) { .tv-header-shell { padding-inline: 18px 14px; } .tv-nav { gap: 10px; } .tv-nav a { font-size: 12px; } }
-    @media (max-width: 860px) { .tv-nav { gap: 7px; } .tv-nav a { font-size: 11.5px; } .tv-actions { gap: 7px; } .tv-donate-top { padding: 0 16px; font-size: 12.5px; } .tv-icon-group { gap: 0; } }
+    @media (max-width: 860px) { .tv-nav { gap: 7px; } .tv-nav a { font-size: 12px; } .tv-actions { gap: 7px; } .tv-donate-top { padding: 0 16px; font-size: 12.5px; } .tv-icon-group { gap: 0; } }
     .tv-mcluster { display: flex; align-items: center; gap: inherit; }
+    /* Base resets so these never fall back to UA link-blue / button-grey. */
+    .tv-mrail-btn { background: transparent; border: 0; color: #33495e; text-decoration: none; }
+    .tv-mrail-badge { color: #fff; }
     .tv-mhome, .tv-mrail, .dn-short { display: none; }
     /* Single compact-layout block. The desktop row needs 810px min-content, so this
        takes over just below that; edges stay anchored so the header never floats.
@@ -99,7 +143,7 @@
       .tv-mrail-btn:hover { background: #fff; color: var(--brand); box-shadow: 0 2px 6px rgba(6,36,66,.1); }
       .tv-mrail-btn svg { width: 17px; height: 17px; }
       .tv-mrail-curr span { font-size: 13.5px; font-weight: 800; }
-      .tv-mrail-badge { position: absolute; top: 0; inset-inline-end: 0; min-width: 14px; height: 14px; padding: 0 3px; display: none; place-items: center; border-radius: 999px; background: #b3391f; color: #fff; font-size: 9px; font-weight: 800; line-height: 14px; text-align: center; }
+      .tv-mrail-badge { position: absolute; top: 0; inset-inline-end: 0; min-width: 14px; height: 14px; padding: 0 3px; display: none; place-items: center; border-radius: 999px; background: #0077b3; color: #fff; font-size: 9px; font-weight: 800; line-height: 14px; text-align: center; }
       .tv-mrail-badge.show { display: block; }
 
       .tv-mobile-menu { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; color: var(--ink); background: #f5f8fa; border: 1px solid #e6eef3; cursor: pointer; }
@@ -120,14 +164,13 @@
        the links, which are nowrap and cannot shrink, never exceed the shell. */
     @media (min-width: 470px) and (max-width: 828px) {
       .tv-nav { display: flex; flex: 1; justify-content: center; gap: 8px; }
-      .tv-nav a { font-size: 11.5px; }
+      .tv-nav a { font-size: 12px; }
     }
-    @media (min-width: 470px) and (max-width: 516px) { .tv-nav a:nth-child(n+2) { display: none; } }
-    @media (min-width: 517px) and (max-width: 563px) { .tv-nav a:nth-child(n+3) { display: none; } }
-    @media (min-width: 564px) and (max-width: 607px) { .tv-nav a:nth-child(n+4) { display: none; } }
-    @media (min-width: 608px) and (max-width: 687px) { .tv-nav a:nth-child(n+5) { display: none; } }
-    @media (min-width: 688px) and (max-width: 733px) { .tv-nav a:nth-child(n+7) { display: none; } }
-    @media (min-width: 734px) and (max-width: 801px) { .tv-nav a:nth-child(n+8) { display: none; } }
+    @media (min-width: 470px) and (max-width: 516px) { .tv-nav > :nth-child(n+2) { display: none; } }
+    @media (min-width: 517px) and (max-width: 563px) { .tv-nav > :nth-child(n+3) { display: none; } }
+    @media (min-width: 564px) and (max-width: 607px) { .tv-nav > :nth-child(n+4) { display: none; } }
+    @media (min-width: 608px) and (max-width: 687px) { .tv-nav > :nth-child(n+5) { display: none; } }
+    @media (min-width: 688px) and (max-width: 733px) { .tv-nav > :nth-child(n+6) { display: none; } }
 
     @media (max-width: 420px) {
       .tv-header-shell { padding: 0 10px; }
@@ -160,18 +203,50 @@
     .tv-lang-suggest { position: fixed; top: 0; left: 0; right: 0; z-index: 1001; display: none; align-items: center; justify-content: center; gap: 14px; background: #eaf6fd; border-bottom: 1px solid #cfe9f7; color: var(--ink); font-size: 12.5px; font-weight: 700; padding: 9px 16px; }
     .tv-lang-suggest.show { display: flex; }
     .tv-lang-suggest button { border: 0; cursor: pointer; font-family: inherit; }
-    .tv-lang-suggest .ls-yes { background: var(--brand); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 12px; font-weight: 800; min-height: 34px; }
-    .tv-lang-suggest .ls-no { background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; text-decoration: underline; min-height: 34px; padding: 0 4px; }
+    .tv-lang-suggest .ls-yes { background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 12px; font-weight: 800; min-height: 34px; }
+    .tv-lang-suggest .ls-no { background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; text-decoration: underline; min-height: 44px; padding: 0 4px; }
     .tv-dropdown-menu button:disabled { opacity: .5; cursor: default; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .tv-dropdown-menu button:disabled span { font-size: 11px; font-weight: 700; color: var(--muted); }
+    .tv-dropdown-menu button:disabled span { font-size: 12px; font-weight: 700; color: var(--muted); }
     .tv-dropdown-menu button:disabled:hover { background: transparent; color: var(--ink); }
     /* Text on light surfaces uses the accessible blue; --brand stays for fills. */
     .tv-nav a:hover, .tv-nav a.active, .tv-search:hover, .tv-icon-btn:hover,
     .tv-lang:hover, .tv-curr:hover, .tv-dropdown-menu button:hover,
     .tv-drawer a:hover, .tv-mrail-btn:hover, .tv-mobile-menu:hover,
     .tv-mhome:hover { color: var(--brand-ink); }
+
+    /* ── Reference header (desktop): language pill with label, no currency or
+       profile in the bar, search + cart as separate outlined circles, no dividers,
+       white bar with a soft curved lower edge over the hero. ── */
+    @media (min-width: 829px) {
+      /* Reference header: a compact 64px white bar whose lower edge is an off-centre
+         wave — highest at the viewer's left (~58px) and dipping lowest toward the logo
+         side (~74px at 70% across), then rising slightly at the right edge. An ellipse
+         centred at 70% with rx 120% produces exactly that profile. A hairline top rule
+         and a faint shadow separate it from the page without a hard border. */
+      .tv-header { height: 64px; border-bottom: 0; box-shadow: none; background: transparent; }
+      .tv-header::before { display: none; }
+      .tv-header::after { content: ""; position: absolute; z-index: -1; inset: 0 0 -10px 0; background: #fff; clip-path: ellipse(120% 100% at 70% 0%);
+        box-shadow: inset 0 1px 0 rgba(6,36,66,.08); filter: drop-shadow(0 6px 12px rgba(2,36,66,.07)); }
+      .tv-brand-logo { height: 36px; }
+      .tv-divider { display: none; }
+      /* Currency + profile are part of the desktop bar: one row of matching
+         outlined 42px circles — search · currency · cart · profile — before donate. */
+      .tv-curr { display: grid; width: 38px; height: 38px; border: 1px solid #e3ebf1; background: #fff; color: var(--ink); }
+      .tv-curr .tv-curr-symbol { font-size: 15px; font-weight: 900; }
+      .tv-lang { width: auto; height: 38px; padding: 0 14px; gap: 8px; display: inline-flex; align-items: center; border: 1px solid #e3ebf1; border-radius: 999px; color: var(--ink); font-size: 13.5px; font-weight: 800; }
+      .tv-lang .tv-dd-label { display: inline; }
+      /* Physical borders: under dir=rtl border-inline-end resolves to the left edge,
+         which rotated 45° draws a sideways chevron instead of a down one. */
+      .tv-lang::after { content: ""; width: 7px; height: 7px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(45deg) translateY(-2px); opacity: .7; }
+      .tv-icon-group { gap: 8px; padding: 0; background: transparent; }
+      .tv-search, .tv-icon-btn { width: 38px; height: 38px; border: 1px solid #e3ebf1; background: #fff; }
+      .tv-search:hover, .tv-icon-btn:hover, .tv-curr:hover, .tv-lang:hover { border-color: rgba(0,162,224,.45); background: #f2faff; color: var(--brand-ink); }
+      .tv-donate-top { min-height: 44px; padding: 0 26px; font-size: 14.5px; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); box-shadow: 0 8px 20px rgba(0,162,224,.34); }
+      .tv-nav a { font-size: 14px; font-weight: 700; color: var(--ink); }
+    }
   </style>
   <script src="./currency.js"></script>
+  <script src="./i18n.js"></script>
 </helmet>
 <div class="tv-header-root" dir="rtl" data-no-currency>
 <div class="tv-lang-suggest" id="tvLangSuggest">
@@ -186,7 +261,7 @@
         <a class="tv-brand" href="Toplum Vakfı Homepage.dc.html" aria-label="Toplum Vakfı"><img class="tv-brand-logo" src="assets/logo-mark.png" alt="Toplum Vakfı"></a>
         <div style="position:relative">
           <button class="tv-lang" type="button" data-dropdown="tvLangMenu" aria-label="اللغة" title="اللغة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 5.6 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.6-3.5-9s1-6.5 3.5-9z"/></svg><span class="tv-dd-label">العربية</span></button>
-          <div class="tv-dropdown-menu" id="tvLangMenu"><button type="button" data-value="العربية">العربية</button><button type="button" disabled="true" data-value="English">English<span>قريبًا</span></button><button type="button" disabled="true" data-value="Türkçe">Türkçe<span>قريبًا</span></button><button type="button" disabled="true" data-value="Shqip">Shqip<span>قريبًا</span></button></div>
+          <div class="tv-dropdown-menu" id="tvLangMenu" data-no-i18n="1"><button type="button" data-lang="ar" lang="ar">العربية</button><button type="button" data-lang="en" lang="en">English</button><button type="button" data-lang="tr" lang="tr">Türkçe</button><button type="button" data-lang="sq" lang="sq">Shqip</button></div>
         </div>
         <div style="position:relative">
           <button class="tv-curr" type="button" data-dropdown="tvCurrMenu" aria-label="العملة" title="العملة"><span class="tv-curr-symbol" id="tvCurrSymbol">$</span><span class="tv-dd-label">USD</span></button>
@@ -195,12 +270,31 @@
       </div>
       <div class="tv-divider"></div>
       <nav class="tv-nav">
-        <a href="Toplum Vakfı About.dc.html" data-key="about">من نحن</a>
-        <a href="Toplum Vakfı Programs.dc.html" data-key="programs">برامجنا</a>
-        <a href="Toplum Vakfı Projects.dc.html" data-key="projects">مشاريعنا</a>
-        <a href="Toplum Vakfı News.dc.html" data-key="news">الأخبار</a>
-        <a href="Toplum Vakfı Homepage.dc.html#impact" data-key="impact">أثرنا</a>
-        <a href="Toplum Vakfı Stories.dc.html" data-key="stories">قصصنا</a>
+        <div class="tv-ni"><a href="Toplum Vakfı About.dc.html" data-key="about" aria-haspopup="true">من نحن<svg class="tv-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="tv-sub tv-sub--2"><div class="tv-sub-head"><b>من نحن</b><a class="tv-sub-all" href="Toplum Vakfı About.dc.html">عرض الكل ←</a></div><div class="tv-sub-grid">
+            <a href="Toplum Vakfı Our Story.dc.html"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4.5h11a2 2 0 0 1 2 2V20H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h11"/></svg></i>قصتنا</a>
+            <a href="Toplum Vakfı About.dc.html#vision"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg></i>رؤيتنا</a>
+            <a href="Toplum Vakfı About.dc.html#message"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></svg></i>رسالتنا</a>
+            <a href="Toplum Vakfı About.dc.html#mission"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></i>مهمتنا</a>
+            <a href="Toplum Vakfı About.dc.html#goals"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></i>أهدافنا</a>
+            <a href="Toplum Vakfı President Letter.dc.html"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.4-5.6 7.5-5.6s6.1 2 7.5 5.6"/></svg></i>رسالة الرئيس</a>
+            <a href="Toplum Vakfı Board.dc.html"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5.2a3 3 0 0 1 0 5.6M18.5 14.8c1.6.7 2.5 2.4 2.5 5.2"/></svg></i>مجلس الإدارة</a>
+          </div></div></div>
+        <div class="tv-ni"><a href="Toplum Vakfı Programs.dc.html" data-key="programs" aria-haspopup="true">برامجنا<svg class="tv-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="tv-sub tv-sub--2"><div class="tv-sub-head"><b>برامجنا</b><a class="tv-sub-all" href="Toplum Vakfı Programs.dc.html">عرض الكل ←</a></div><div class="tv-sub-grid">
+            <a href="Toplum Vakfı Programs.dc.html#values"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21v-8M12 13c0-4 3-6 7-6 0 4-3 6-7 6zM12 15c0-3-2.2-5-5.5-5 0 3 2.2 5 5.5 5z"/></svg></i>غرس القيم</a>
+            <a href="Toplum Vakfı Programs.dc.html#human"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5.2a3 3 0 0 1 0 5.6M18.5 14.8c1.6.7 2.5 2.4 2.5 5.2"/></svg></i>بناء الإنسان</a>
+            <a href="Toplum Vakfı Programs.dc.html#youth"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17 9 11l4 4 8-8M15 7h6v6"/></svg></i>صناعة مستقبل الشباب</a>
+            <a href="Toplum Vakfı Programs.dc.html#community"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg></i>المجتمع الواحد</a>
+            <a href="Toplum Vakfı Projects.dc.html" data-key="projects"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg></i>حملة أمل</a>
+          </div></div></div>
+        <div class="tv-ni"><a href="Toplum Vakfı Impact.dc.html" data-key="impact" aria-haspopup="true">أثرنا<svg class="tv-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="tv-sub"><div class="tv-sub-head"><b>أثرنا</b><a class="tv-sub-all" href="Toplum Vakfı Impact.dc.html">عرض الكل ←</a></div><div class="tv-sub-grid">
+            <a href="Toplum Vakfı Impact.dc.html"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4v16h16M8 15l3.5-4 3 2.5L20 7"/></svg></i>أثرنا</a>
+            <a href="Toplum Vakfı Transparency.dc.html"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M14 3.5v5h5M9 13h6M9 16.5h6"/></svg></i>الشفافية</a>
+            <a href="Toplum Vakfı News.dc.html" data-key="news"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4.5" width="13" height="15" rx="1.5"/><path d="M17 8.5h2.5V18a1.5 1.5 0 0 1-3 0M7.5 8.5h6M7.5 12h6M7.5 15.5h4"/></svg></i>أخبارنا</a>
+          </div></div></div>
+        <a href="Toplum Vakfı Stories.dc.html" data-key="stories">قصص</a>
         <a href="Toplum Vakfı Partners.dc.html" data-key="partners">الشركاء</a>
         <a href="Toplum Vakfı Contact.dc.html" data-key="contact">تواصل معنا</a>
       </nav>
@@ -212,7 +306,7 @@
           <a class="tv-icon-btn" href="Toplum Vakfı Profile.dc.html" aria-label="الملف الشخصي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c1.4-3.6 4.4-5.6 7.5-5.6s6.1 2 7.5 5.6"/></svg></a>
           <a class="tv-icon-btn" href="Toplum Vakfı Cart.dc.html" aria-label="السلة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.4 12.2a1.8 1.8 0 0 0 1.8 1.5h7.9a1.8 1.8 0 0 0 1.77-1.47L21 8H6"/></svg><span class="tv-icon-badge" id="tvCartBadge">0</span></a>
         </div>
-        <a class="tv-donate-top" href="Toplum Vakfı Cart.dc.html"><span class="dn-full">تبرع الآن</span><span class="dn-short">تبرع</span></a>
+        <a class="tv-donate-top" href="Toplum Vakfı Projects.dc.html"><span class="dn-full">تبرع الآن</span><span class="dn-short">تبرع</span></a>
       </div>
       <div class="tv-mrail">
         <a class="tv-mrail-btn tv-mhome" href="Toplum Vakfı Homepage.dc.html" aria-label="الصفحة الرئيسية" title="الرئيسية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.2 12 3.5l9 6.7V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"/></svg></a>
@@ -242,7 +336,7 @@
   <a href="Toplum Vakfı Programs.dc.html">برامجنا</a>
   <a href="Toplum Vakfı Projects.dc.html">مشاريعنا</a>
   <a href="Toplum Vakfı News.dc.html">الأخبار</a>
-  <a href="Toplum Vakfı Homepage.dc.html#impact">أثرنا</a>
+  <a href="Toplum Vakfı Impact.dc.html">أثرنا</a>
   <a href="Toplum Vakfı Stories.dc.html">قصصنا</a>
   <a href="Toplum Vakfı Partners.dc.html">الشركاء</a>
   <a href="Toplum Vakfı Contact.dc.html">تواصل معنا</a>
@@ -253,10 +347,17 @@
     <a href="Toplum Vakfı Search Results.dc.html">البحث</a>
   </div>
   <div class="tv-drawer-picks">
-    <select id="tvDrawerLang" aria-label="اللغة"><option>العربية</option><option disabled="true">English — قريبًا</option><option disabled="true">Türkçe — قريبًا</option><option disabled="true">Shqip — قريبًا</option></select>
+    <select id="tvDrawerLang" aria-label="اللغة" data-no-i18n="1"><option value="ar">العربية</option><option value="en">English</option><option value="tr">Türkçe</option><option value="sq">Shqip</option></select>
     <select id="tvDrawerCurr" aria-label="العملة"><option value="USD">USD $</option><option value="EUR">EUR €</option><option value="TRY">TRY ₺</option></select>
   </div>
-  <a class="tv-drawer-donate" href="Toplum Vakfı Cart.dc.html">تبرع الآن</a>
+  <a class="tv-drawer-donate" href="Toplum Vakfı Projects.dc.html">تبرع الآن</a>
+</nav>
+<nav class="tv-bnav" aria-label="التنقل السفلي">
+  <a href="Toplum Vakfı Homepage.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.2 12 3.5l9 6.7V20a1 1 0 0 1-1 1h-5v-6H10v6H4a1 1 0 0 1-1-1z"/></svg><span>الرئيسية</span></a>
+  <a href="Toplum Vakfı Programs.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg><span>برامج</span></a>
+  <a class="tv-bnav-give" href="Toplum Vakfı Cart.dc.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.4 3 5 6.4 5c2 0 3.4 1.1 4.1 2.3h3C14.2 6.1 15.6 5 17.6 5 21 5 23.1 8.4 21.6 11.7 19.5 16.4 12 21 12 21z"/></svg><span>تبرع الآن</span></a>
+  <a href="Toplum Vakfı Stories.dc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9.5 5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg><span>قصص</span></a>
+  <button type="button" id="tvBnavMore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>المزيد</span></button>
 </nav>
 </div>
 </x-dc>
@@ -283,7 +384,11 @@ class Component extends DCLogic {
     const active = this.props.activeKey;
     if (active) {
       const link = document.querySelector(`.tv-nav a[data-key="${active}"]`);
-      if (link) link.classList.add('active');
+      if (link) {
+        // A submenu match lights its top-level parent, which is what stays visible.
+        const group = link.closest('.tv-ni');
+        (group && link.closest('.tv-sub') ? group.querySelector(':scope > a') : link).classList.add('active');
+      }
     }
     document.querySelectorAll('.tv-dropdown-menu').forEach(menu => document.body.appendChild(menu));
     document.querySelectorAll('[data-dropdown]').forEach(btn => btn.addEventListener('click', (e) => {
@@ -303,7 +408,7 @@ class Component extends DCLogic {
       const menu = opt.closest('.tv-dropdown-menu');
       const trigger = document.querySelector(`[data-dropdown="${menu.id}"]`);
       // Desktop and the mobile rail both trigger this menu, so update every label/symbol.
-      document.querySelectorAll(`[data-dropdown="${menu.id}"] .tv-dd-label`).forEach(l => { l.textContent = opt.dataset.value; });
+      if (opt.dataset.value) document.querySelectorAll(`[data-dropdown="${menu.id}"] .tv-dd-label`).forEach(l => { l.textContent = opt.dataset.value; });
       if (opt.dataset.symbol) {
         ['tvCurrSymbol', 'tvMCurrSymbol'].forEach(id => {
           const el = document.getElementById(id);
@@ -337,14 +442,32 @@ class Component extends DCLogic {
     window.addEventListener('storage', syncBadge);
 
     // Inline search field
+    // Resolve the language at use time: this can mount before i18n.js defines tvI18n.
+    const curLang = () => { try { return (window.tvI18n && window.tvI18n.get()) || localStorage.getItem('tv_lang') || 'ar'; } catch (e) { return 'ar'; } };
+    const setLang = code => {
+      if (code === curLang()) return;
+      if (window.tvI18n) { window.tvI18n.set(code); return; }
+      try { localStorage.setItem('tv_lang', code); } catch (e) {}
+      location.reload();
+    };
+    const cur = curLang();
+    const names = { ar: 'العربية', en: 'English', tr: 'Türkçe', sq: 'Shqip' };
+    document.querySelectorAll('#tvLangMenu [data-lang]').forEach(b => {
+      b.classList.toggle('on', b.dataset.lang === cur);
+      b.addEventListener('click', e => { e.stopPropagation(); setLang(b.dataset.lang); });
+    });
+    const dl = document.getElementById('tvDrawerLang');
+    if (dl) { dl.value = cur; dl.addEventListener('change', () => setLang(dl.value)); }
+    const langLabel = document.querySelector('.tv-lang .tv-dd-label');
+    if (langLabel) { langLabel.textContent = names[cur] || names.ar; langLabel.setAttribute('data-no-i18n', '1'); }
     const suggest = this.detectLanguage();
     const bar = document.getElementById('tvLangSuggest');
     if (suggest && bar) {
       const header = document.querySelector('.tv-header');
       // No translated pages exist yet, so the bar acknowledges the visitor's
       // language and records interest — it never promises a switch.
-      document.getElementById('tvLangSuggestText').textContent = 'نسخة ' + suggest.name + ' قيد الإعداد. الموقع متاح بالعربية حاليًا.';
-      document.getElementById('tvLangYes').textContent = 'أبلغوني عند توفرها';
+      document.getElementById('tvLangSuggestText').textContent = 'هذا الموقع متاح بلغة ' + suggest.name + '.';
+      document.getElementById('tvLangYes').textContent = 'التبديل إلى ' + suggest.name;
       bar.classList.add('show');
       const h = Math.round(bar.getBoundingClientRect().height);
       if (header) header.style.top = h + 'px';
@@ -357,8 +480,8 @@ class Component extends DCLogic {
       };
       document.getElementById('tvLangNo').addEventListener('click', dismiss);
       document.getElementById('tvLangYes').addEventListener('click', () => {
-        localStorage.setItem('tv_lang_interest', suggest.code);
         dismiss();
+        if (window.tvI18n) window.tvI18n.set(suggest.code);
       });
     }
 
@@ -396,6 +519,8 @@ class Component extends DCLogic {
     const btn = document.getElementById('tvMobileMenuBtn'), overlay = document.getElementById('tvDrawerOverlay'), drawer = document.getElementById('tvDrawer');
     const open = () => { drawer.classList.add('open'); overlay.classList.add('open'); };
     const close = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
+    const more = document.getElementById('tvBnavMore');
+    if (more) more.addEventListener('click', open);
     if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); open(); });
     const closeBtn = document.getElementById('tvDrawerClose');
     if (closeBtn) closeBtn.addEventListener('click', close);

@@ -7,107 +7,217 @@
 </head>
 <body>
 <x-dc>
-<meta charset="UTF-8" />
+<helmet>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>برامجنا — وقف التضامن الاجتماعي</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
-    a { text-decoration: none; color: inherit; }
-    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
-
-    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
-    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
-    .page-banner-inner { position: relative; z-index: 1; }
-    .page-banner h1 { margin: 0 0 10px; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; }
-    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
-
-    .programs-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; padding: 50px 0 70px; }
-    .prog-card { background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #e6eef3; box-shadow: 0 12px 28px rgba(2,52,88,.07); transition: transform .2s, box-shadow .2s; display: block; }
-    .prog-card:hover { transform: translateY(-4px); box-shadow: 0 18px 34px rgba(2,52,88,.13); }
-    .prog-image { height: 150px; background-position: center; background-size: cover; }
-    .prog-body { padding: 20px; }
-    .prog-body h3 { margin: 0 0 10px; font-size: 15.5px; color: var(--ink); }
-    .prog-body p { margin: 0 0 14px; color: var(--muted); font-size: 12.5px; line-height: 1.7; }
-    .prog-sub { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-    .prog-sub li { background: var(--page-bg); color: var(--muted); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
-    .prog-link { color: var(--brand); font-size: 12.5px; font-weight: 800; }
-
-
-
-    @media (max-width: 900px) {
-      .programs-grid { grid-template-columns: 1fr; }
-    }
-      .mobile-sticky-donate { display: none; }
-    @media (max-width: 760px) {
-      .prog-sub li { font-size: 12px; }
-      .mobile-sticky-donate { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500; padding: 12px 16px; background: #fff; box-shadow: 0 -8px 24px rgba(2,20,38,.15); }
-      .mobile-sticky-donate a { display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 14px; min-height: 44px; }
-      body { padding-bottom: 70px; }
-    }
-  </style>
-
-<svg style="position:absolute; width:0; height:0" aria-hidden="true">
-  <defs>
-    <clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox">
-      <path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/>
-    </clipPath>
-  </defs>
-</svg>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./toplum-inner.css" />
+  <script src="./currency.js"></script>
+</helmet>
 <div dir="rtl">
-  <dc-import name="Toplum Vakfı Header" active-key="programs" hint-size="100%,78px"></dc-import>
-  <div class="mobile-sticky-donate"><a href="Toplum Vakfı Cart.dc.html">تبرع الآن</a></div>
+  <dc-import name="Toplum Vakfı Header" active-key="programs" hint-size="100%,64px"></dc-import>
 
-  <section class="page-banner">
-    <div class="container page-banner-inner">
-      <h1>برامجنا لبناء حياة أفضل</h1>
-      <p>خمسة مسارات عمل رئيسية — حملة أمل، غرس القيم، بناء الإنسان، صناعة مستقبل للشباب، والجسد الواحد — يجمع كل منها مبادرات ومشاريع ملموسة.</p>
+  <section class="in-banner">
+    <div class="in-wrap">
+      <nav class="in-crumb" id="pgCrumb" aria-label="مسار التنقل"><a href="Toplum Vakfı Homepage.dc.html">الرئيسية</a><span aria-hidden="true">‹</span><span>برامجنا</span></nav>
+      <h1 id="pgTitle">برامجنا</h1>
+      <p id="pgIntro">منذ عام 1995 نعمل من إسطنبول على غرس القيم وبناء الإنسان، بالتعليم والتأهيل والرعاية والتكافل، في تركيا وأكثر من عشرين دولة ومجتمعًا حول العالم.</p>
     </div>
   </section>
 
-  <div class="container programs-grid">
-    <a class="prog-card" href="Toplum Vakfı Program - Quran.dc.html">
-      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80')"></div>
-      <div class="prog-body"><h3>حملة أمل</h3><p>مبادرات إيمانية وتعليمية واجتماعية تخدم المجتمع الفلسطيني وتدعم ارتباطه بالعلم والقيم.</p><ul class="prog-sub"><li>تحفيظ القرآن</li><li>الاعتكاف</li><li>وجبات الإفطار</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
-    </a>
-    <a class="prog-card" href="Toplum Vakfı Blog.dc.html">
-      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=600&q=80')"></div>
-      <div class="prog-body"><h3>غرس القيم</h3><p>مبادرات إعلامية وتربوية ومجتمعية تهدف إلى تأصيل القيم وتحويلها إلى ممارسة يومية.</p><ul class="prog-sub"><li>بودكاست غرس</li><li>الأسرة القيمية</li><li>ركن القيم</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
-    </a>
-    <a class="prog-card" href="Toplum Vakfı Program - Aytam.dc.html">
-      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=600&q=80')"></div>
-      <div class="prog-body"><h3>بناء الإنسان</h3><p>مبادرات تعنى بتأهيل البنية التعليمية والمجتمعية، ودعم بيئات آمنة للتعلم والعبادة والرعاية.</p><ul class="prog-sub"><li>بناء دار أيتام</li><li>ترميم مدارس</li><li>تأهيل مساجد</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
-    </a>
-    <a class="prog-card" href="Toplum Vakfı Stories.dc.html">
-      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80')"></div>
-      <div class="prog-body"><h3>صناعة مستقبل للشباب</h3><p>مسارات لتنمية المهارات والقيادة والمبادرات التي يقودها الشباب ورواد المجتمع.</p><ul class="prog-sub"><li>زاد المرشدين</li><li>حاضنة المبادرات</li><li>زاد الرواد</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
-    </a>
-    <a class="prog-card" href="Toplum Vakfı Partners.dc.html">
-      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80')"></div>
-      <div class="prog-body"><h3>الجسد الواحد</h3><p>مبادرة تعزز التكافل والانتماء المجتمعي ضمن إطار قيمي مشترك.</p><ul class="prog-sub"><li>دار القيم</li></ul><span class="prog-link">اقرأ أكثر ←</span></div>
-    </a>
-    <a class="prog-card" href="Toplum Vakfı Zakat Calculator.dc.html">
-      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1607863680198-23d4b2565df0?auto=format&fit=crop&w=600&q=80')"></div>
-      <div class="prog-body"><h3>حاسبة الزكاة</h3><p>احسب زكاة مالك بسهولة وتبرع بها مباشرة لمن يستحقها.</p><ul class="prog-sub"><li>حاسبة تلقائية</li><li>تبرع مباشر</li></ul><span class="prog-link">احسب زكاتك ←</span></div>
-    </a>
-    <a class="prog-card" href="Toplum Vakfı Sadaqah Jariyah.dc.html">
-      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1542601098-8fc114e148f1?auto=format&fit=crop&w=600&q=80')"></div>
-      <div class="prog-body"><h3>صدقة جارية</h3><p>زرع شجرة أو حفر بئر بلوحة تحمل اسمك أو اسم من تحب.</p><ul class="prog-sub"><li>شجرة</li><li>بئر</li></ul><span class="prog-link">تبرع بصدقة جارية ←</span></div>
-    </a>
-    <a class="prog-card" href="Toplum Vakfı Religious Occasions.dc.html">
-      <div class="prog-image" style="background-image:url('https://images.unsplash.com/photo-1591189863430-ab87e120f312?auto=format&fit=crop&w=600&q=80')"></div>
-      <div class="prog-body"><h3>مناسبات شرعية</h3><p>كفّارة، فدية الصيام، وعقيقة — أدِّ ما عليك ببساطة.</p><ul class="prog-sub"><li>كفّارة</li><li>فدية</li><li>عقيقة</li></ul><span class="prog-link">تصفح ←</span></div>
-    </a>
-  </div>
+  <main class="in-main">
+    <div class="in-wrap">
+      <div class="pg-tabs" role="tablist" aria-label="تصفية البرامج">
+        <button type="button" class="on" data-cat="all">جميع البرامج</button>
+        <button type="button" data-cat="amal">حملة أمل</button>
+        <button type="button" data-cat="values">غرس القيم</button>
+        <button type="button" data-cat="human">بناء الإنسان</button>
+        <button type="button" data-cat="youth">صناعة مستقبل الشباب</button>
+        <button type="button" data-cat="community">المجتمع الواحد</button>
+      </div>
+
+      <article class="in-card pg-feature">
+        <div class="pg-feature-text">
+          <small id="pgKicker">حملة الوقف 2026</small>
+          <h2 id="pgFTitle">حملة أمل</h2>
+          <span class="in-script" id="pgFScript">فلنكن أملهم.. فتضامننا مستقبلهم</span>
+          <p id="pgFText">نرمّم مدارس ومساجد في سوريا ليستقبل أهلها من جديد.</p>
+          <div class="pg-chips" id="pgChips"><span>7 مشاريع</span></div>
+          <div class="pg-actions" id="pgActions">
+            <a class="in-pill" href="#amal"><i>←</i>مشاريع الحملة</a>
+            <a class="in-pill" href="Toplum Vakfı Cart.dc.html"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg></i>ساهم في الحملة</a>
+          </div>
+        </div>
+        <div class="pg-feature-img" id="pgFImg" style="background-image:url('assets/hero-bg.jpg')" role="img" aria-label="أعمال ترميم ضمن حملة أمل"></div>
+      </article>
+
+      <section class="in-sec" id="pgPaths">
+        <h2 class="in-h2">مسارات العطاء</h2>
+        <p class="in-sub">أربعة مسارات تنتظم فيها برامج الوقف.</p>
+        <div class="gp-grid">
+          <a class="in-card gp-card" href="#values"><div class="gp-img" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=700&q=80')"><span class="gp-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 21v-8M12 13c0-4 3-6 7-6 0 4-3 6-7 6zM12 15c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/></svg></span></div><div class="gp-body"><small>المسار 01</small><h3>غرس القيم</h3><p>ترسيخ الأخلاق والمعرفة التي تنتقل من الفرد إلى مجتمعه.</p><div class="gp-foot"><span>4 برامج</span><b>استكشف ←</b></div></div></a>
+          <a class="in-card gp-card" href="#human"><div class="gp-img" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=80')"><span class="gp-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5.5a3 3 0 0 1 0 5.8M21 20c0-2.6-1.5-4.5-3.8-5.2"/></svg></span></div><div class="gp-body"><small>المسار 02</small><h3>بناء الإنسان</h3><p>تعليم متكافئ للفئات الأضعف، ورعاية وبيئات تتيح للإنسان أن ينمو.</p><div class="gp-foot"><span>7 برامج</span><b>استكشف ←</b></div></div></a>
+          <a class="in-card gp-card" href="#youth"><div class="gp-img" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=700&q=80')"><span class="gp-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></span></div><div class="gp-body"><small>المسار 03</small><h3>صناعة مستقبل الشباب</h3><p>مهارات تفتح أبواب العمل، وقدرات تدعم القيادة والمشاركة.</p><div class="gp-foot"><span>5 برامج</span><b>استكشف ←</b></div></div></a>
+          <a class="in-card gp-card" href="#community"><div class="gp-img" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=700&q=80')"><span class="gp-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg></span></div><div class="gp-body"><small>المسار 04</small><h3>المجتمع الواحد</h3><p>تكافل في تفاصيل الحياة: غذاء وماء ورعاية تصل إلى المحتاجين في مواسمها.</p><div class="gp-foot"><span>8 برامج</span><b>استكشف ←</b></div></div></a>
+        </div>
+      </section>
+
+      <section class="in-sec" id="pgProgs" hidden="hidden">
+        <div class="in-sec-head">
+          <h2 class="in-h2">برامج المسار</h2>
+          <p class="in-sub">أرقام مختارة من كتالوج إنجازات الوقف 2026، لكل رقم وحدته</p>
+        </div>
+        <div class="pp2-grid" id="pgProgGrid"></div>
+      </section>
+
+      <section class="in-sec" id="open">
+        <h2 class="in-h2" id="pgProjTitle" style="margin-bottom:16px">المشاريع المفتوحة للتبرع</h2>
+        <div class="pj-grid" id="pjGrid"></div>
+        <div class="in-card pg-empty" id="pgEmpty" hidden="hidden">
+          <b>لا توجد مشاريع مفتوحة في هذا المسار حاليًا</b>
+          <a href="#all">عرض جميع المشاريع ←</a>
+        </div>
+      </section>
+    </div>
+  </main>
 
   <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+const IMG = {
+  a: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=900&q=80',
+  b: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=900&q=80',
+  c: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=900&q=80',
+  d: 'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=900&q=80',
+  e: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=900&q=80',
+  h: 'assets/hero-bg.jpg'
+};
+const SCHOOL = 'Toplum Vakfı Project - Schools Restoration.dc.html', ALL = 'Toplum Vakfı Projects.dc.html';
+// [name, cats, image, tag, raised, goal, detailsHref]
+const PROJECTS = [
+  ['ترميم مدرسة العتيبة للبنين — سوريا', 'amal human', 'a', 'حملة أمل', 2000, 30000, SCHOOL],
+  ['ترميم مدرسة الإبداع', 'amal human', 'c', 'حملة أمل', 0, 0, SCHOOL],
+  ['تأهيل المساجد المتضررة وتجهيزها لرمضان', 'amal human', 'h', 'حملة أمل', 0, 0, ALL],
+  ['ترميم مسجد آل ياسر — سوريا', 'amal human', 'd', 'حملة أمل', 0, 0, ALL],
+  ['ترميم مدرسة زاكية للبنات وتأهيلها', 'amal human', 'a', 'حملة أمل', 0, 0, SCHOOL],
+  ['بناء دار أيتام — سوريا', 'amal human', 'e', 'حملة أمل', 0, 0, 'Toplum Vakfı Project - Dar Aytam.dc.html'],
+  ['ترميم مدرسة الأمل وتأهيلها — سوريا', 'amal human', 'c', 'حملة أمل', 0, 0, SCHOOL],
+  ['دعم رائد القيم', 'youth', 'b', '', 0, 0, ALL],
+  ['زاد المرشدين', 'values', 'b', '', 2000, 10000, ALL],
+  ['حفر آبار المياه', 'community', 'c', '', 0, 0, 'Toplum Vakfı Project - Water Wells.dc.html'],
+  ['السلال الغذائية', 'community', 'e', '', 0, 0, 'Toplum Vakfı Project - Food Baskets.dc.html'],
+  ['تسديد ديون الغارمين في أفريقيا', 'community', 'd', '', 0, 0, 'Toplum Vakfı Project - Gharimin.dc.html'],
+  ['منح تحفيظ القرآن', 'values', 'a', '', 0, 0, 'Toplum Vakfı Project - Quran Scholarships.dc.html']
+];
+const PATHS = {
+  values: { n: '01', t: 'غرس القيم', line: 'تعلّمٌ يرسّخ الأخلاق، ومعرفة تنتقل من الفرد إلى مجتمعه', img: 'd', chips: ['4 برامج', 'مشروع واحد'], progs: [
+    ['نسمة القيم', 'أنشطة قيمية أسبوعية في رياض الأطفال والمدارس والجامعات', ['+20,000 مستفيد']],
+    ['واحة القيم', 'فعاليات ومحاضرات لتعزيز القيم', ['+30,000 مستفيد']],
+    ['دار المعلم', 'تدريب المعلمين', ['+2,000 معلم', '+30,000 طالب وصل إليهم الأثر']],
+    ['دار المرشدين', 'تأهيل الدعاة والأئمة والخطباء والمؤثرين', ['+2,000 مستفيد']]] },
+  human: { n: '02', t: 'بناء الإنسان', line: 'تعليم متكافئ للفئات الأضعف خاصة، ورعاية وبيئات تمنح الإنسان مساحة للنمو', img: 'a', chips: ['7 برامج', '8 مشاريع'], progs: [
+    ['السفرة', 'حلقات لتحفيظ القرآن الكريم وتدريس علومه', ['+500 حلقة', '+12,500 طالب وطالبة سنويًا']],
+    ['مربية جيل القيم', 'تأهيل الأمهات ومربيات الأيتام', ['+1,500 مربية', '+5,000 طفل']],
+    ['سنابل القيم', 'برنامج مستمر لرعاية الأيتام', ['+1,000 يتيم شهريًا']],
+    ['سفراء القيم', 'منح دراسية وتدريب', ['+10,000 طالب']],
+    ['دعم رائد القيم', 'دعاة يوظّفون التقنية ووسائل التواصل', ['+5,000 مستفيد']],
+    ['بيئة القيم', 'بناء المساجد وترميمها', ['+100,000 مستفيد']],
+    ['الأسرة القيمية', 'برامج للأسرة', ['+5,000 أسرة']]] },
+  youth: { n: '03', t: 'صناعة مستقبل الشباب', line: 'مهارات تفتح فرص العمل، وقدرات تدعم القيادة والمشاركة', img: 'b', chips: ['5 برامج'], progs: [
+    ['دار الروّاد', 'مسارات قيادية وابتكارية وتقنية', ['+1,000 شاب وفتاة']],
+    ['صناعة المؤثرين', 'مهارات خطابية ومعرفة قيمية وتقنية', ['+2,000 مستفيد']],
+    ['تمكين الخريجين', 'تأهيل الخريجين لسوق العمل', ['+2,000 مستفيد']],
+    ['التعليم والمهن الحرفية', 'تعليم مهني وحرفي', ['+2,500 مستفيد']],
+    ['المنح التعليمية', 'منح دراسية للطلاب', ['+6,000 طالب']]] },
+  community: { n: '04', t: 'المجتمع الواحد', line: 'التكافل في تفاصيل الحياة: غذاء وماء ورعاية تصل إلى المحتاجين عبر المواسم', img: 'e', chips: ['8 برامج'], progs: [
+    ['سقيا الماء', 'ماء نقي في الأماكن العامة والمزدحمة، مع التوصيل إلى المحتاجين', ['+50,000 مستفيد']],
+    ['إفطار صائم', 'وجبات إفطار متكاملة في رمضان', ['+30,000 مستفيد']],
+    ['السلال الغذائية', 'سلال غذائية للأسر المحتاجة', ['+55,000 مستفيد']],
+    ['توزيع المصاحف', 'مصاحف للمساجد المحتاجة', ['+5,000 نسخة']],
+    ['توزيع الخبز', 'خبز يومي للأسر', ['+100,000 مستفيد']],
+    ['تكية الطعام', 'وجبات مطهوة للأسر', ['+50,000 أسرة']],
+    ['الأضاحي', 'لحوم الأضاحي للأسر المحتاجة', ['+40,000 أسرة']],
+    ['موسم الشتاء', 'حزم شتوية للأسر النازحة', ['+30,000 أسرة']]] }
+};
+const HEART = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg>';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmt = n => '$' + n.toLocaleString('en-US');
+
 class Component extends DCLogic {
+  componentDidMount() {
+    this.onHash = () => this.show((location.hash || '#all').slice(1));
+    document.querySelectorAll('.pg-tabs button').forEach(t => t.addEventListener('click', () => {
+      history.replaceState(null, '', '#' + t.dataset.cat);
+      this.show(t.dataset.cat);
+    }));
+    window.addEventListener('hashchange', this.onHash);
+    document.getElementById('pjGrid').addEventListener('click', e => {
+      const btn = e.target.closest('.pj-add');
+      if (!btn) return;
+      const card = btn.closest('.pj-card');
+      const amt = Math.max(1, Number(card.querySelector('input').value) || 0);
+      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
+      cart.push({ name: card.dataset.name, amount: amt, freq: 'تبرع مرة واحدة' });
+      localStorage.setItem('tv_cart', JSON.stringify(cart));
+      btn.textContent = '✓ أُضيف';
+      setTimeout(() => { btn.textContent = 'أضف إلى السلة'; }, 1500);
+    });
+    this.onHash();
+  }
+  componentWillUnmount() { window.removeEventListener('hashchange', this.onHash); }
+
+  show(key) {
+    const valid = ['all', 'amal', 'values', 'human', 'youth', 'community'];
+    if (!valid.includes(key)) key = 'all';
+    document.querySelectorAll('.pg-tabs button').forEach(b => b.classList.toggle('on', b.dataset.cat === key));
+    const $ = id => document.getElementById(id);
+    const path = PATHS[key];
+    const title = key === 'all' ? 'برامجنا' : key === 'amal' ? 'حملة أمل' : path.t;
+    $('pgTitle').textContent = title;
+    $('pgIntro').hidden = key !== 'all';
+    $('pgCrumb').innerHTML = '<a href="Toplum Vakfı Homepage.dc.html">الرئيسية</a><span aria-hidden="true">‹</span>' +
+      (key === 'all' ? '<span>برامجنا</span>' : '<a href="#all">برامجنا</a><span aria-hidden="true">‹</span><span>' + esc(title) + '</span>');
+
+    if (path) {
+      $('pgKicker').textContent = 'المسار ' + path.n;
+      $('pgFTitle').textContent = path.line;
+      $('pgFScript').hidden = true;
+      $('pgFText').hidden = true;
+      $('pgChips').innerHTML = path.chips.map(c => '<span>' + esc(c) + '</span>').join('');
+      $('pgActions').innerHTML = '<a class="in-pill" href="Toplum Vakfı Cart.dc.html"><i>' + HEART + '</i>تبرع لهذا المسار</a><span class="pg-note">يوجَّه تبرعك إلى برامج هذا المسار</span>';
+      $('pgFImg').style.backgroundImage = "url('" + IMG[path.img] + "')";
+      $('pgProgGrid').innerHTML = path.progs.map(p => '<article class="in-card pp2-card"><h3>' + esc(p[0]) + '</h3><p>' + esc(p[1]) + '</p><div class="pp2-stats">' + p[2].map(s => '<span>' + esc(s) + '</span>').join('') + '</div></article>').join('');
+    } else {
+      $('pgKicker').textContent = 'حملة الوقف 2026';
+      $('pgFTitle').textContent = 'حملة أمل';
+      $('pgFScript').hidden = false;
+      $('pgFText').hidden = false;
+      $('pgChips').innerHTML = '<span>7 مشاريع</span>';
+      $('pgActions').innerHTML = (key === 'all' ? '<a class="in-pill" href="#amal"><i>←</i>مشاريع الحملة</a>' : '') + '<a class="in-pill" href="Toplum Vakfı Cart.dc.html"><i>' + HEART + '</i>ساهم في الحملة</a>';
+      $('pgFImg').style.backgroundImage = "url('assets/hero-bg.jpg')";
+    }
+    $('pgPaths').hidden = key !== 'all';
+    $('pgProgs').hidden = !path;
+
+    const list = key === 'all' ? PROJECTS : PROJECTS.filter(p => p[1].split(' ').includes(key));
+    $('pgProjTitle').textContent = key === 'all' ? 'المشاريع المفتوحة للتبرع' : key === 'amal' ? 'مشاريع الحملة' : 'مشاريع هذا المسار';
+    $('pgEmpty').hidden = list.length > 0;
+    $('pjGrid').hidden = list.length === 0;
+    $('pjGrid').innerHTML = list.map(p => {
+      const pct = p[5] ? Math.round(p[4] / p[5] * 100) : 0;
+      const prog = p[5]
+        ? '<div class="pj-bar"><span style="width:' + Math.max(pct, 3) + '%"></span></div><div class="pj-meta"><span>تم جمع <b>' + fmt(p[4]) + '</b></span><span>الهدف <b>' + fmt(p[5]) + '</b></span></div>'
+        : '<p class="pj-note">يوجَّه تبرعك إلى هذا المشروع مباشرة</p>';
+      return '<article class="in-card pj-card" data-name="' + esc(p[0]) + '"><div class="pj-img" style="background-image:url(\'' + IMG[p[2]] + '\')">' + (p[3] ? '<span class="pj-tag">' + esc(p[3]) + '</span>' : '') + '</div>' +
+        '<div class="pj-body"><h3>' + esc(p[0]) + '</h3>' + prog +
+        '<label class="pj-amt"><span>$</span><input type="number" min="1" value="50" aria-label="مبلغ التبرع"></label>' +
+        '<div class="pj-btns"><button type="button" class="in-pill pj-add">أضف إلى السلة</button><a class="in-ghost" href="' + esc(p[6]) + '">اقرأ المزيد</a></div></div></article>';
+    }).join('');
+  }
   renderVals() { return {}; }
 }
 </script>

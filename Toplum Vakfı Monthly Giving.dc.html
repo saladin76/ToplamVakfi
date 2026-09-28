@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    :root { --brand: #00a2e0; --brand-ink: #0077b3; --brand-2: #00a1df; --ink: #062442; --navy: #031a31; --muted: #5d7187; --page-bg: #f4f8fb; }
+    :root { --brand: #00a2e0; --brand-ink: #0077b3; --brand-2: #00a1df; --ink: #062442; --navy: #031a36; --muted: #5d7187; --page-bg: #f4f8fb; }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
     a { text-decoration: none; color: inherit; }
@@ -63,7 +63,7 @@
     .mg-amounts { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 6px; }
     .mg-amounts button { min-height: 46px; border: 1.5px solid #e2eaf0; border-radius: 10px; background: #f2f6f9; color: var(--ink); font-size: 13px; font-weight: 800; direction: ltr; cursor: pointer; transition: background .15s, border-color .15s, color .15s, transform .15s; }
     .mg-amounts button:hover { border-color: var(--brand); transform: translateY(-1px); }
-    .mg-amounts button.active { background: linear-gradient(135deg, var(--brand), #0089cb); border-color: var(--brand); color: #fff; box-shadow: 0 8px 18px rgba(0,162,224,.34); }
+    .mg-amounts button.active { background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); border-color: var(--brand); color: #fff; box-shadow: 0 8px 18px rgba(0,162,224,.34); }
     .mg-custom { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; margin-top: 0; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 10px; padding: 0 14px; min-height: 46px; direction: ltr; transition: border-color .2s, background .2s; }
     .mg-custom:focus-within { border-color: var(--brand); background: #fff; }
     .mg-custom span { color: var(--muted); font-weight: 800; font-size: 13px; }
@@ -85,9 +85,42 @@
     .mg-summary > span { color: var(--muted); font-size: 12.5px; font-weight: 700; line-height: 1.7; }
     .mg-summary em { font-style: normal; color: var(--ink); }
 
-    .mg-cta { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 52px; background: linear-gradient(135deg, var(--brand), #0089cb); color: #fff; border: 0; border-radius: 999px; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 24px rgba(0,162,224,.34); transition: transform .2s, box-shadow .2s; }
+    .mg-cta { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 52px; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; border: 0; border-radius: 999px; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 24px rgba(0,162,224,.34); transition: transform .2s, box-shadow .2s; }
     .mg-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,162,224,.44); }
     .mg-fine { margin: 12px 0 0; text-align: center; font-size: 12px; color: var(--muted); line-height: 1.8; }
+
+    /* Sections below the hero */
+    .mg-sec { padding: 56px 0 0; }
+    .mg-sec:last-of-type { padding-bottom: 70px; }
+    .mg-h2 { margin: 0 0 6px; font-size: clamp(22px, 2.4vw, 30px); font-weight: 900; letter-spacing: -.4px; }
+    .mg-intro { margin: 0 0 24px; color: var(--muted); font-size: 13.5px; line-height: 1.85; max-width: 60ch; }
+    .mg-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: st; }
+    .mg-step { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 22px; box-shadow: 0 12px 28px rgba(2,52,88,.06); }
+    .mg-step::before { counter-increment: st; content: counter(st); display: grid; place-items: center; width: 38px; height: 38px; margin-bottom: 14px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #0077b3); color: #fff; font-size: 15px; font-weight: 900; }
+    .mg-step h3 { margin: 0 0 6px; font-size: 16px; font-weight: 900; }
+    .mg-step p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.85; }
+    .mg-causes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .mg-cause { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 200px; padding: 20px; border-radius: 16px; overflow: hidden; color: #fff; background: #0b2440 center / cover no-repeat; text-decoration: none; transition: transform .2s; }
+    .mg-cause::before { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(3,26,54,.9), rgba(3,26,54,.15) 70%); }
+    .mg-cause > * { position: relative; }
+    .mg-cause:hover { transform: translateY(-3px); color: #fff; }
+    .mg-cause h3 { margin: 0 0 4px; font-size: 17px; font-weight: 900; }
+    .mg-cause p { margin: 0; color: #cfe3f1; font-size: 12.5px; line-height: 1.7; }
+    .mg-control { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+    .mg-ctl-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .mg-ctl-list li { display: flex; gap: 12px; align-items: flex-start; padding: 16px 18px; background: #fff; border: 1px solid #e6eef3; border-radius: 14px; }
+    .mg-ctl-list svg { flex-shrink: 0; width: 22px; height: 22px; color: var(--brand-ink); }
+    .mg-ctl-list b { display: block; font-size: 14px; font-weight: 800; }
+    .mg-ctl-list span { color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+    .mg-faq { display: grid; gap: 10px; }
+    .mg-faq details { background: #fff; border-radius: 14px; box-shadow: 0 6px 18px rgba(2,52,88,.06); }
+    .mg-faq summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 0 18px; font-size: 14px; font-weight: 800; }
+    .mg-faq summary::-webkit-details-marker { display: none; }
+    .mg-faq summary::after { content: "+"; flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #eaf5fc; color: var(--brand-ink); font-size: 16px; font-weight: 800; }
+    .mg-faq details[open] summary::after { content: "−"; background: var(--brand); color: #fff; }
+    .mg-faq p { margin: 0; padding: 0 18px 16px; color: var(--muted); font-size: 13px; line-height: 1.85; }
+    @media (max-width: 900px) { .mg-steps, .mg-causes, .mg-control { grid-template-columns: minmax(0, 1fr); } }
+    @media (min-width: 560px) and (max-width: 900px) { .mg-causes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
     @media (max-width: 980px) {
       .mg-hero-in { grid-template-columns: minmax(0,1fr); gap: 28px; padding-bottom: 34px; }
@@ -166,6 +199,56 @@
     </div>
   </section>
 
+  <section class="mg-sec">
+    <div class="container">
+      <h2 class="mg-h2">كيف يعمل البرنامج</h2>
+      <p class="mg-intro">ثلاث خطوات، وتبقى صدقتك مستمرة دون أن تعود إليها.</p>
+      <div class="mg-steps">
+        <article class="mg-step"><h3>اختر المبلغ والباب</h3><p>حدّد مبلغًا يناسبك، واختر أسبوعيًا أو شهريًا، والباب الذي تريد أن يُصرف فيه.</p></article>
+        <article class="mg-step"><h3>يتجدد تلقائيًا</h3><p>يُخصم المبلغ الأول عند الاشتراك، ثم بالموعد نفسه كل أسبوع أو شهر، ويصلك إيصال بكل دفعة.</p></article>
+        <article class="mg-step"><h3>تتابع الأثر</h3><p>نرسل إليك تحديثات من الميدان عن الباب الذي اخترته، وتجد سجل دفعاتك كاملًا في ملفك.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="mg-sec">
+    <div class="container">
+      <h2 class="mg-h2">أين يذهب عطاؤك</h2>
+      <p class="mg-intro">ستة أبواب يمكنك أن تختار بينها، وكلها تُنفَّذ عبر برامج الوقف القائمة.</p>
+      <div class="mg-causes">
+        <a class="mg-cause" href="Toplum Vakfı Programs.dc.html#human" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=700&q=80')"><h3>رعاية الأيتام</h3><p>سكن وتعليم ورعاية مستمرة للأطفال الأيتام.</p></a>
+        <a class="mg-cause" href="Toplum Vakfı Programs.dc.html#human" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=80')"><h3>التعليم والمنح الدراسية</h3><p>منح دراسية وترميم مدارس تعيد الطلاب إلى الدراسة.</p></a>
+        <a class="mg-cause" href="Toplum Vakfı Programs.dc.html#community" style="background-image:url('assets/hero-bg.jpg')"><h3>الإغاثة الإنسانية</h3><p>سلال غذائية وخبز وحزم شتوية تصل في مواسمها.</p></a>
+        <a class="mg-cause" href="Toplum Vakfı Programs.dc.html#community" style="background-image:url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=700&q=80')"><h3>المياه النظيفة والآبار</h3><p>آبار وسقيا ماء في المناطق الأشد حاجة.</p></a>
+        <a class="mg-cause" href="Toplum Vakfı Programs.dc.html#values" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=700&q=80')"><h3>القرآن والقيم</h3><p>حلقات التحفيظ وتأهيل المعلمين والمرشدين.</p></a>
+        <a class="mg-cause" href="Toplum Vakfı Projects.dc.html" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=700&q=80')"><h3>حيث الحاجة الأشد</h3><p>يوجّهه الوقف إلى المشروع الأكثر إلحاحًا في حينه.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mg-sec">
+    <div class="container mg-control">
+      <div>
+        <h2 class="mg-h2">صدقتك تحت تصرفك</h2>
+        <p class="mg-intro">كل شيء تديره من ملفك الشخصي، دون اتصال أو نماذج.</p>
+        <ul class="mg-ctl-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg><span><b>تعديل المبلغ أو الباب</b>يسري التغيير ابتداءً من الدفعة التالية.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><span><b>إيقاف مؤقت أو نهائي</b>بضغطة واحدة، ولا تُخصم أي دفعة بعدها.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M14 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M14 3.5v5h5M9 13h6M9 17h4"/></svg><span><b>إيصالات وسجل كامل</b>كل دفعة بإيصال قابل للتحميل.</span></li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="mg-h2">أسئلة شائعة</h2>
+        <p class="mg-intro">ما يسأل عنه المتبرعون قبل الاشتراك.</p>
+        <div class="mg-faq">
+          <details open="open"><summary>متى يُخصم المبلغ؟</summary><p>تُخصم الدفعة الأولى عند الاشتراك، ثم في اليوم نفسه من كل أسبوع أو شهر.</p></details>
+          <details><summary>هل يمكنني إيقاف الاشتراك؟</summary><p>نعم، في أي وقت من ملفك الشخصي، ولا تُخصم أي دفعة بعد الإيقاف.</p></details>
+          <details><summary>هل تُحتسب الصدقة الدورية من الزكاة؟</summary><p>البرنامج للصدقات. إن أردت إخراج الزكاة، فاستخدم <a href="Toplum Vakfı Zakat Calculator.dc.html">حاسبة الزكاة</a> لتُسجّل بنيتها.</p></details>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
 
@@ -194,13 +277,15 @@ class Component extends DCLogic {
     const money = (usd) => (window.tvCurrency ? window.tvCurrency.format(usd) : '$' + usd.toLocaleString('en-US'));
     // The first charge runs at signup, so there is no schedule to pick.
     const weekly = () => freq === 'weekly';
+    // Runtime text goes through the translation lookup so other languages stay translated.
+    const L = (ar) => (window.tvI18n && window.tvI18n.t ? window.tvI18n.t(ar) : ar);
     const render = () => {
       sumAmt.textContent = money(amount);
-      sumFund.textContent = fund;
-      if (amtLabel) amtLabel.textContent = weekly() ? 'المبلغ الأسبوعي' : 'المبلغ الشهري';
-      if (sumAmtLabel) sumAmtLabel.textContent = weekly() ? 'أسبوعيًا' : 'شهريًا';
-      if (builderTitle) builderTitle.textContent = weekly() ? 'صدقتك الأسبوعية' : 'صدقتك الشهرية';
-      cta.textContent = weekly() ? 'ابدأ صدقتك الأسبوعية' : 'ابدأ صدقتك الشهرية';
+      sumFund.textContent = L(fundSelect.options[fundSelect.selectedIndex].text);
+      if (amtLabel) amtLabel.textContent = L(weekly() ? 'المبلغ الأسبوعي' : 'المبلغ الشهري');
+      if (sumAmtLabel) sumAmtLabel.textContent = L(weekly() ? 'أسبوعيًا' : 'شهريًا');
+      if (builderTitle) builderTitle.textContent = L(weekly() ? 'صدقتك الأسبوعية' : 'صدقتك الشهرية');
+      cta.textContent = L(weekly() ? 'ابدأ صدقتك الأسبوعية' : 'ابدأ صدقتك الشهرية');
     };
 
     freqBtns.forEach(b => b.addEventListener('click', () => {

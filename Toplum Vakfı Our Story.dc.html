@@ -7,54 +7,73 @@
 </head>
 <body>
 <x-dc>
-<meta charset="UTF-8" />
+<helmet>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قصتنا — وقف التضامن الاجتماعي</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
-    a { text-decoration: none; color: inherit; }
-    .container { width: min(820px, calc(100% - 64px)); margin: 0 auto; }
-    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
-    .page-banner .banner-inner { width: min(1180px, calc(100% - 64px)); margin: 0 auto; position: relative; z-index: 1; }
-    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
-    .page-banner h1 { margin: 0 0 10px; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; }
-    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
-    .story-body { padding: 64px 0; }
-    .story-body h2 { font-size: 19px; font-weight: 800; margin: 36px 0 14px; }
-    .story-body h2:first-child { margin-top: 0; }
-    .story-body p { color: var(--muted); font-size: 14.5px; line-height: 1.9; margin: 0 0 14px; }
-    .milestones { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; margin-top: 12px; }
-    .milestone { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 20px; box-shadow: 0 12px 30px rgba(2,52,88,.06); }
-    .milestone b { display: block; color: var(--brand); font-size: 20px; margin-bottom: 6px; }
-    .milestone span { color: var(--muted); font-size: 13px; line-height: 1.7; }
-    @media (max-width: 700px) { .milestones { grid-template-columns: 1fr; } }
-  </style>
-
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./toplum-inner.css" />
+</helmet>
 <div dir="rtl">
-  <dc-import name="Toplum Vakfı Header" active-key="about" hint-size="100%,78px"></dc-import>
-  <section class="page-banner">
-    <div class="banner-inner">
+  <dc-import name="Toplum Vakfı Header" active-key="about" hint-size="100%,64px"></dc-import>
+
+  <section class="in-banner">
+    <div class="in-wrap">
+      <nav class="in-crumb" aria-label="مسار التنقل"><a href="Toplum Vakfı Homepage.dc.html">الرئيسية</a><span aria-hidden="true">‹</span><a href="Toplum Vakfı About.dc.html">من نحن</a><span aria-hidden="true">‹</span><span>قصتنا</span></nav>
       <h1>قصتنا</h1>
-      <p>من فكرة بسيطة إلى وقف معتمد رسميًا يخدم مجتمعات في مختلف أنحاء العالم.</p>
+      <p>ثلاثون عامًا من العمل في التعليم وبناء الإنسان</p>
     </div>
   </section>
-  <div class="container story-body">
-    <h2>البداية</h2>
-    <p>بدأت الفكرة في تركيا، بوصفها نقطة التقاء للحضارة والثقافة بين الشرق والغرب. تم اعتماد وقف التضامن الاجتماعي رسميًا وبدء نشاطه بموجب موافقة المديرية العامة للأوقاف في جمهورية تركيا بتاريخ 03/11/1995 تحت رقم السجل 3673، برؤية تؤمن بأن الإنسان أساس الحضارة، وأن العلم والتعليم والمعرفة أدوات رئيسية لبنائه.</p>
-    <h2>لماذا نعمل</h2>
-    <p>لم يقتصر عملنا على نقل المعرفة، بل ربط بين العقل والقيم والأخلاق. نعمل على تفعيل وتعزيز دور رواد المجتمع، بما في ذلك الدعاة والشباب والمؤثرون، وتبنّي المبادرات والمشاريع التي تغرس القيم السامية وتبني مجتمعًا متماسكًا قادرًا على مواجهة التحديات بأخلاقية.</p>
-    <h2>التوسع</h2>
-    <p>توسعت رؤيتنا من تمكين الشباب إلى العمل في التعليم، وبناء البيئة المعرفية، والتكافل الاجتماعي. وامتد الأفق إلى دول البلقان وآسيا الوسطى، مع الحفاظ على رسالة إنسانية وقيمية عابرة للحدود.</p>
-    <h2>محطات على الطريق</h2>
-    <div class="milestones">
-      <div class="milestone"><b>1995</b><span>الاعتماد الرسمي للوقف تحت رقم السجل 3673.</span></div>
-      <div class="milestone"><b>اليوم</b><span>شراكات مؤسسية وأكاديمية في تركيا، السعودية، قطر، إندونيسيا، وماليزيا، وعمل يمتد إلى البلقان وآسيا الوسطى.</span></div>
+
+  <main class="in-main">
+    <div class="in-wrap in-side">
+      <nav class="in-nav" aria-label="أقسام من نحن">
+        <a href="Toplum Vakfı About.dc.html">من نحن</a>
+        <a class="on" href="Toplum Vakfı Our Story.dc.html">قصتنا</a>
+        <a href="Toplum Vakfı About.dc.html#vision">رؤيتنا</a>
+        <a href="Toplum Vakfı About.dc.html#mission">رسالتنا</a>
+        <a href="Toplum Vakfı About.dc.html#purpose">مهمتنا</a>
+        <a href="Toplum Vakfı About.dc.html#goals">أهدافنا</a>
+        <a href="Toplum Vakfı President Letter.dc.html">رسالة الرئيس</a>
+        <a href="Toplum Vakfı Board.dc.html">مجلس الإدارة</a>
+      </nav>
+
+      <article class="in-card st-body">
+        <span class="in-script st-lead">بدأت قصتنا…</span>
+        <section>
+          <h2>من أين بدأنا</h2>
+          <p>وُلدت فكرة الوقف في تركيا، البلد الذي التقت فيه حضارات الشرق والغرب قرونًا، وانتقلت عبره العلوم والأفكار بين الأجيال. انطلقنا من قناعة بسيطة: أن الإنسان هو أساس كل نهضة، وأن بناءه يبدأ من التعليم والمعرفة.</p>
+        </section>
+        <section>
+          <h2>البداية عام 1995</h2>
+          <p>قبل ثلاثين عامًا، عام 1995، بدأ الوقف عمله مؤمنًا بأن الشباب المتعلّمين الذين يحملون القيم هم أعمدة المجتمعات الناهضة. فكان التعليم ركيزتنا الأولى، لا بوصفه نقلًا للمعلومات فحسب، بل تكوينًا متكاملًا يجمع العقل والقلب، ويربط العلم بالأخلاق، والتقدّم المادي بالارتقاء الروحي.</p>
+        </section>
+        <section>
+          <h2>تأسيس الأجيال</h2>
+          <p>مرّت أجيال من الشباب ببرامج الوقف، فاكتسبت المعرفة ونشأت على القيم. ومع الأيام صار كثير منهم فاعلين في مجتمعاتهم وقادةً وروّادًا يحملون ما تعلّموه، ولم يقتصر أثرهم على النجاح الأكاديمي أو المهني، بل امتد إلى بناء مجتمعات تقوم على العدالة والشفافية والإحسان.</p>
+        </section>
+        <section>
+          <h2>عمل مستمر</h2>
+          <p>لم يتوقف العمل عند هذا الحد. فالطلاب الذين نشأوا في رعاية الوقف صاروا اليوم يحملون رسالته، ويجدّدون أساليبها لتواكب تغيّرات العصر مع الحفاظ على ثوابتها. وبهذا اتسعت دائرة العمل لتشمل أفقًا أوسع.</p>
+        </section>
+        <section>
+          <h2>أمام تحديات العالم</h2>
+          <p>يعيش العالم اليوم أزمات متتالية: صراعات وحروب، واتساع في رقعة الفقر، وانتشار للتطرف والتعصب. ويرى القائمون على الوقف أن أنجع ما يُواجَه به ذلك هو غرس القيم التي تعيد للمجتمعات أمنها وسلامها، وتحمي الإنسان من الانحراف الفكري والسلوكي.</p>
+        </section>
+        <section>
+          <h2>رؤية تتجاوز الحدود</h2>
+          <p>ما زال التعليم الطريق الأنسب لتعزيز هذا الوعي. غير أن الإنسان يحتاج إلى أكثر من العلم ليُبنى بناءً كاملًا: إلى قيم تعزز الروح، وتوجيه يعينه على توظيف معرفته في خدمة مجتمعه. ولذلك توسّع عمل الوقف ليشمل بناء الروح والأخلاق، وتهيئة بيئة مناسبة للتعلّم، وتعزيز التكافل الاجتماعي.</p>
+        </section>
+        <section>
+          <h2>من تركيا إلى العالم</h2>
+          <p>بدأت رحلة الوقف من تركيا، مهد حضارات عريقة، فصارت جسرًا يربط العالم بالإنسانية والقيم. ولم يعد القائمون على الوقف يرون عملهم محصورًا داخل حدودها، فامتد إلى دول البلقان وآسيا الوسطى وغيرها، ليكون الوقف اليوم أحد جسور التعاون والتفاهم وتعزيز الروابط بين الشعوب.</p>
+        </section>
+      </article>
     </div>
-  </div>
+  </main>
+
   <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
 </x-dc>

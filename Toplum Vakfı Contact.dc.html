@@ -10,97 +10,57 @@
 <helmet>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تواصل معنا — وقف التضامن الاجتماعي</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
-    a { text-decoration: none; color: inherit; }
-    button, input, textarea { font-family: inherit; }
-    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
-    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
-    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
-    .page-banner-inner { position: relative; z-index: 1; }
-    .page-banner h1 { margin: 0 0 10px; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; }
-    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
-    .contact-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; padding: 56px 0 70px; }
-    .contact-info { display: flex; flex-direction: column; gap: 18px; }
-    .info-card { background: #fff; border: 1px solid #e6eef3; border-radius: 14px; padding: 20px; }
-    .info-card svg { width: 22px; height: 22px; color: var(--brand); margin-bottom: 10px; }
-    .info-card b { display: block; font-size: 13.5px; margin-bottom: 4px; }
-    .info-card span { font-size: 12.5px; color: var(--muted); }
-    .info-card a[href^="tel"] { direction: ltr; unicode-bidi: plaintext; display: inline-block; }
-    .contact-form { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; padding: 30px; box-shadow: 0 16px 34px rgba(2,52,88,.08); }
-    .field { margin-bottom: 16px; }
-    .field label { display: block; font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
-    .field input, .field textarea { width: 100%; padding: 12px 14px; border: 1.5px solid #e2eaf0; border-radius: 10px; font-size: 13.5px; outline: none; color: var(--ink); }
-    .field input:focus, .field textarea:focus { border-color: var(--brand); }
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .submit-btn { background: var(--brand); color: #fff; padding: 13px 30px; border-radius: 999px; font-weight: 800; font-size: 14px; white-space: nowrap; min-height: 44px; }
-    .submit-btn:hover { background: #0089cb; }
-    .form-msg { display: none; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 11px; font-size: 13px; font-weight: 700; margin-top: 12px; }
-    .form-msg.show { display: flex; }
-    .form-msg.success { background: #e6f9ee; color: #12844c; }
-    .form-msg.error { background: #fdeaea; color: #c0392b; }
-    .form-msg svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .faq-section { background: #fff; padding: 56px 0 70px; }
-    .faq-section h2 { text-align: center; font-size: 20px; font-weight: 800; margin: 0 0 30px; }
-    .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
-    .faq-item { border: 1px solid #e6eef3; border-radius: 12px; overflow: hidden; }
-    .faq-q { padding: 16px 20px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: var(--page-bg); }
-    .faq-q .chev { transition: transform .2s; }
-    .faq-item.open .faq-q .chev { transform: rotate(180deg); }
-    .faq-a { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height .25s ease, padding .25s ease; color: var(--muted); font-size: 13px; line-height: 1.8; }
-    .faq-item.open .faq-a { max-height: 200px; padding: 16px 20px; }
-    @media (max-width: 900px) { .contact-layout { grid-template-columns: 1fr; } .field-row { grid-template-columns: 1fr; } }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./toplum-inner.css" />
 </helmet>
-<svg style="position:absolute; width:0; height:0" aria-hidden="true">
-  <defs><clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox"><path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/></clipPath></defs>
-</svg>
 <div dir="rtl">
-  <dc-import name="Toplum Vakfı Header" active-key="contact" hint-size="100%,78px"></dc-import>
+  <dc-import name="Toplum Vakfı Header" active-key="contact" hint-size="100%,64px"></dc-import>
 
-  <section class="page-banner">
-    <div class="container page-banner-inner">
+  <section class="in-banner">
+    <div class="in-wrap">
+      <nav class="in-crumb" aria-label="مسار التنقل"><a href="Toplum Vakfı Homepage.dc.html">الرئيسية</a><span aria-hidden="true">‹</span><span>تواصل معنا</span></nav>
       <h1>تواصل معنا</h1>
-      <p>اصنع اتصالًا، اصنع تأثيرًا — نرحب بأسئلتك ومقترحاتك.</p>
+      <p>نسعد بأسئلتكم واقتراحاتكم، ونردّ على كل رسالة.</p>
     </div>
   </section>
 
-  <div class="container contact-layout">
-    <div class="contact-info">
-      <div class="info-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><b>العنوان</b><span>Mimar Sinan Cd No:38, Bağlar, 34209 Bağcılar/İstanbul</span></div>
-      <div class="info-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.98.36 1.94.67 2.86a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.22-1.24a2 2 0 0 1 2.11-.45c.92.31 1.88.54 2.86.67A2 2 0 0 1 22 16.92z"/></svg><b>الهاتف</b><span><a href="tel:+902125827970">+90 212 582 7970</a></span></div>
-      <div class="info-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><b>البريد الإلكتروني</b><span><a href="mailto:info@toplumsalvakfi.org">info@toplumsalvakfi.org</a></span></div>
-    </div>
-    <form class="contact-form">
-      <div class="field-row">
-        <div class="field"><label>الاسم</label><input type="text" placeholder="اسمك الكامل"></div>
-        <div class="field"><label>البريد الإلكتروني</label><input type="email" placeholder="example@email.com"></div>
-      </div>
-      <div class="field"><label>رقم الهاتف</label><input type="tel" placeholder="+90 5xx xxx xx xx"></div>
-      <div class="field"><label>كيف يمكننا مساعدتك؟</label><input type="text" placeholder="موضوع الرسالة"></div>
-      <div class="field"><label>رسالتك</label><textarea rows="4" placeholder="اكتب رسالتك هنا"></textarea></div>
-      <button class="submit-btn" type="button" id="contactSubmit">إرسال</button>
-      <div class="form-msg success" id="msgSuccess"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg><span>تم استلام رسالتك بنجاح وسنرد عليك قريبًا.</span></div>
-      <div class="form-msg error" id="msgError"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>حدث خلل في الإرسال. يرجى المحاولة مرة أخرى.</span></div>
-    </form>
-  </div>
+  <main class="in-main">
+    <div class="in-wrap ct-grid">
+      <form class="in-card ct-form" id="ctForm" novalidate="novalidate">
+        <span class="in-script">انشر الخير وشارك</span>
+        <h2>راسلنا</h2>
+        <div class="ct-row">
+          <div class="ct-field"><label for="ctName">الاسم <b>*</b></label><input id="ctName" type="text" required="required" autocomplete="name" /></div>
+          <div class="ct-field"><label for="ctEmail">البريد الإلكتروني <b>*</b></label><input id="ctEmail" type="email" required="required" autocomplete="email" dir="ltr" /></div>
+        </div>
+        <div class="ct-row">
+          <div class="ct-field"><label for="ctPhone">رقم الهاتف (اختياري)</label><input id="ctPhone" type="tel" autocomplete="tel" dir="ltr" /></div>
+          <div class="ct-field"><label for="ctTopic">موضوع الرسالة</label><select id="ctTopic"><option>استفسار عام</option><option>التبرع والإيصالات</option><option>التطوع</option><option>الشراكات</option><option>الإعلام</option></select></div>
+        </div>
+        <div class="ct-field"><label for="ctMsg">رسالتك <b>*</b></label><textarea id="ctMsg" required="required"></textarea></div>
+        <label class="ct-consent"><input type="checkbox" id="ctConsent" /><span>قرأت <a href="Toplum Vakfı Privacy Policy.dc.html">نص الإفصاح وفق قانون حماية البيانات الشخصية (KVKK)</a>، وأوافق على معالجة بياناتي للرد على رسالتي.</span></label>
+        <button type="submit" class="in-pill"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></i>إرسال</button>
+        <p class="ct-msg" id="ctMsgOut" role="status" aria-live="polite"></p>
+      </form>
 
-  <section class="faq-section">
-    <div class="container">
-      <h2>الأسئلة الشائعة</h2>
-      <div class="faq-list">
-        <div class="faq-item"><div class="faq-q"><span>كيف أتأكد أن تبرعي وصل إلى المشروع الصحيح؟</span><span class="chev">⌄</span></div><div class="faq-a">يمكنك اختيار مشروع محدد عند التبرع، وستصل تحديثات المشروع عبر صفحته الخاصة على الموقع.</div></div>
-        <div class="faq-item"><div class="faq-q"><span>هل التبرع الإلكتروني آمن؟</span><span class="chev">⌄</span></div><div class="faq-a">نعم، تتم معالجة جميع التبرعات عبر قنوات دفع آمنة ومشفّرة.</div></div>
-        <div class="faq-item"><div class="faq-q"><span>ما سياسة الاسترداد؟</span><span class="chev">⌄</span></div><div class="faq-a">راجع سياسة الإلغاء والاسترداد الكاملة في صفحة التقارير والشفافية.</div></div>
-        <div class="faq-item"><div class="faq-q"><span>كيف يمكن لمؤسستي أن تصبح شريكًا؟</span><span class="chev">⌄</span></div><div class="faq-a">تواصل معنا عبر النموذج أعلاه أو البريد الإلكتروني، وسيتواصل معك فريقنا لمناقشة فرص الشراكة.</div></div>
-      </div>
+      <aside class="ct-side">
+        <a class="in-card ct-item" href="mailto:info@toplumsalvakfi.org"><span class="ab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg></span><span><small>البريد الإلكتروني</small><b dir="ltr">info@toplumsalvakfi.org</b></span></a>
+        <a class="in-card ct-item" href="tel:+902125827970"><span class="ab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg></span><span><small>الهاتف</small><b dir="ltr">+90 212 582 79 70</b></span></a>
+        <a class="in-card ct-item" href="https://wa.me/902125827970" target="_blank" rel="noopener"><span class="ab-ico" style="background:#e7f7ee;color:#1d8a4e"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.5-4.3A8.5 8.5 0 1 1 20.5 11.6z"/></svg></span><span><small>واتساب</small><b dir="ltr">+90 212 582 79 70</b></span></a>
+        <div class="in-card ct-item"><span class="ab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><small>العنوان</small><b dir="ltr">Mimar Sinan Cd. No:38, Bağlar, 34209 Bağcılar / İstanbul</b></span></div>
+        <div class="in-card ct-map">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z"/><path d="M9 4v13M15 6.5v13"/></svg>
+            <p>تُحمَّل الخريطة من خرائط Google عند الضغط.</p>
+            <a class="in-pill" href="https://maps.google.com/?q=Mimar+Sinan+Cd.+No:38+Ba%C4%9Flar+Ba%C4%9Fc%C4%B1lar+Istanbul" target="_blank" rel="noopener"><i>←</i>افتح في خرائط Google</a>
+          </div>
+        </div>
+      </aside>
     </div>
-  </section>
+  </main>
 
   <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
@@ -108,19 +68,22 @@
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
   componentDidMount() {
-    const submitBtn = document.getElementById('contactSubmit');
-    if (submitBtn) submitBtn.addEventListener('click', () => {
-      const email = document.querySelector('input[type="email"]');
-      const ok = email && /.+@.+\..+/.test(email.value);
-      document.getElementById('msgSuccess').classList.remove('show');
-      document.getElementById('msgError').classList.remove('show');
-      document.getElementById(ok ? 'msgSuccess' : 'msgError').classList.add('show');
+    const f = document.getElementById('ctForm'), out = document.getElementById('ctMsgOut');
+    if (!f) return;
+    f.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('ctName').value.trim();
+      const email = document.getElementById('ctEmail').value.trim();
+      const msg = document.getElementById('ctMsg').value.trim();
+      const ok = document.getElementById('ctConsent').checked;
+      let err = '';
+      if (!name || !email || !msg) err = 'يرجى تعبئة الحقول المطلوبة.';
+      else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) err = 'يرجى إدخال بريد إلكتروني صحيح.';
+      else if (!ok) err = 'يرجى الموافقة على نص الإفصاح لنتمكن من الرد.';
+      out.style.color = err ? '#b3261e' : '#1a7f4b';
+      out.textContent = err || 'وصلتنا رسالتك، وسنردّ عليك خلال يومي عمل.';
+      if (!err) f.reset();
     });
-    document.querySelectorAll('.faq-item').forEach(item => item.querySelector('.faq-q').addEventListener('click', () => {
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
-    }));
   }
   renderVals() { return {}; }
 }

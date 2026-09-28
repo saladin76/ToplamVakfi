@@ -7,43 +7,56 @@
 </head>
 <body>
 <x-dc>
-<meta charset="UTF-8" />
+<helmet>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مجلس الإدارة — وقف التضامن الاجتماعي</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
-    a { text-decoration: none; color: inherit; }
-    .container { width: min(1180px, calc(100% - 64px)); margin: 0 auto; }
-    .page-banner { background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); padding: 108px 0 62px; color: #fff; position: relative; overflow: hidden; }
-    .page-banner::before { content: ""; position: absolute; inset: 0; opacity: .16; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 34px 34px; }
-    .page-banner-inner { position: relative; z-index: 1; }
-    .page-banner h1 { margin: 0 0 10px; font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; }
-    .page-banner p { margin: 0; color: #b9d3e6; font-size: 14.5px; max-width: 620px; line-height: 1.8; }
-    .board-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; padding: 64px 0 80px; }
-    .board-card { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; box-shadow: 0 12px 30px rgba(2,52,88,.06); padding: 30px 20px; text-align: center; }
-    .board-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--page-bg); color: var(--brand); display: grid; place-items: center; font-weight: 800; font-size: 18px; margin: 0 auto 14px; }
-    .board-card h3 { margin: 0 0 6px; font-size: 15px; }
-    .board-card span { color: var(--muted); font-size: 12.5px; }
-    @media (max-width: 760px) { .board-grid { grid-template-columns: 1fr; } }
-  </style>
-
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./toplum-inner.css" />
+  <script src="./image-slot.js"></script>
+</helmet>
 <div dir="rtl">
-  <dc-import name="Toplum Vakfı Header" active-key="about" hint-size="100%,78px"></dc-import>
-  <section class="page-banner">
-    <div class="container page-banner-inner">
+  <dc-import name="Toplum Vakfı Header" active-key="about" hint-size="100%,64px"></dc-import>
+
+  <section class="in-banner">
+    <div class="in-wrap">
+      <nav class="in-crumb" aria-label="مسار التنقل"><a href="Toplum Vakfı Homepage.dc.html">الرئيسية</a><span aria-hidden="true">‹</span><a href="Toplum Vakfı About.dc.html">من نحن</a><span aria-hidden="true">‹</span><span>مجلس الإدارة</span></nav>
       <h1>مجلس الإدارة</h1>
-      <p>القيادات المسؤولة عن رؤية الوقف ومساره الاستراتيجي.</p>
     </div>
   </section>
-  <div class="container board-grid">
-    <div class="board-card"><div class="board-avatar">أ.ح</div><h3>د. أحمد حمدي يلدرم</h3><span>رئيس الهيئة الاستشارية العليا</span></div>
-    <div class="board-card"><div class="board-avatar">ح.أ</div><h3>د. حمدي أرسلان</h3><span>رئيس هيئة المتولين</span></div>
-    <div class="board-card"><div class="board-avatar">ع.ك</div><h3>د. عبد الصمد كوتشاك</h3><span>رئيس مجلس الإدارة</span></div>
-  </div>
+
+  <main class="in-main">
+    <div class="in-wrap in-side">
+      <nav class="in-nav" aria-label="أقسام من نحن">
+        <a href="Toplum Vakfı About.dc.html">من نحن</a>
+        <a href="Toplum Vakfı Our Story.dc.html">قصتنا</a>
+        <a href="Toplum Vakfı About.dc.html#vision">رؤيتنا</a>
+        <a href="Toplum Vakfı About.dc.html#mission">رسالتنا</a>
+        <a href="Toplum Vakfı About.dc.html#purpose">مهمتنا</a>
+        <a href="Toplum Vakfı About.dc.html#goals">أهدافنا</a>
+        <a href="Toplum Vakfı President Letter.dc.html">رسالة الرئيس</a>
+        <a class="on" href="Toplum Vakfı Board.dc.html">مجلس الإدارة</a>
+      </nav>
+
+      <div class="bd-grid">
+        <article class="in-card bd-card">
+          <div class="bd-photo"><image-slot id="board-yildirim" shape="rect" placeholder="صورة د. أحمد حمدي يلدريم"></image-slot></div>
+          <div class="bd-body"><h3>د. أحمد حمدي يلدريم</h3><span>رئيس الهيئة الاستشارية العليا</span></div>
+        </article>
+        <article class="in-card bd-card">
+          <div class="bd-photo"><image-slot id="board-arslan" shape="rect" placeholder="صورة د. حمدي أرسلان"></image-slot></div>
+          <div class="bd-body"><h3>د. حمدي أرسلان</h3><span>رئيس هيئة المتولّين</span></div>
+        </article>
+        <article class="in-card bd-card">
+          <div class="bd-photo"><image-slot id="board-kocak" shape="rect" placeholder="صورة د. عبد الصمد كوتشاك"></image-slot></div>
+          <div class="bd-body"><h3>د. عبد الصمد كوتشاك</h3><span>رئيس مجلس الإدارة</span></div>
+        </article>
+      </div>
+    </div>
+  </main>
+
   <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
 </x-dc>

@@ -33,17 +33,17 @@
     .proj-main p { color: #33495e; font-size: 14.5px; line-height: 1.9; margin: 0 0 14px; }
     .proj-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
     .proj-fact { background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px; text-align: center; }
-    .proj-fact b { display: block; font-size: 20px; color: var(--brand); direction: ltr; }
+    .proj-fact b { display: block; font-size: 20px; color: #0077b3; direction: ltr; }
     .proj-fact span { font-size: 12px; color: var(--muted); }
     .proj-budget { background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px 18px; margin: 8px 0 20px; }
     .proj-budget-bar { height: 8px; background: #eef3f7; border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
     .proj-budget-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), #4fc3f7); }
     .proj-budget-row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12.5px; color: var(--muted); margin-bottom: 8px; }
     .proj-budget-row b { color: var(--ink); direction: ltr; }
-    .proj-budget-note { font-size: 12px; color: #9fb0bd; }
+    .proj-budget-note { font-size: 12px; color: var(--muted); }
     .updates-list { display: flex; flex-direction: column; gap: 14px; }
     .update-item { background: #fff; border: 1px solid #e6eef3; border-radius: 12px; padding: 16px 18px; }
-    .update-item time { display: block; color: var(--brand); font-size: 12px; font-weight: 800; margin-bottom: 6px; direction: ltr; text-align: right; }
+    .update-item time { display: block; color: #0077b3; font-size: 12px; font-weight: 800; margin-bottom: 6px; direction: ltr; text-align: right; }
     .update-item p { margin: 0; font-size: 13px; color: var(--ink); }
 
     .donate-sidebar { position: sticky; top: 130px; background: #fff; border-radius: 18px; border: 1px solid #e6eef3; box-shadow: 0 16px 34px rgba(2,52,88,.1); padding: 26px; }
@@ -58,9 +58,9 @@
     .ds-custom span { color: var(--muted); font-weight: 800; font-size: 13px; }
     /* The wrapper's height does not propagate to the input, so set the hit area here. */
     .ds-custom input { border: 0; outline: none; flex: 1; min-width: 0; min-height: 42px; font-size: 13px; font-family: inherit; text-align: left; color: var(--ink); background: transparent; }
-    .ds-custom input::placeholder { direction: rtl; color: #9fb0bd; }
+    .ds-custom input::placeholder { direction: rtl; color: var(--muted); }
     .ds-gift { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); margin-bottom: 10px; cursor: pointer; padding: 8px 12px; border: 1px solid #e2eaf0; border-radius: 999px; transition: all .2s; }
-    .ds-gift svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--brand); }
+    .ds-gift svg { width: 15px; height: 15px; flex-shrink: 0; color: #0077b3; }
     .ds-gift input { display: none; }
     .ds-gift.checked { background: #eaf6fd; border-color: var(--brand); color: var(--ink); }
     .ds-gift-field { max-height: 0; overflow: hidden; transition: max-height .25s ease, margin .25s ease; }
@@ -68,10 +68,10 @@
     .ds-gift-field input { width: 100%; padding: 10px 14px; border: 1px solid #e2eaf0; border-radius: 10px; font-size: 12.5px; outline: none; font-family: inherit; color: var(--ink); }
     .ds-gift-field input:focus { border-color: var(--brand); }
     .ds-btn-row { display: flex; gap: 8px; }
-    .ds-btn { flex: 1.3; display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px 8px; border-radius: 999px; font-weight: 800; font-size: 13.5px; white-space: nowrap; transition: transform .2s, box-shadow .2s; }
-    .ds-btn:hover { background: #0089cb; transform: translateY(-1px); }
+    .ds-btn { flex: 1.3; display: flex; align-items: center; justify-content: center; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; padding: 13px 8px; border-radius: 999px; font-weight: 800; font-size: 13.5px; white-space: nowrap; transition: transform .2s, box-shadow .2s; }
+    .ds-btn:hover { filter: brightness(.94); transform: translateY(-1px); }
     .ds-cart { flex: 1; background: #f2f6f9; color: var(--ink); border: 1px solid #e2eaf0; padding: 13px 6px; border-radius: 999px; font-weight: 800; font-size: 12px; white-space: nowrap; min-height: 44px; }
-    .ds-cart:hover { background: #eaf6fd; border-color: var(--brand); color: var(--brand); }
+    .ds-cart:hover { background: #eaf6fd; border-color: var(--brand); color: #0077b3; }
     .ds-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 10px; }
 
     @media (max-width: 900px) {
@@ -83,7 +83,7 @@
       .mobile-sticky-donate { display: none; }
     @media (max-width: 760px) {
       .mobile-sticky-donate { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1500; padding: 12px 16px; background: #fff; box-shadow: 0 -8px 24px rgba(2,20,38,.15); }
-      .mobile-sticky-donate a { display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 14px; min-height: 44px; }
+      .mobile-sticky-donate a { display: flex; align-items: center; justify-content: center; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 14px; min-height: 44px; }
       body { padding-bottom: 70px; }
     }
   </style>

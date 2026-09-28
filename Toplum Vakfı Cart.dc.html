@@ -9,193 +9,138 @@
 <x-dc>
 <helmet>
   <meta charset="UTF-8" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سلة التبرعات — وقف التضامن الاجتماعي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./toplum-inner.css" />
+  <script src="./currency.js"></script>
   <style>
-    :root { --brand: #00a2e0; --brand-2: #00a1df; --ink: #062442; --muted: #5d7187; --page-bg: #f4f8fb; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
-    a, button { font-family: inherit; }
-    a { text-decoration: none; color: inherit; }
-    .container { width: min(860px, calc(100% - 48px)); margin: 0 auto; }
-    .secure-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
-    .secure-badge svg { width: 15px; height: 15px; color: var(--brand); }
-    .steps { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 26px 0 12px; flex-wrap: wrap; }
-    .steps-dots { display: flex; align-items: center; gap: 6px; }
-    .step-dot { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); font-weight: 700; }
-    .step-dot .circle { width: 24px; height: 24px; border-radius: 50%; background: #e9eff3; color: var(--muted); display: grid; place-items: center; font-size: 11px; font-weight: 800; }
-    .step-dot.active .circle, .step-dot.done .circle { background: var(--brand); color: #fff; }
-    .step-dot.active { color: var(--ink); }
-    .step-sep { width: 24px; height: 1px; background: #dbe6ee; align-self: center; }
-    .layout { display: grid; grid-template-columns: 1.6fr 1fr; gap: 26px; align-items: start; margin: 20px 0 60px; }
-    .panel { background: #fff; border: 1px solid #e6eef3; border-radius: 18px; box-shadow: 0 16px 34px rgba(2,52,88,.08); padding: 34px; }
-    .panel h2 { margin: 0 0 22px; font-size: 19px; font-weight: 800; }
-    .cart-item { display: flex; gap: 14px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid #eef3f7; flex-wrap: wrap; }
-    .cart-main { display: flex; gap: 14px; align-items: center; width: 100%; }
-    .cart-freq { flex: 1 1 100%; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding-inline-start: 60px; }
-    .cart-freq-tabs { display: flex; background: #eef3f7; border: 1px solid #e2eaf0; border-radius: 10px; padding: 3px; }
-    .cart-freq-tabs button { min-height: 44px; padding: 0 16px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font-family: inherit; font-size: 12px; font-weight: 800; cursor: pointer; transition: background .2s, color .2s, box-shadow .2s; }
-    .cart-freq-tabs button.active { background: #fff; color: var(--brand); box-shadow: 0 2px 6px rgba(2,52,88,.12); }
-    .cart-amt-edit { position: relative; display: flex; align-items: center; gap: 4px; background: #f2f6f9; border: 1.5px solid #e2eaf0; border-radius: 10px; min-height: 44px; padding: 0 10px; direction: ltr; cursor: text; transition: border-color .2s, background .2s; }
-    .cart-amt-edit:hover { border-color: rgba(0,162,224,.45); }
-    .cart-amt-edit svg { width: 15px; height: 15px; color: var(--muted); flex-shrink: 0; transition: color .2s; }
-    .cart-amt-edit:hover svg, .cart-amt-edit:focus-within svg { color: var(--brand-ink); }
-    .cart-amt-edit:focus-within { border-color: var(--brand); background: #fff; }
-    .cart-amt-edit span { color: var(--muted); font-size: 12px; font-weight: 800; }
-    /* The wrapper's height does not propagate to the input, so the hit area is set here. */
-    .cart-amt-edit input { width: 68px; min-width: 0; min-height: 42px; background: transparent; border: 0; outline: none; font-family: inherit; font-size: 13px; font-weight: 800; color: var(--ink); text-align: center; }
-    @media (max-width: 560px) { .cart-freq { padding-inline-start: 0; } }
-    .cart-item:last-child { border-bottom: 0; }
-    .cart-icon { width: 46px; height: 46px; border-radius: 12px; background: #eaf6fd; color: var(--brand); display: grid; place-items: center; flex-shrink: 0; }
-    .cart-icon svg { width: 22px; height: 22px; }
-    .cart-item-body { flex: 1; min-width: 0; }
-    .cart-item-body h3 { margin: 0 0 5px; font-size: 14px; line-height: 1.4; }
-    .cart-item-body span { font-size: 12px; color: var(--muted); font-weight: 700; }
-    .cart-item-amt { text-align: left; direction: ltr; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-    .cart-item-amt b { font-size: 16px; color: var(--brand); font-weight: 800; }
-    .cart-remove { background: transparent; border: 0; color: #c0392b; font-size: 12px; cursor: pointer; font-weight: 700; min-height: 44px; padding: 0 4px; }
-    .review-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eef3f7; font-size: 13.5px; }
-    .review-row.total { font-weight: 800; font-size: 17px; border-bottom: 0; padding-top: 16px; }
-    .review-row b { color: var(--ink); direction: ltr; }
-    .review-row span:first-child { color: var(--muted); }
-    .btn-primary { width: 100%; background: var(--brand); color: #fff; padding: 15px; border-radius: 999px; font-weight: 800; font-size: 15px; margin-top: 18px; border: 0; cursor: pointer; min-height: 48px; }
-    .btn-primary:hover { background: var(--brand-2); }
-    .btn-primary:disabled { opacity: .5; pointer-events: none; }
-    .trust-strip { display: flex; justify-content: center; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
-    .trust-strip span { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
-    .trust-strip svg { width: 13px; height: 13px; color: var(--brand); }
-    .continue-link { display: block; text-align: center; font-size: 12.5px; color: var(--brand); font-weight: 700; margin-top: 20px; min-height: 44px; line-height: 44px; }
-    .empty { text-align: center; padding: 70px 20px; }
-    .empty svg { width: 60px; height: 60px; color: #c7d6e0; margin-bottom: 16px; }
-    .empty h2 { font-size: 17px; margin: 0 0 8px; }
-    .empty p { color: var(--muted); font-size: 13px; margin: 0 0 22px; }
-    .empty a { display: inline-flex; align-items: center; background: var(--brand); color: #fff; padding: 12px 26px; border-radius: 999px; font-weight: 800; font-size: 13.5px; min-height: 44px; }
-    @media (max-width: 720px) { .layout { grid-template-columns: 1fr; } }
-    @media (max-width: 480px) { .step-dot span:not(.circle) { display: none; } .step-sep { width: 14px; } .panel { padding: 22px; } }
+    .ct-cart { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; }
+    .ct-items { padding: 10px 24px; min-height: 150px; }
+    .ct-empty { padding: 30px 20px; text-align: center; }
+    .ct-empty .in-script { display: block; font-size: 30px; margin-bottom: 6px; }
+    .ct-empty b { display: block; color: var(--ink); font-size: 14px; font-weight: 800; margin-bottom: 18px; }
+    .ct-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .ct-row:last-child { border-bottom: 0; }
+    .ct-row h3 { margin: 0 0 8px; color: var(--ink); font-size: 15px; font-weight: 800; line-height: 1.5; }
+    .ct-tag { display: inline-flex; align-items: center; min-height: 26px; padding: 0 12px; border-radius: 999px; background: #eef4f8; color: var(--muted); font-size: 12px; font-weight: 800; }
+    .ct-tag.is-rec { background: #e6f4fb; color: var(--brand-ink); }
+    .ct-end { display: flex; align-items: center; gap: 10px; }
+    .ct-amt { display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: 999px; background: #fbfdff; direction: ltr; }
+    .ct-amt:focus-within { border-color: var(--brand); background: #fff; }
+    .ct-amt span { color: var(--brand-ink); font-weight: 800; }
+    .ct-amt input { width: 74px; border: 0; outline: none; background: transparent; color: var(--ink); font-size: 15px; font-weight: 900; }
+    .ct-del { width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #fdf1ef; color: #b3261e; cursor: pointer; }
+    .ct-del svg { width: 17px; height: 17px; }
+    .ct-sum { position: sticky; top: 92px; padding: 24px; border-radius: 18px; color: #fff; background: linear-gradient(160deg, #04234a 0%, #082b50 55%, #031a36 100%); box-shadow: 0 16px 36px rgba(3,26,54,.28); }
+    .ct-sum h2 { margin: 0 0 16px; font-size: 18px; font-weight: 900; }
+    .ct-line { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; color: #cfe3f1; font-size: 13px; }
+    .ct-line b { color: #fff; direction: ltr; }
+    .ct-total { margin-top: 8px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.14); display: flex; justify-content: space-between; align-items: baseline; }
+    .ct-total span { font-size: 17px; font-weight: 900; }
+    .ct-total b { font-size: 22px; font-weight: 900; direction: ltr; }
+    .ct-go { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 48px; margin-top: 18px; border-radius: 999px; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; font-size: 14px; font-weight: 800; box-shadow: 0 8px 20px rgba(0,162,224,.35); }
+    .ct-go:hover { color: #fff; }
+    .ct-go[aria-disabled="true"] { background: rgba(255,255,255,.12); color: rgba(255,255,255,.6); box-shadow: none; pointer-events: none; }
+    .ct-more { display: flex; justify-content: center; align-items: center; min-height: 44px; margin-top: 8px; color: #cfe3f1; font-size: 13px; font-weight: 700; }
+    .ct-more:hover { color: #fff; }
+    .ct-safe { display: flex; align-items: center; gap: 7px; margin-top: 10px; color: #b9d3e6; font-size: 12px; }
+    .ct-safe svg { width: 14px; height: 14px; }
+    @media (max-width: 900px) { .ct-cart { grid-template-columns: 1fr; } .ct-sum { position: static; } }
+    @media (max-width: 560px) { .ct-row { grid-template-columns: 1fr; } .ct-items { padding: 6px 16px; } }
   </style>
 </helmet>
 <div dir="rtl">
-  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,78px"></dc-import>
-  <div style="height:78px"></div>
-  <div class="container">
-    <div class="steps">
-      <div class="steps-dots">
-      <div class="step-dot active"><span class="circle">1</span><span>السلة</span></div>
-      <div class="step-sep"></div>
-      <div class="step-dot"><span class="circle">2</span><span>الدفع</span></div>
-      <div class="step-sep"></div>
-      <div class="step-dot"><span class="circle">3</span><span>التأكيد</span></div>
-      </div>
-      <div class="secure-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>تبرع آمن ومشفّر</span></div>
+  <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,64px"></dc-import>
+
+  <section class="in-banner">
+    <div class="in-wrap">
+      <nav class="in-crumb" aria-label="مسار التنقل"><a href="Toplum Vakfı Homepage.dc.html">الرئيسية</a><span aria-hidden="true">‹</span><span>سلة التبرعات</span></nav>
+      <h1>سلة التبرعات</h1>
     </div>
-    <div class="layout" id="cartLayout">
-      <div class="panel"><h2>سلة التبرعات</h2><div id="itemsList"></div></div>
-      <div class="panel" id="summaryBox">
+  </section>
+
+  <main class="in-main">
+    <div class="in-wrap ct-cart">
+      <section class="in-card ct-items" aria-label="سلة التبرعات">
+        <div id="ctList"></div>
+        <div class="ct-empty" id="ctEmpty" hidden="hidden">
+          <span class="in-script">دائرة الخير تكبر بكم</span>
+          <b>سلة التبرعات فارغة</b>
+          <a class="in-pill" href="Toplum Vakfı Programs.dc.html#open" style="padding:0 24px">تصفح المشاريع</a>
+        </div>
+      </section>
+
+      <aside class="ct-sum" aria-label="ملخص التبرع">
         <h2>ملخص التبرع</h2>
-        <div class="review-row"><span>عدد البنود</span><b id="sumCount">0</b></div>
-        <div class="review-row total" id="sumOnceRow"><span>إجمالي لمرة واحدة</span><b id="sumTotal">$0</b></div>
-        <div class="review-row total" id="sumMonthlyRow" style="display:none"><span>شهريًا</span><b id="sumMonthly">$0</b></div>
-        <button class="btn-primary" type="button" id="checkoutBtn">إتمام التبرع ←</button>
-        <div class="trust-strip"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>دفع آمن ومشفّر</span></div>
-        <a class="continue-link" href="Toplum Vakfı Projects.dc.html">+ إضافة مشروع آخر</a>
-      </div>
+        <div class="ct-line"><span>عدد التبرعات</span><b id="ctCount">0</b></div>
+        <div class="ct-line" id="ctOnceRow"><span>لمرة واحدة</span><b id="ctOnce">$0</b></div>
+        <div class="ct-line" id="ctMonthRow"><span>شهريًا</span><b id="ctMonth">$0</b></div>
+        <div class="ct-total"><span>الإجمالي</span><b id="ctTotal">$0</b></div>
+        <a class="ct-go" id="ctGo" href="Toplum Vakfı Payment Info.dc.html" aria-disabled="true">المتابعة للدفع</a>
+        <a class="ct-more" href="Toplum Vakfı Programs.dc.html#open">متابعة التبرع لمشاريع أخرى</a>
+        <p class="ct-safe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>دفع مشفّر وآمن</p>
+      </aside>
     </div>
-  </div>
+  </main>
+
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+const KEY = 'tv_cart';
+const MONTHLY = 'تبرع شهري', ONCE = 'تبرع مرة واحدة';
+const TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const isMonthly = f => /شهري/.test(f || '');
+
 class Component extends DCLogic {
+  read() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } }
+  write(c) { localStorage.setItem(KEY, JSON.stringify(c)); }
+  money(v) { return window.tvCurrency ? window.tvCurrency.format(v) : '$' + Math.round(v).toLocaleString('en-US'); }
+
   componentDidMount() {
+    const list = document.getElementById('ctList');
+    list.addEventListener('click', e => {
+      const row = e.target.closest('.ct-row'); if (!row) return;
+      const i = Number(row.dataset.i), cart = this.read();
+      if (e.target.closest('.ct-del')) { cart.splice(i, 1); this.write(cart); this.render(); return; }
+    });
+    list.addEventListener('change', e => {
+      const inp = e.target.closest('input'); if (!inp) return;
+      const row = inp.closest('.ct-row'), cart = this.read(), i = Number(row.dataset.i);
+      const n = Math.max(1, Math.round(Number(inp.value) || 0));
+      cart[i].amount = n; this.write(cart); this.render();
+    });
+    window.addEventListener('tv:currency', () => this.render());
     this.render();
-    document.getElementById('checkoutBtn').addEventListener('click', () => {
-      const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
-      if (!cart.length) return;
-      window.location.href = 'Toplum Vakfı Payment Info.dc.html';
-    });
   }
+
   render() {
-    const cart = JSON.parse(localStorage.getItem('tv_cart') || '[]');
-    const list = document.getElementById('itemsList');
-    const layout = document.getElementById('cartLayout');
-    const summaryBox = document.getElementById('summaryBox');
-    if (!cart.length) {
-      summaryBox.style.display = 'none';
-      layout.style.gridTemplateColumns = '1fr';
-      list.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><h2>سلتك فارغة</h2><p>لم تُضِف أي مشروع للسلة بعد. تصفّح المشاريع وابدأ رحلة العطاء.</p><a href="Toplum Vakfı Projects.dc.html">تصفح المشاريع</a></div>';
-      return;
-    }
-    const icons = ['<circle cx="12" cy="8" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/>', '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'];
-    const money = (v) => (window.tvCurrency ? window.tvCurrency.format(Number(v)) : '$' + v);
-    const symbol = () => (window.tvCurrency ? window.tvCurrency.symbol() : '$');
-    // Amounts are stored in USD; the editable field shows the selected currency.
-    const toLocal = (usd) => (window.tvCurrency ? window.tvCurrency.fromUsd(Number(usd)) : Number(usd));
-
-    list.innerHTML = cart.map((item, i) => {
-      const monthly = item.freq === 'تبرع شهري';
-      return `
-      <div class="cart-item">
-        <div class="cart-main">
-          <div class="cart-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${icons[i % 2]}</svg></div>
-          <div class="cart-item-body"><h3>${item.name}</h3><span>${monthly ? 'يتكرر شهريًا' : 'تبرع مرة واحدة'}</span></div>
-          <div class="cart-item-amt"><b>${money(item.amount)}${monthly ? ' / شهريًا' : ''}</b><button class="cart-remove" data-i="${i}" type="button">إزالة</button></div>
-        </div>
-        <div class="cart-freq">
-          <div class="cart-freq-tabs">
-            <button type="button" data-freq-i="${i}" data-freq="once" class="${monthly ? '' : 'active'}">مرة واحدة</button>
-            <button type="button" data-freq-i="${i}" data-freq="monthly" class="${monthly ? 'active' : ''}">شهريًا</button>
-          </div>
-          <label class="cart-amt-edit" title="تعديل المبلغ"><span>${symbol()}</span><input type="number" min="1" data-amt-i="${i}" value="${toLocal(item.amount)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></label>
-        </div>
-      </div>`;
+    const cart = this.read();
+    const $ = id => document.getElementById(id);
+    $('ctEmpty').hidden = cart.length > 0;
+    $('ctList').innerHTML = cart.map((it, i) => {
+      const m = isMonthly(it.freq), w = /أسبوع/.test(it.freq || '');
+      const L = s => (window.tvI18n && window.tvI18n.t ? window.tvI18n.t(s) : s);
+      // A fixed tag, not a toggle: frequency is chosen where the gift is set up.
+      const tag = w ? 'أسبوعيًا' : m ? 'شهريًا' : 'مرة واحدة';
+      return '<div class="ct-row" data-i="' + i + '"><div><h3>' + esc(it.name) + '</h3>' +
+        '<span class="ct-tag' + (m || w ? ' is-rec' : '') + '">' + L(tag) + '</span></div>' +
+        '<div class="ct-end"><label class="ct-amt" title="تعديل المبلغ"><span>$</span><input type="number" min="1" value="' + Number(it.amount) + '" aria-label="تعديل المبلغ"></label>' +
+        '<button type="button" class="ct-del" aria-label="حذف">' + TRASH + '</button></div></div>';
     }).join('');
-
-    // Handlers re-read storage: persisting the closure's snapshot resurrected stale
-    // rows written by a later render (currency change, remount).
-    const patch = (i, fields) => {
-      const c = JSON.parse(localStorage.getItem('tv_cart') || '[]');
-      if (!c[i]) return;
-      Object.assign(c[i], fields);
-      localStorage.setItem('tv_cart', JSON.stringify(c));
-      this.render();
-    };
-    list.querySelectorAll('[data-freq-i]').forEach(btn => btn.addEventListener('click', () => {
-      patch(Number(btn.dataset.freqI), {
-        freq: btn.dataset.freq === 'monthly' ? 'تبرع شهري' : 'تبرع مرة واحدة'
-      });
-    }));
-    list.querySelectorAll('[data-amt-i]').forEach(input => {
-      const commit = () => {
-        const i = Number(input.dataset.amtI);
-        const local = Number(input.value);
-        if (!(local > 0)) {
-          const c = JSON.parse(localStorage.getItem('tv_cart') || '[]');
-          if (c[i]) input.value = toLocal(c[i].amount);
-          return;
-        }
-        const usd = window.tvCurrency ? window.tvCurrency.toUsd(local) : local;
-        patch(i, { amount: Math.round(usd * 100) / 100 });
-      };
-      input.addEventListener('change', commit);
-      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
-    });
-    list.querySelectorAll('.cart-remove').forEach(btn => btn.addEventListener('click', () => {
-      const cart2 = JSON.parse(localStorage.getItem('tv_cart') || '[]');
-      cart2.splice(Number(btn.dataset.i), 1);
-      localStorage.setItem('tv_cart', JSON.stringify(cart2));
-      this.render();
-    }));
-    document.getElementById('sumCount').textContent = cart.length;
-    // Recurring and one-time money are different promises — never one figure.
-    const sum = (f) => cart.filter(f).reduce((s, it) => s + Number(it.amount), 0);
-    const onceUsd = sum(it => it.freq !== 'تبرع شهري');
-    const monthlyUsd = sum(it => it.freq === 'تبرع شهري');
-    document.getElementById('sumTotal').textContent = money(onceUsd);
-    document.getElementById('sumMonthly').textContent = money(monthlyUsd) + ' / شهريًا';
-    document.getElementById('sumOnceRow').style.display = onceUsd > 0 || monthlyUsd === 0 ? 'flex' : 'none';
-    document.getElementById('sumMonthlyRow').style.display = monthlyUsd > 0 ? 'flex' : 'none';
-    if (!this._currBound) {
-      this._currBound = true;
-      window.addEventListener('tv:currency', () => this.componentDidMount());
-    }
+    const once = cart.filter(x => !isMonthly(x.freq)).reduce((a, x) => a + Number(x.amount || 0), 0);
+    const month = cart.filter(x => isMonthly(x.freq)).reduce((a, x) => a + Number(x.amount || 0), 0);
+    $('ctCount').textContent = cart.length;
+    $('ctOnce').textContent = this.money(once);
+    $('ctMonth').textContent = this.money(month);
+    $('ctOnceRow').hidden = !once && month > 0;
+    $('ctMonthRow').hidden = !month;
+    $('ctTotal').textContent = this.money(once + month);
+    $('ctGo').setAttribute('aria-disabled', cart.length ? 'false' : 'true');
   }
   renderVals() { return {}; }
 }
