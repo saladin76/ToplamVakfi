@@ -30,9 +30,10 @@
     .partner-row span { font-size: 12px; color: var(--muted); }
     .partner-loc { font-size: 12px; color: #0077b3; font-weight: 800; white-space: nowrap; }
     .cta-band { text-align: center; padding: 60px 0 70px; }
-    .cta-band a { display: inline-flex; align-items: center; background: var(--brand); color: #fff; padding: 13px 32px; border-radius: 999px; font-weight: 800; font-size: 14px; white-space: nowrap; }
+    .cta-band a { display: inline-flex; align-items: center; min-height: 48px; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; padding: 0 32px; border-radius: 999px; font-weight: 800; font-size: 14px; white-space: nowrap; box-shadow: 0 8px 20px rgba(27,111,224,.3); }
     @media (max-width: 900px) { .partner-row { flex-direction: column; align-items: flex-start; gap: 6px; } }
   </style>
+  <link rel="stylesheet" href="./toplum-inner.css" />
 </helmet>
 <svg style="position:absolute; width:0; height:0" aria-hidden="true">
   <defs><clipPath id="headerWaveClip" clipPathUnits="objectBoundingBox"><path d="M0,0 L1,0 L1,0.82 C0.9,0.95 0.8,0.95 0.7,0.8 C0.62,0.68 0.55,0.68 0.5,0.8 C0.45,0.92 0.38,0.92 0.3,0.8 C0.2,0.65 0.1,0.65 0,0.82 Z"/></clipPath></defs>
@@ -40,8 +41,8 @@
 <div dir="rtl">
   <dc-import name="Toplum Vakfı Header" active-key="partners" hint-size="100%,78px"></dc-import>
 
-  <section class="page-banner">
-    <div class="container page-banner-inner">
+  <section class="in-banner" style="--in-img:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1800&q=80')">
+    <div class="in-wrap">
       <h1>الشراكات والتعاون</h1>
       <p>نبني الشراكات لأنها تجمع الخبرة المحلية، الوصول الميداني، والحوكمة في خدمة المجتمعات.</p>
     </div>

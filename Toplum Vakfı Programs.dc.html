@@ -15,16 +15,69 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./toplum-inner.css" />
+  <style>
+    /* The campaign banner is the page hero: full-bleed photo, navy fade on the text side. */
+    /* One fixed hero height for every campaign/path, so switching tabs never
+       makes the page jump; the text block is centred inside it. */
+    .pg-hero { position: relative; isolation: isolate; overflow: hidden; height: 520px; min-height: 0; display: flex; align-items: center; padding: 96px 0 60px; background: #031a36; box-sizing: border-box; }
+    .pg-hero > .pg-feature-img { position: absolute; inset: 0; z-index: -2; min-height: 0 !important; background-size: cover; background-position: center; order: 0 !important; }
+    .pg-hero::before { content: ""; position: absolute; inset: 0; z-index: -1;
+      background: linear-gradient(270deg, rgba(3,26,54,.94) 0%, rgba(3,26,54,.82) 38%, rgba(3,26,54,.35) 68%, rgba(3,26,54,.1) 100%), linear-gradient(0deg, rgba(3,26,54,.55), rgba(3,26,54,0) 40%); }
+    .pg-hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 60px; background: var(--page-bg); clip-path: path('M0 60 L0 30 C 320 4, 620 52, 960 26 S 1600 0, 2600 22 L2600 60 Z'); }
+    .pg-hero-in { position: relative; width: min(1240px, calc(100% - 40px)); }
+    .pg-hero .in-crumb { color: #cfe3f1; }
+    .pg-hero .in-crumb a { color: #cfe3f1; }
+    .pg-hero .pg-feature { display: block !important; background: none !important; box-shadow: none !important; max-width: 560px; }
+    .pg-hero .pg-feature-text { padding: 0 !important; color: #fff; }
+    .pg-hero .pg-feature-text small { color: #7fd6f5; font-size: 13px; font-weight: 800; }
+    .pg-hero .pg-feature-text h2 { color: #fff; font-size: clamp(38px, 5vw, 60px); margin: 6px 0 4px; line-height: 1.1; }
+    .pg-hero .pg-feature-text .in-script { color: #7fd6f5; font-size: clamp(22px, 2.6vw, 30px); }
+    .pg-hero .pg-feature-text p { color: #dbe9f3; font-size: 15px; line-height: 1.85; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .pg-hero .pg-feature-text .in-script { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pg-hero .pg-chips span { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.24); }
+    .pg-hero .pg-note { color: #cfe3f1; }
+    .pg-sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .pg-hero + .in-main { padding-top: 10px; }
+    /* The tabs already say which projects are shown, so the grid has no heading. */
+    #pgProjTitle { display: none !important; }
+    /* Hero carries only the title, the line under it and the donate button. */
+    .pg-hero .in-crumb, .pg-hero #pgKicker, .pg-hero .pg-chips, .pg-hero .pg-note, .pg-hero a[href="#amal"] { display: none !important; }
+    .pg-hero .pg-feature-text p { margin-bottom: 20px; }
+    html[dir=ltr] .pg-hero::before { background: linear-gradient(90deg, rgba(3,26,54,.94) 0%, rgba(3,26,54,.82) 38%, rgba(3,26,54,.35) 68%, rgba(3,26,54,.1) 100%), linear-gradient(0deg, rgba(3,26,54,.55), rgba(3,26,54,0) 40%); }
+    @media (max-width: 760px) {
+      .pg-hero { height: 640px; padding: 86px 0 72px; align-items: flex-start; }
+      .pg-hero .pg-note { display: none; }
+      .pg-hero .pg-feature-text h2 { font-size: 38px; }
+      .pg-hero .pg-feature-text .in-script { font-size: 20px; }
+      .pg-hero .pg-feature-text p { font-size: 14px; margin: 6px 0 10px; }
+      .pg-hero::before { background: linear-gradient(0deg, rgba(3,26,54,.95) 0%, rgba(3,26,54,.8) 55%, rgba(3,26,54,.45) 100%); }
+      .pg-hero .pg-actions { gap: 10px; }
+    }
+  </style>
   <script src="./currency.js"></script>
 </helmet>
 <div dir="rtl">
   <dc-import name="Toplum Vakfı Header" active-key="programs" hint-size="100%,64px"></dc-import>
 
-  <section class="in-banner">
-    <div class="in-wrap">
+  <section class="pg-hero">
+    <div class="pg-feature-img" id="pgFImg" style="background-image:url('assets/hero-bg.jpg')" role="img" aria-label="أعمال ترميم ضمن حملة أمل"></div>
+    <div class="in-wrap pg-hero-in">
       <nav class="in-crumb" id="pgCrumb" aria-label="مسار التنقل"><a href="Toplum Vakfı Homepage.dc.html">الرئيسية</a><span aria-hidden="true">‹</span><span>برامجنا</span></nav>
-      <h1 id="pgTitle">برامجنا</h1>
-      <p id="pgIntro">منذ عام 1995 نعمل من إسطنبول على غرس القيم وبناء الإنسان، بالتعليم والتأهيل والرعاية والتكافل، في تركيا وأكثر من عشرين دولة ومجتمعًا حول العالم.</p>
+      <h1 id="pgTitle" class="pg-sr">برامجنا</h1>
+      <p id="pgIntro" class="pg-sr">منذ عام 1995 نعمل من إسطنبول على غرس القيم وبناء الإنسان، بالتعليم والتأهيل والرعاية والتكافل، في تركيا وأكثر من عشرين دولة ومجتمعًا حول العالم.</p>
+      <article class="pg-feature">
+        <div class="pg-feature-text">
+          <small id="pgKicker">حملة الوقف 2026</small>
+          <h2 id="pgFTitle">حملة أمل</h2>
+          <span class="in-script" id="pgFScript">فلنكن أملهم.. فتضامننا مستقبلهم</span>
+          <p id="pgFText">نرمّم مدارس ومساجد في سوريا ليستقبل أهلها من جديد.</p>
+          <div class="pg-chips" id="pgChips"><span>7 مشاريع</span></div>
+          <div class="pg-actions" id="pgActions">
+            <a class="in-pill" href="#amal"><i>←</i>مشاريع الحملة</a>
+            <a class="in-pill" href="Toplum Vakfı Cart.dc.html"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg></i>ساهم في الحملة</a>
+          </div>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -38,40 +91,6 @@
         <button type="button" data-cat="youth">صناعة مستقبل الشباب</button>
         <button type="button" data-cat="community">المجتمع الواحد</button>
       </div>
-
-      <article class="in-card pg-feature">
-        <div class="pg-feature-text">
-          <small id="pgKicker">حملة الوقف 2026</small>
-          <h2 id="pgFTitle">حملة أمل</h2>
-          <span class="in-script" id="pgFScript">فلنكن أملهم.. فتضامننا مستقبلهم</span>
-          <p id="pgFText">نرمّم مدارس ومساجد في سوريا ليستقبل أهلها من جديد.</p>
-          <div class="pg-chips" id="pgChips"><span>7 مشاريع</span></div>
-          <div class="pg-actions" id="pgActions">
-            <a class="in-pill" href="#amal"><i>←</i>مشاريع الحملة</a>
-            <a class="in-pill" href="Toplum Vakfı Cart.dc.html"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg></i>ساهم في الحملة</a>
-          </div>
-        </div>
-        <div class="pg-feature-img" id="pgFImg" style="background-image:url('assets/hero-bg.jpg')" role="img" aria-label="أعمال ترميم ضمن حملة أمل"></div>
-      </article>
-
-      <section class="in-sec" id="pgPaths">
-        <h2 class="in-h2">مسارات العطاء</h2>
-        <p class="in-sub">أربعة مسارات تنتظم فيها برامج الوقف.</p>
-        <div class="gp-grid">
-          <a class="in-card gp-card" href="#values"><div class="gp-img" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=700&q=80')"><span class="gp-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 21v-8M12 13c0-4 3-6 7-6 0 4-3 6-7 6zM12 15c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/></svg></span></div><div class="gp-body"><small>المسار 01</small><h3>غرس القيم</h3><p>ترسيخ الأخلاق والمعرفة التي تنتقل من الفرد إلى مجتمعه.</p><div class="gp-foot"><span>4 برامج</span><b>استكشف ←</b></div></div></a>
-          <a class="in-card gp-card" href="#human"><div class="gp-img" style="background-image:url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=700&q=80')"><span class="gp-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5.5a3 3 0 0 1 0 5.8M21 20c0-2.6-1.5-4.5-3.8-5.2"/></svg></span></div><div class="gp-body"><small>المسار 02</small><h3>بناء الإنسان</h3><p>تعليم متكافئ للفئات الأضعف، ورعاية وبيئات تتيح للإنسان أن ينمو.</p><div class="gp-foot"><span>7 برامج</span><b>استكشف ←</b></div></div></a>
-          <a class="in-card gp-card" href="#youth"><div class="gp-img" style="background-image:url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=700&q=80')"><span class="gp-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></span></div><div class="gp-body"><small>المسار 03</small><h3>صناعة مستقبل الشباب</h3><p>مهارات تفتح أبواب العمل، وقدرات تدعم القيادة والمشاركة.</p><div class="gp-foot"><span>5 برامج</span><b>استكشف ←</b></div></div></a>
-          <a class="in-card gp-card" href="#community"><div class="gp-img" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=700&q=80')"><span class="gp-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20s-7.2-4.6-9.4-9.2C1.2 7.8 3 5 6 5c2 0 3.3 1.1 4 2.3.7-1.2 2-2.3 4-2.3 3 0 4.8 2.8 3.4 5.8C19.2 15.4 12 20 12 20z"/></svg></span></div><div class="gp-body"><small>المسار 04</small><h3>المجتمع الواحد</h3><p>تكافل في تفاصيل الحياة: غذاء وماء ورعاية تصل إلى المحتاجين في مواسمها.</p><div class="gp-foot"><span>8 برامج</span><b>استكشف ←</b></div></div></a>
-        </div>
-      </section>
-
-      <section class="in-sec" id="pgProgs" hidden="hidden">
-        <div class="in-sec-head">
-          <h2 class="in-h2">برامج المسار</h2>
-          <p class="in-sub">أرقام مختارة من كتالوج إنجازات الوقف 2026، لكل رقم وحدته</p>
-        </div>
-        <div class="pp2-grid" id="pgProgGrid"></div>
-      </section>
 
       <section class="in-sec" id="open">
         <h2 class="in-h2" id="pgProjTitle" style="margin-bottom:16px">المشاريع المفتوحة للتبرع</h2>
@@ -184,27 +203,37 @@ class Component extends DCLogic {
 
     if (path) {
       $('pgKicker').textContent = 'المسار ' + path.n;
-      $('pgFTitle').textContent = path.line;
-      $('pgFScript').hidden = true;
-      $('pgFText').hidden = true;
+      // Same layout as the campaign: title, handwritten line, one short sentence, button.
+      const HERO = {
+        values: ['علمٌ يُثمر خُلقًا', 'نرسّخ الأخلاق والمعرفة التي تنتقل من الفرد إلى مجتمعه.'],
+        human: ['نبني الإنسان قبل البنيان', 'تعليم متكافئ ورعاية تمنح الإنسان مساحة للنمو.'],
+        youth: ['شبابٌ يصنعون الغد', 'مهارات تفتح فرص العمل، وقدرات تدعم القيادة.'],
+        community: ['يدٌ واحدة في كل موسم', 'غذاء وماء ورعاية تصل إلى المحتاجين عبر المواسم.']
+      }[key] || ['', path.line];
+      const L = s => (window.tvI18n && window.tvI18n.t ? window.tvI18n.t(s) : s);
+      $('pgFTitle').textContent = L(path.t);
+      $('pgFScript').textContent = L(HERO[0]);
+      $('pgFScript').hidden = !HERO[0];
+      $('pgFText').textContent = L(HERO[1]);
+      $('pgFText').hidden = false;
       $('pgChips').innerHTML = path.chips.map(c => '<span>' + esc(c) + '</span>').join('');
       $('pgActions').innerHTML = '<a class="in-pill" href="Toplum Vakfı Cart.dc.html"><i>' + HEART + '</i>تبرع لهذا المسار</a><span class="pg-note">يوجَّه تبرعك إلى برامج هذا المسار</span>';
       $('pgFImg').style.backgroundImage = "url('" + IMG[path.img] + "')";
-      $('pgProgGrid').innerHTML = path.progs.map(p => '<article class="in-card pp2-card"><h3>' + esc(p[0]) + '</h3><p>' + esc(p[1]) + '</p><div class="pp2-stats">' + p[2].map(s => '<span>' + esc(s) + '</span>').join('') + '</div></article>').join('');
+      if ($('pgProgGrid')) $('pgProgGrid').innerHTML = path.progs.map(p => '<article class="in-card pp2-card"><h3>' + esc(p[0]) + '</h3><p>' + esc(p[1]) + '</p><div class="pp2-stats">' + p[2].map(s => '<span>' + esc(s) + '</span>').join('') + '</div></article>').join('');
     } else {
       $('pgKicker').textContent = 'حملة الوقف 2026';
       $('pgFTitle').textContent = 'حملة أمل';
+      $('pgFScript').textContent = 'فلنكن أملهم.. فتضامننا مستقبلهم';
       $('pgFScript').hidden = false;
+      $('pgFText').textContent = 'نرمّم مدارس ومساجد في سوريا ليستقبل أهلها من جديد.';
       $('pgFText').hidden = false;
       $('pgChips').innerHTML = '<span>7 مشاريع</span>';
       $('pgActions').innerHTML = (key === 'all' ? '<a class="in-pill" href="#amal"><i>←</i>مشاريع الحملة</a>' : '') + '<a class="in-pill" href="Toplum Vakfı Cart.dc.html"><i>' + HEART + '</i>ساهم في الحملة</a>';
       $('pgFImg').style.backgroundImage = "url('assets/hero-bg.jpg')";
     }
-    $('pgPaths').hidden = key !== 'all';
-    $('pgProgs').hidden = !path;
 
     const list = key === 'all' ? PROJECTS : PROJECTS.filter(p => p[1].split(' ').includes(key));
-    $('pgProjTitle').textContent = key === 'all' ? 'المشاريع المفتوحة للتبرع' : key === 'amal' ? 'مشاريع الحملة' : 'مشاريع هذا المسار';
+    $('pgProjTitle').textContent = key === 'amal' ? 'مشاريع الحملة' : 'المشاريع المفتوحة للتبرع';
     $('pgEmpty').hidden = list.length > 0;
     $('pjGrid').hidden = list.length === 0;
     $('pjGrid').innerHTML = list.map(p => {

@@ -36,7 +36,8 @@
     body { margin: 0; background: var(--page-bg); color: var(--ink); font-family: Cairo, Arial, sans-serif; }
     button, a { font: inherit; }
     button { border: 0; cursor: pointer; }
-    .page { overflow-x: clip; min-height: 100vh; padding-bottom: 116px; }
+    /* No bottom reserve: the docked donate bar is hidden (replaced by the hero circle). */
+    .page { overflow-x: clip; min-height: 100vh; }
 
     @keyframes heroPan { from { transform: scale(1.04); } to { transform: scale(1.11); } }
     /* Tiling 44px targets, not stacked overlays: at a 16px pitch an expanded
@@ -136,7 +137,6 @@
       .dw-wrap.expanded .dw-step { width: 50px; height: 50px; font-size: 22px; }
       .dw-wrap.expanded .dw-value input { font-size: 26px; }
       .mobile-sticky-donate { display: none !important; }
-      .page { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
     }
     @media (min-width: 1151px) {
       .dw-handle, .dw-sheet-title, .dw-field-label, .dw-scrim { display: none; }
@@ -164,7 +164,7 @@
     .program-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent, rgba(3,34,59,.25)); }
     .program:nth-child(2) .program-image { background-image: url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=500&q=80'); }
     .program:nth-child(3) .program-image { background-image: url('https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&w=500&q=80'); }
-    .program:nth-child(4) .program-image { background-image: url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=500&q=80'); }
+    .program:nth-child(4) .program-image { background-image: url('assets/hero-bg.jpg'); }
     .program:nth-child(5) .program-image { background-image: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80'); }
     .program:nth-child(6) .program-image { background-image: url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=500&q=80'); }
     .program:nth-child(7) .program-image { background-image: url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=500&q=80'); }
@@ -248,7 +248,7 @@
     .pp-card.is-paused { opacity: .75; cursor: default; }
     .pp-image-1 { background-image: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=600&q=80'); }
     .pp-image-2 { background-image: url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=600&q=80'); }
-    .pp-image-3 { background-image: url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80'); }
+    .pp-image-3 { background-image: url('assets/hero-bg.jpg'); }
     .pp-body { padding: clamp(14px, 1.2vw, 20px) clamp(14px, 1.2vw, 20px) clamp(13px, 1.1vw, 18px); display: flex; flex-direction: column; flex: 1; }
     .pp-body h3 { margin: 0 0 6px; font-size: clamp(14.5px, 1vw, 17px); font-weight: 800; color: var(--ink); line-height: 1.4; text-wrap: pretty; }
     .pp-body p { margin: 0 0 13px; color: var(--muted); font-size: 12px; line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -779,10 +779,14 @@
     .th-lead { margin: 0 0 12px; font-size: clamp(17px, 1.6vw, 22px); font-weight: 800; }
     /* One line on ≥900px: the sentence is 459px at 14.5px, inside the 508–520px column. */
     .th-body { margin: 0 0 26px; color: #fff; font-size: 14.5px; line-height: 1.9; white-space: nowrap; }
-    .th-cta { display: inline-flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 12px 0 26px; border-radius: 999px;
+    .th-cta { display: inline-flex; align-items: center; gap: 12px; min-height: 52px; padding-block: 0; padding-inline: 24px 8px; border-radius: 999px;
       background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; font-size: 15px; font-weight: 800; text-decoration: none; box-shadow: 0 10px 26px rgba(0,162,224,.35); transition: transform .2s; }
     .th-cta:hover { transform: translateY(-2px); }
-    .th-cta b { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #fff; color: var(--brand-ink); }
+    /* Arrow chip: equal 8px inset top/bottom/side, a drawn chevron-arrow instead of
+       the text glyph (which sat off-centre and read thin). */
+    .th-cta b { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #1b6fe0; box-shadow: 0 2px 6px rgba(3,26,54,.18); flex-shrink: 0; }
+    .th-cta b svg { width: 16px; height: 16px; }
+    html[dir=ltr] .th-cta b svg { transform: scaleX(-1); }
 
     /* Disc: fixed size (no aspect-ratio/flex, per CLAUDE.md). Checked per row:
        every row's width must fit the chord at its own height, not just the widest. */
@@ -826,6 +830,24 @@
        their line box and gain vertical padding instead, so the text doesn't shift. */
     .zm-link, .ps-link, .fm-link, .nt-link, .story-cta, .tb-links a { display: inline-flex; align-items: center; min-height: 44px; }
     section p a { padding-block: 11px; }
+    /* Phone polish: no orphan tiles, tighter section rhythm, arrows clear of logos. */
+    @media (max-width: 760px) {
+      .hs-stats .stat:last-child:nth-child(odd) { grid-column: 1 / -1; }
+      .program-row .program:last-child:nth-child(even) { grid-column: 1 / -1; }
+      .program-row .program:last-child:nth-child(even) .program-image { height: 150px; }
+      .impact-panel { padding-top: 12px !important; padding-inline: 16px !important; }
+      .impact-panel .hs-strip { padding-inline: 0 !important; }
+      .hs-quote { margin-top: 0 !important; }
+      .fd { padding-top: 32px !important; }
+      .wg-units { margin-top: 0 !important; }
+      .wg-bar { margin-top: 18px !important; }
+      .pt-row { gap: 8px !important; }
+      .pt-track { gap: 10px !important; padding: 0 2px; }
+      .pt-logo { flex-basis: 132px !important; }
+      .cf { padding: 20px 0 40px !important; }
+      .iw-caption { display: none; }
+    }
+
     .ac-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
     .ac-card { background: #fff; border: 1px solid #e6eef3; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 28px rgba(2,52,88,.07); }
     .ac-img { aspect-ratio: 16 / 10; background: #0b2440 center / cover no-repeat; }
@@ -938,7 +960,7 @@
     .fq-item summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 52px; padding: 0 20px; color: var(--ink); font-size: 14px; font-weight: 800; }
     .fq-item summary::-webkit-details-marker { display: none; }
     .fq-item summary::after { content: "+"; flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #eaf5fc; color: var(--brand-ink); font-size: 16px; font-weight: 800; line-height: 1; }
-    .fq-item[open] summary::after { content: "−"; background: var(--brand); color: #fff; }
+    .fq-item[open] summary::after { content: "−"; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; }
     .fq-item p { margin: 0; padding: 0 20px 18px; color: var(--muted); font-size: 13px; line-height: 1.85; }
     .fq-foot { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
     .fq-more { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; background: #e3f2fb; color: var(--brand-ink); font-size: 13px; font-weight: 800; }
@@ -1058,7 +1080,37 @@
       .th-trust { margin-top: 16px; }
       .th-dots { margin-top: 8px; }
     }
-    @media (max-width: 828px) { .th { padding-top: calc(66px + var(--alert-h, 44px) + 16px); } }
+    @media (max-width: 828px) { .th { padding-top: calc(66px + var(--alert-h, 44px) + 30px); } }
+    /* Phone: breathing room under the header, and the copy stays inside the side
+       gutters the header uses, so both columns line up. */
+    @media (max-width: 760px) {
+      .th-inner { width: calc(100% - 32px); gap: 30px; }
+      .th-copy h1 { margin-bottom: 10px; }
+      /* One vertical rhythm down the stacked hero: 20px between every block. */
+      .th-actions { margin-top: 20px; justify-content: center; gap: 18px; }
+      .th-trust { margin-top: 22px; padding-top: 18px; }
+      .th-dots { margin-top: 16px; }
+      .th-ring { margin: 0 auto; }
+      .th { padding-bottom: 72px; }
+    }
+    /* Phone disc: one control height (34px) for stepper, frequency, fund and
+       presets, the Go button one step up (40px); the frequency pair and the four
+       presets share equal widths so no row looks lopsided. */
+    @media (max-width: 760px) {
+      .th-sb { width: 34px !important; height: 34px !important; }
+      .th-freq { display: grid !important; grid-template-columns: 1fr 1fr; }
+      .th-freq button, .th-sel, .th-presets button { min-height: 34px !important; height: 34px !important; }
+      .th-presets { display: grid !important; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 196px; }
+      .th-presets button { min-width: 0 !important; padding-inline: 4px !important; }
+      .th-go { min-height: 40px !important; height: 40px !important; }
+    }
+    /* The WhatsApp button would sit on the hero wave and the donate disc edge;
+       on phones it moves to the inline-end (left in RTL) above the bottom nav,
+       smaller, so it never covers a control. */
+    @media (max-width: 760px) {
+      .tv-wa { width: 50px !important; height: 50px !important; left: 12px !important; bottom: calc(var(--bnav-h, 0px) + 14px) !important; box-shadow: 0 6px 18px rgba(0,0,0,.25) !important; }
+      .tv-wa svg { width: 28px !important; height: 28px !important; }
+    }
     @media (max-width: 420px) {
       .th-ring { flex-basis: 300px; width: 300px; height: 300px; }
       .th-disc { width: 280px; height: 280px; gap: 4px; }
@@ -1118,7 +1170,7 @@
           <p class="th-lead">من أجل مجتمعات أكثر عدلاً ورحمة وكرامة</p>
           <p class="th-body">مجتمعات آمنة بقيم سامية نغرس الأمل، ونصنع مجتمعات تزدهر بالعطاء والأمان.</p>
           <div class="th-actions">
-            <a class="th-cta" href="#programs">كن جزءاً من هذا الأثر <b aria-hidden="true">←</b></a>
+            <a class="th-cta" href="#programs">كن جزءاً من هذا الأثر <b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></b></a>
             <a class="th-link" href="Toplum Vakfı Our Story.dc.html">قصتنا</a>
           </div>
           <ul class="th-trust" aria-label="مؤشرات الثقة">
@@ -1316,7 +1368,7 @@
     <div class="container">
       <div class="wg-units">
           <div class="wg-unit" data-name="مصحف صدقة جارية" data-price="5">
-            <div class="wg-unit-img" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80')"></div>
+            <div class="wg-unit-img" style="background-image:url('assets/hero-bg.jpg')"></div>
             <div class="wg-unit-body">
               <div class="wg-unit-top"><b class="wg-price">$5</b><span class="wg-tag">صدقة جارية</span></div>
               <h3>مصحف صدقة جارية</h3>
@@ -1405,7 +1457,7 @@
     <div class="container">
       <div class="wg-sponsors">
         <div class="wg-spons" data-name="اكفل حلقة قرآن" data-price="300" data-freq="monthly">
-          <div class="wg-spons-img" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=600&q=80')"></div>
+          <div class="wg-spons-img" style="background-image:url('assets/hero-bg.jpg')"></div>
           <div class="wg-spons-body">
             <h3>اكفل حلقة قرآن</h3>
             <p>حلقة تحفيظ ضمن برنامج السفرة الذي يضم 500+ حلقة و12,500+ طالب وطالبة سنويًا</p>
@@ -1578,7 +1630,7 @@
       <div class="fd-rail">
         <a class="fd-card" href="Toplum Vakfı Stories.dc.html" style="background-image:url('assets/hero-bg.jpg')"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>ترميم المساجد — سوريا 2025</span></a>
         <a class="fd-card" href="Toplum Vakfı Stories.dc.html" style="background-image:url('https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=700&q=80')"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>سقيا الماء — غزة 2025</span></a>
-        <a class="fd-card" href="Toplum Vakfı Stories.dc.html" style="background-image:url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=700&q=80')"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>توزيع المصاحف — أفريقيا 2025</span></a>
+        <a class="fd-card" href="Toplum Vakfı Stories.dc.html" style="background-image:url('assets/hero-bg.jpg')"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>توزيع المصاحف — أفريقيا 2025</span></a>
         <a class="fd-card" href="Toplum Vakfı Stories.dc.html" style="background-image:url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=700&q=80')"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>توزيع الخبز — سوريا 2025</span></a>
       </div>
     </div>

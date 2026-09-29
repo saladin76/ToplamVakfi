@@ -24,7 +24,7 @@
     .steps-dots { display: flex; align-items: center; gap: 6px; }
     .step-dot { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
     .step-dot .circle { width: 24px; height: 24px; border-radius: 50%; background: #e9eff3; color: var(--muted); display: grid; place-items: center; font-size: 12px; font-weight: 800; }
-    .step-dot.active .circle, .step-dot.done .circle { background: var(--brand); color: #fff; }
+    .step-dot.active .circle, .step-dot.done .circle { background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; }
     .step-dot.active { color: var(--ink); }
     .step-sep { width: 24px; height: 1px; background: #dbe6ee; align-self: center; }
     .panel { background: #fff; border: 1px solid #e6eef3; border-radius: 18px; box-shadow: 0 16px 34px rgba(2,52,88,.08); padding: 34px; margin: 20px 0 60px; text-align: center; }
@@ -52,9 +52,11 @@
     .cert-mini i { font-style: normal; font-size: 12.5px; font-weight: 800; color: var(--brand-ink); padding-bottom: 5px; border-bottom: 1.5px dotted #9fc0d6; min-width: 150px; max-width: 100%; word-break: break-word; }
     .cert-mini .cm-seal { margin-top: 4px; width: 34px; height: 34px; display: grid; place-items: center; border: 1.5px solid var(--brand); border-radius: 50%; font-size: 12px; font-weight: 800; color: var(--brand-ink); direction: ltr; }
     .btn-row { display: flex; gap: 10px; }
-    .btn-row a { flex: 1; display: flex; align-items: center; justify-content: center; background: var(--brand); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 13.5px; min-height: 44px; }
+    .btn-row a { flex: 1; display: flex; align-items: center; justify-content: center; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; padding: 13px; border-radius: 999px; font-weight: 800; font-size: 13.5px; min-height: 44px; }
     .btn-row a.outline { background: transparent; color: var(--muted); border: 1.5px solid #e2eaf0; }
     @media (max-width: 480px) { .step-dot span:not(.circle) { display: none; } .step-sep { width: 14px; } .panel { padding: 22px; } .certificate { padding: 18px 14px; } }
+    /* Phone: the content ends clear of the bottom bar and its raised donate circle. */
+    @media (max-width: 760px) { .btn-row { margin-bottom: 36px; } }
   </style>
 </helmet>
 <div dir="rtl">
@@ -101,6 +103,7 @@
       </div>
     </div>
   </div>
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>

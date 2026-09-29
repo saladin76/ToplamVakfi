@@ -1,0 +1,13 @@
+/* Site-wide touch-target floor for phones and tablets (loaded by the shared header).
+   Raises small controls to 44px without changing their desktop size. */
+@media (max-width: 900px) {
+  .pj-amt, .pj-amt input { min-height: 44px; }
+  .ct-edit, .cart-amt-edit, [data-edit-amount] { min-height: 44px; }
+  input[type="checkbox"], input[type="radio"] { width: 22px; height: 22px; }
+  label:has(> input[type="checkbox"]), label:has(> input[type="radio"]) { min-height: 44px; display: flex; align-items: center; gap: 10px; }
+  .slider-arrow, .sl-arrow, [class*="slider"] button[aria-label] { min-width: 44px; min-height: 44px; }
+  .back-link, .fm-link, .back, .faq-back, .news-back { display: inline-flex; align-items: center; min-height: 44px; }
+  /* Real markup found by the audit */
+  .ct-amt, .ct-amt input { min-height: 44px; }
+  .footer-strip a, .trust-strip a, .trust-strip span, .in-crumb a { display: inline-flex; align-items: center; min-height: 44px; }
+}

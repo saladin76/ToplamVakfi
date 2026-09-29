@@ -48,7 +48,12 @@
 
     /* Floating actions: WhatsApp on the inline-end, back-to-top on the inline-start. */
     .tv-wa { position: fixed; z-index: 1250; left: 22px; bottom: calc(22px + var(--bnav-h, 0px)); display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: #25d366; color: #fff; box-shadow: 0 10px 24px rgba(37,211,102,.4); }
-    .tv-wa svg { width: 26px; height: 26px; }
+    .tv-wa svg { width: 28px; height: 28px; display: block; flex-shrink: 0; }
+    /* The footer's 44px touch rule sets every footer <a> to inline-flex, which
+       pushed the icon to the inline-start (right in RTL). Centre it explicitly. */
+    .tv-wa { display: flex !important; align-items: center !important; justify-content: center !important; padding: 0 !important; line-height: 0; }
+    .tv-wa { color: #fff; box-shadow: 0 8px 20px rgba(37,211,102,.4), 0 0 0 4px rgba(255,255,255,.9); }
+    .tv-wa:hover { filter: brightness(.95); }
 
     @media (max-width: 980px) { .tv-foot-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 560px) {
@@ -56,7 +61,30 @@
       .tv-foot-wave { height: 36px; }
       .tv-foot-grid { grid-template-columns: 1fr; gap: 28px; }
       .tv-foot-legal { flex-direction: column; align-items: flex-start; }
-      .tv-wa { width: 48px; height: 48px; left: 14px; }
+      .tv-wa { width: 50px !important; height: 50px !important; left: 12px !important; box-shadow: 0 6px 18px rgba(0,0,0,.25) !important; }
+      .tv-wa svg { width: 28px !important; height: 28px !important; }
+    }
+    /* Touch targets: every footer link and contact row is at least 44px tall on
+       touch screens, without changing the desktop rhythm. Social icons keep their
+       own centred circle (the generic rule used to push the glyph to one side). */
+    @media (max-width: 900px) {
+      .tv-foot a { display: inline-flex; align-items: center; min-height: 44px; }
+      .tv-foot-legal a { min-height: 44px; }
+      .tv-foot-social a { display: flex !important; justify-content: center; align-items: center; width: 44px; height: 44px; min-height: 44px; }
+    }
+    /* Phone: a compact footer — brand first, links in two columns, contact rows
+       and legal links tight, so it doesn't run three screens long. */
+    @media (max-width: 560px) {
+      .tv-foot-grid { gap: 22px !important; padding-bottom: 20px; }
+      .tv-foot-brand { order: -1; display: flex; align-items: center; gap: 14px; }
+      .tv-foot-brand span { flex-shrink: 0; }
+      .tv-foot-brand img { height: 52px; }
+      .tv-foot h4 { margin-bottom: 8px; }
+      .tv-foot-links { grid-template-columns: 1fr 1fr; gap: 0 16px; }
+      .tv-foot-contact { gap: 0 !important; }
+      .tv-foot-social { gap: 10px; margin-top: 6px; }
+      .tv-foot-legal { align-items: stretch !important; gap: 4px !important; padding: 12px 0 calc(16px + var(--bnav-h, 0px)); }
+      .tv-foot-legal nav { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
     }
   </style>
 </helmet>
@@ -110,9 +138,19 @@
       <span class="tv-foot-copy">© 2026 وقف التضامن الاجتماعي — جميع الحقوق محفوظة</span>
     </div>
   </div>
-  <a class="tv-wa" href="https://wa.me/902125827970" target="_blank" rel="noopener" aria-label="واتساب"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20l1.3-3.9A8.5 8.5 0 1 1 8 18.8z"/></svg></a>
+  <a class="tv-wa" href="https://wa.me/902125827970" target="_blank" rel="noopener" aria-label="واتساب"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.73 1.2h.01c5.46 0 9.91-4.45 9.91-9.91A9.85 9.85 0 0 0 12.04 2zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 0 1 8.24 8.25c0 4.54-3.7 8.23-8.25 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.7-.8-.23-.09-.39-.13-.56.12-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42h-.48a.92.92 0 0 0-.66.31c-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.29z"/></svg></a>
 </footer>
 
 </x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    // Phones: the fixed WhatsApp button would sit on the hero's donate circle,
+    // so it stays hidden until the visitor has scrolled past the hero.
+
+  }
+  renderVals() { return {}; }
+}
+</script>
 </body>
 </html>

@@ -38,6 +38,7 @@
     .p-sidebar button:hover:not(.active) { background: #f7fafc; color: var(--ink); }
     .p-sidebar hr { border: 0; border-top: 1px solid #edf2f6; margin: 8px 6px; }
     .p-sidebar .logout { color: #c62828; }
+    .pf-logout-row { display: none; }
 
     .p-section { display: none; }
     .p-section.active { display: block; }
@@ -112,6 +113,31 @@
       .stat-grid, .field-row, .saved-grid { grid-template-columns: 1fr; }
       .ph-card { flex-wrap: wrap; }
     }
+    /* Phone: a compact profile header (avatar + name on one line, badge under it),
+       tabs that scroll without a visible bar, and stats as a tight 3-up row. */
+    @media (max-width: 760px) {
+      .profile-hero { padding: 88px 0 14px; }
+      .ph-card { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: center; gap: 6px 14px; padding: 20px 18px; }
+      .ph-avatar { width: 56px; height: 56px; font-size: 20px; grid-row: span 2; }
+      .ph-info h1 { font-size: 19px; line-height: 1.35; }
+      .ph-info span { display: block; line-height: 1.7; }
+      .ph-badge { grid-column: 1 / -1; justify-self: start; margin-top: 8px; }
+      .profile-layout { padding-top: 14px; gap: 16px; }
+      .p-sidebar { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 8px; overflow: visible !important; }
+      .p-sidebar button { width: 100% !important; min-height: 48px; padding: 0 12px; justify-content: flex-start; white-space: normal !important; line-height: 1.35; font-size: 13px; border: 1px solid #edf2f6; }
+      .p-sidebar button svg { flex-shrink: 0; }
+      .p-sidebar hr { display: none; }
+      /* Logout lives at the very bottom of the page on phones, not in the tab grid. */
+      .p-sidebar .logout { display: none !important; }
+      .p-sidebar button[data-tab="settings"] { grid-column: 1 / -1; }
+      .pf-logout-row { display: block; padding: 0 0 28px; }
+      .pf-logout { width: 100%; min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 14px; border: 1.5px solid #f3c9c4; background: #fff; color: #b3261e; font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+      .pf-logout svg { width: 18px; height: 18px; }
+      .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px; }
+      .stat-card { padding: 14px 10px; text-align: center; }
+      .stat-card b { font-size: 18px; text-align: center; }
+      .stat-card span { display: block; line-height: 1.5; }
+    }
   </style>
 </helmet>
 <svg style="position:absolute; width:0; height:0" aria-hidden="true">
@@ -167,13 +193,13 @@
           <p class="sub">جميع عمليات التبرع المرتبطة بحسابك</p>
           <table class="history-table">
             <tr><th>المشروع</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th><th></th></tr>
-            <tr><td>بناء دار أيتام في سوريا</td><td class="amt">$100</td><td class="date">2026/09/01</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
-            <tr><td>الصندوق العام</td><td class="amt">$60</td><td class="date">2026/08/01</td><td><span class="status-pill recurring">شهري</span></td><td class="row-actions"><a href="#">إدارة</a></td></tr>
-            <tr><td>سلال غذائية عاجلة</td><td class="amt">$200</td><td class="date">2026/07/12</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
-            <tr><td>تسديد ديون الغارمين</td><td class="amt">$250</td><td class="date">2026/05/20</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
-            <tr><td>حفر آبار مياه</td><td class="amt">$150</td><td class="date">2026/03/09</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
-            <tr><td>منح طلبة القرآن الكريم</td><td class="amt">$400</td><td class="date">2026/01/15</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="#">إيصال</a></td></tr>
-            <tr><td>ترميم المدارس والمساجد</td><td class="amt">$120</td><td class="date">2026/09/10</td><td><span class="status-pill pending">قيد المراجعة</span></td><td class="row-actions"><a href="#">تفاصيل</a></td></tr>
+            <tr><td>بناء دار أيتام في سوريا</td><td class="amt">$100</td><td class="date">2026/09/01</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="Toplum Vakfı Certificate.dc.html">إيصال</a></td></tr>
+            <tr><td>الصندوق العام</td><td class="amt">$60</td><td class="date">2026/08/01</td><td><span class="status-pill recurring">شهري</span></td><td class="row-actions"><a href="Toplum Vakfı Monthly Giving.dc.html">إدارة</a></td></tr>
+            <tr><td>سلال غذائية عاجلة</td><td class="amt">$200</td><td class="date">2026/07/12</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="Toplum Vakfı Certificate.dc.html">إيصال</a></td></tr>
+            <tr><td>تسديد ديون الغارمين</td><td class="amt">$250</td><td class="date">2026/05/20</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="Toplum Vakfı Certificate.dc.html">إيصال</a></td></tr>
+            <tr><td>حفر آبار مياه</td><td class="amt">$150</td><td class="date">2026/03/09</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="Toplum Vakfı Certificate.dc.html">إيصال</a></td></tr>
+            <tr><td>منح طلبة القرآن الكريم</td><td class="amt">$400</td><td class="date">2026/01/15</td><td><span class="status-pill done">مكتمل</span></td><td class="row-actions"><a href="Toplum Vakfı Certificate.dc.html">إيصال</a></td></tr>
+            <tr><td>ترميم المدارس والمساجد</td><td class="amt">$120</td><td class="date">2026/09/10</td><td><span class="status-pill pending">قيد المراجعة</span></td><td class="row-actions"><a href="Toplum Vakfı Projects.dc.html">تفاصيل</a></td></tr>
           </table>
         </div>
       </section>
@@ -195,8 +221,8 @@
           <h2>الشهادات والإيصالات</h2>
           <p class="sub">مستندات قابلة للتحميل والطباعة</p>
           <div class="cert-row"><div><b>شهادة شكر — بناء دار أيتام</b><span>صادرة 2026/09/01</span></div><a href="Toplum Vakfı Thank You.dc.html">عرض ↗</a></div>
-          <div class="cert-row"><div><b>إيصال تبرع — الصندوق العام</b><span>2026/08/01 · $60</span></div><a href="#">تحميل PDF</a></div>
-          <div class="cert-row"><div><b>إيصال تبرع — سلال غذائية عاجلة</b><span>2026/07/12 · $200</span></div><a href="#">تحميل PDF</a></div>
+          <div class="cert-row"><div><b>إيصال تبرع — الصندوق العام</b><span>2026/08/01 · $60</span></div><a href="Toplum Vakfı Certificate.dc.html">تحميل PDF</a></div>
+          <div class="cert-row"><div><b>إيصال تبرع — سلال غذائية عاجلة</b><span>2026/07/12 · $200</span></div><a href="Toplum Vakfı Certificate.dc.html">تحميل PDF</a></div>
         </div>
       </section>
 
@@ -222,6 +248,8 @@
       </section>
     </div>
   </div>
+
+  <div class="container pf-logout-row"><button class="logout pf-logout" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>تسجيل الخروج</button></div>
 
   <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>

@@ -27,7 +27,7 @@
     .steps { display: flex; align-items: center; gap: 6px; }
     .step-dot { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
     .step-dot .circle { width: 26px; height: 26px; border-radius: 50%; background: #e9eff3; color: var(--muted); display: grid; place-items: center; font-size: 12px; font-weight: 800; }
-    .step-dot.active .circle, .step-dot.done .circle { background: var(--brand); color: #fff; }
+    .step-dot.active .circle, .step-dot.done .circle { background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; }
     .step-dot.active { color: var(--ink); }
     .step-sep { width: 26px; height: 1px; background: #dbe6ee; }
     .secure-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
@@ -140,6 +140,54 @@
       .panel { padding: 20px 18px; }
       .field-row { grid-template-columns: 1fr; }
     }
+    /* Phone checkout: one tight rhythm, summary first, card fields paired. */
+    @media (max-width: 760px) {
+      .checkout-grid, .ck-grid, .pay-grid { display: flex !important; flex-direction: column; gap: 14px !important; }
+      .panel.summary { order: -1; }
+      .panel { padding: 18px 16px !important; border-radius: 16px !important; }
+      .panel h2 { font-size: 19px !important; margin-bottom: 14px !important; }
+      .field { margin-bottom: 12px !important; }
+      .field label { margin-bottom: 6px !important; font-size: 13px; }
+      .field input, .field select { min-height: 48px; }
+      .card-preview, .cc-preview, .card-visual { max-width: 300px; margin: 6px auto 16px !important; aspect-ratio: 1.586 / 1; min-height: 0 !important; height: auto !important; padding: 16px 18px !important; }
+      .pm-option, .pay-method { padding: 12px 14px !important; }
+      .trust-strip { margin: 12px 0 !important; gap: 14px !important; flex-wrap: wrap; justify-content: center; }
+      .order-total { font-size: 16px !important; }
+      /* Expiry and CVC are short: keep them side by side even on phones. */
+      .field-row:has(#cardExpiry) { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    }
+    /* The cart already shows the summary; the payment page drops it. */
+    .panel.summary { display: none !important; }
+    /* Payment methods side by side as compact tiles. */
+    .pay-options { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .pay-option { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center; gap: 8px !important; text-align: center; min-height: 104px; padding: 14px 10px !important; }
+    .pay-option .po-icon { order: -1; margin: 0 !important; }
+    .pay-option .po-body { display: grid; gap: 2px; }
+    .pay-option .po-body b { font-size: 14px; }
+    .pay-option .po-body i { font-size: 12px; }
+    /* Form fields: one consistent size, label above, pairs side by side. */
+    .field { display: grid; gap: 6px; align-content: start; }
+    .field label { font-size: 13px; font-weight: 800; color: var(--ink); margin: 0 !important; min-height: 20px; }
+    .field input, .field select { width: 100%; height: 48px; min-height: 48px; box-sizing: border-box; border-radius: 12px; }
+    .field-row { gap: 12px !important; align-items: start; }
+    /* Denser controls, larger card: the preview is the focal point of this step. */
+    .field { gap: 5px; }
+    .field label { font-size: 12.5px; min-height: 18px; }
+    .field input, .field select { height: 44px !important; min-height: 44px !important; font-size: 14px; padding: 0 14px !important; border-radius: 10px !important; }
+    .field { margin-bottom: 10px !important; }
+    .pay-options { gap: 8px !important; }
+    .pay-option { min-height: 84px !important; padding: 10px 8px !important; gap: 5px !important; border-radius: 12px !important; }
+    .pay-option .po-icon { width: 36px !important; height: 36px !important; border-radius: 10px !important; }
+    .pay-option .po-icon svg { width: 18px; height: 18px; }
+    .pay-option .po-body b { font-size: 13.5px; }
+    .cc { display: flex; justify-content: center; margin: 4px 0 18px !important; }
+    .cc-face { width: 100%; max-width: 420px !important; padding: 24px 26px !important; border-radius: 18px !important; }
+    .cc-chip { width: 46px; height: 33px; }
+    .cc-number { font-size: clamp(18px, 5.4vw, 24px) !important; letter-spacing: 2.6px; }
+    @media (max-width: 760px) {
+      .field-row:has(#donorPhone) { grid-template-columns: 1fr !important; }
+    }
+    .layout, .checkout-grid, .ck-grid, .pay-grid { grid-template-columns: minmax(0, 1fr) !important; max-width: 760px; margin-inline: auto; }
   </style>
 </helmet>
 <div dir="rtl">
@@ -204,11 +252,6 @@
             <input type="radio" name="pay" checked="true">
             <span class="po-body"><b>بطاقة بنكية</b><i>Visa · Mastercard · Troy</i></span>
             <span class="po-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19"/></svg></span>
-          </label>
-          <label class="pay-option" data-pay="bank">
-            <input type="radio" name="pay">
-            <span class="po-body"><b>تحويل بنكي مباشر</b><i>يتطلب رفع إيصال التحويل</i></span>
-            <span class="po-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9.5 12 4l9 5.5"/><path d="M5 9.5V20h14V9.5M3 20h18"/></svg></span>
           </label>
           <label class="pay-option" data-pay="paypal">
             <input type="radio" name="pay">
@@ -285,15 +328,10 @@
         <div id="orderItems"></div>
         <div class="order-total" id="orderOnceRow"><span>إجمالي لمرة واحدة</span><b id="orderTotal">$0</b></div>
         <div class="order-total" id="orderMonthlyRow" style="display:none"><span>شهريًا</span><b id="orderMonthly">$0</b></div>
-        <ul class="sm-promise">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>إيصال فوري على بريدك بعد الدفع</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>يُوجَّه كل بند إلى المشروع الذي اخترته</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>وقف مسجّل رسميًا برقم 3673 منذ 1995</li>
-        </ul>
-        <div class="sm-help"><span>تحتاج مساعدة؟</span><a href="https://wa.me/902125827970" target="_blank" rel="noopener" dir="ltr">+90 212 582 79 70</a></div>
       </div>
     </div>
   </div>
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
 
 </x-dc>

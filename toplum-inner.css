@@ -11,17 +11,24 @@ a:hover { color: var(--brand); }
 button, input, select, textarea { font-family: inherit; }
 .in-wrap { width: min(1240px, calc(100% - 40px)); margin: 0 auto; }
 
-/* Banner: navy with a wavy lower edge that runs into the page background. */
-.in-banner { position: relative; background: linear-gradient(120deg, #021428 0%, #082b50 60%, #04172e 100%); color: #fff; padding: 118px 0 86px; overflow: hidden; }
-.in-banner::before { content: ""; position: absolute; inset: 0; opacity: .12; background-image: radial-gradient(#fff 1px, transparent 1.5px); background-size: 30px 30px; }
+/* Banner: a field photograph (per page via --in-img) under a directional navy fade,
+   with the wavy lower edge running into the page background. */
+.in-banner { --in-img: url('assets/hero-bg.jpg'); position: relative; isolation: isolate; color: #fff; min-height: 380px; display: flex; align-items: center; padding: 108px 0 92px; overflow: hidden;
+  background: linear-gradient(270deg, rgba(3,26,54,.95) 0%, rgba(3,26,54,.84) 40%, rgba(3,26,54,.45) 72%, rgba(3,26,54,.2) 100%), var(--in-img) center / cover no-repeat, #031a36; }
+html[dir=ltr] .in-banner { background: linear-gradient(90deg, rgba(3,26,54,.95) 0%, rgba(3,26,54,.84) 40%, rgba(3,26,54,.45) 72%, rgba(3,26,54,.2) 100%), var(--in-img) center / cover no-repeat, #031a36; }
+.in-banner::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(3,26,54,.6), rgba(3,26,54,0) 45%); }
 .in-banner::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 70px; background: var(--page-bg);
   clip-path: path('M0 70 L0 34 C 320 6, 620 58, 960 30 S 1600 0, 2600 26 L2600 70 Z'); }
-.in-banner .in-wrap { position: relative; z-index: 1; }
-.in-crumb { display: flex; gap: 8px; align-items: center; font-size: 12px; color: #cfe3f1; margin-bottom: 14px; }
+.in-banner .in-wrap { position: relative; z-index: 1; width: min(1240px, calc(100% - 40px)); }
+/* Overlap the next section by 2px so no sub-pixel navy seam shows under the wave. */
+.in-banner { margin-bottom: -2px; }
+.in-banner + .in-main, .in-banner + main, .in-banner + div { position: relative; background: var(--page-bg); }
+.in-crumb { display: flex; gap: 8px; align-items: center; font-size: 12.5px; color: #cfe3f1; margin-bottom: 16px; }
 .in-crumb a { color: #cfe3f1; }
 .in-crumb span[aria-hidden] { opacity: .6; }
-.in-banner h1 { margin: 0 0 8px; font-size: clamp(34px, 4.6vw, 54px); font-weight: 900; letter-spacing: -.6px; line-height: 1.1; }
-.in-banner p { margin: 0; color: #cfe3f1; font-size: 14px; line-height: 1.85; max-width: 64ch; }
+.in-banner h1 { position: relative; margin: 0 0 14px; padding-bottom: 16px; font-size: clamp(38px, 5vw, 62px); font-weight: 900; letter-spacing: -.8px; line-height: 1.08; }
+.in-banner h1::after { content: ""; position: absolute; inset-inline-start: 0; bottom: 0; width: 64px; height: 4px; border-radius: 4px; background: linear-gradient(90deg, #1b6fe0, #27b8f2); }
+.in-banner p { margin: 0; color: #dbe9f3; font-size: 15.5px; line-height: 1.85; max-width: 56ch; }
 
 .in-main { padding: 26px 0 70px; }
 .in-card { background: #fff; border-radius: 18px; box-shadow: 0 12px 30px rgba(2,52,88,.07); }
@@ -79,7 +86,11 @@ button, input, select, textarea { font-family: inherit; }
 .st-body p { margin: 0; color: #3d5468; font-size: 14px; line-height: 2; }
 
 /* Impact */
-.im-map { position: relative; border-radius: 22px; overflow: hidden; background: radial-gradient(circle at 55% 45%, #0b3a78, #031a36 70%); aspect-ratio: 2 / 1; min-height: 300px; }
+.im-map { position: relative; border-radius: 22px; overflow: hidden; background: radial-gradient(circle at 55% 45%, #0b3a78, #031a36 70%); width: 100%; aspect-ratio: 2 / 1; min-height: 300px; }
+/* On narrow screens aspect-ratio + min-height would widen the box past the
+   viewport (300px tall → 600px wide), so the height is set directly instead. */
+@media (max-width: 700px) { .im-map { aspect-ratio: auto; height: 300px; min-height: 0; } }
+@media (max-width: 560px) { .im-stats .im-stat:last-child:nth-child(odd) { grid-column: 1 / -1; } }
 .im-map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .im-map .in-script { position: absolute; bottom: 18px; left: 0; right: 0; text-align: center; color: #fff; font-size: 24px; }
 .im-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
@@ -247,10 +258,17 @@ button, input, select, textarea { font-family: inherit; }
   .sr-video { order: -1; }
 }
 @media (max-width: 560px) {
-  .in-banner { padding: 104px 0 70px; }
+  .in-banner { min-height: 320px; padding: 96px 0 76px; background: linear-gradient(0deg, rgba(3,26,54,.95) 0%, rgba(3,26,54,.78) 55%, rgba(3,26,54,.5) 100%), var(--in-img) center / cover no-repeat, #031a36 !important; }
   .gp-grid, .pj-grid, .im-regions { grid-template-columns: 1fr; }
   .fg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .im-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ct-row { grid-template-columns: 1fr; }
   .ab-intro-text, .st-body, .ct-form, .pg-feature-text, .sr-proj-text { padding: 20px 18px; }
+}
+
+/* Programs filter tabs on phones: one swipeable row instead of three wrapped rows. */
+@media (max-width: 560px) {
+  .pg-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -20px; padding: 2px 20px 6px; scroll-padding-inline: 20px; }
+  .pg-tabs::-webkit-scrollbar { display: none; }
+  .pg-tabs button { flex-shrink: 0; min-height: 44px; padding: 0 18px; }
 }

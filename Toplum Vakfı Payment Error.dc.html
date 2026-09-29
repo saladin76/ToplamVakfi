@@ -22,7 +22,7 @@
     .steps-dots { display: flex; align-items: center; gap: 6px; }
     .step-dot { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 700; }
     .step-dot .circle { width: 24px; height: 24px; border-radius: 50%; background: #e9eff3; color: var(--muted); display: grid; place-items: center; font-size: 12px; font-weight: 800; }
-    .step-dot.done .circle { background: var(--brand); color: #fff; }
+    .step-dot.done .circle { background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; }
     .step-dot.error .circle { background: #d64545; color: #fff; }
     .step-dot.error { color: #d64545; }
     .step-sep { width: 24px; height: 1px; background: #dbe6ee; align-self: center; }
@@ -32,7 +32,7 @@
     .panel h2 { margin: 0 0 10px; font-size: 19px; font-weight: 800; }
     .panel p { color: var(--muted); font-size: 13.5px; margin: 0 0 26px; line-height: 1.85; }
     .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .btn-row a { flex: 1; display: inline-flex; align-items: center; justify-content: center; min-width: 130px; background: var(--brand); color: #fff; padding: 13px 26px; border-radius: 999px; font-weight: 800; font-size: 13.5px; min-height: 44px; }
+    .btn-row a { flex: 1; display: inline-flex; align-items: center; justify-content: center; min-width: 130px; background: linear-gradient(90deg, #1b6fe0 0%, #1ca3ec 72%, #27b8f2 100%); color: #fff; padding: 13px 26px; border-radius: 999px; font-weight: 800; font-size: 13.5px; min-height: 44px; }
     .btn-row a.outline { background: transparent; color: var(--muted); border: 1.5px solid #e2eaf0; }
     @media (max-width: 480px) { .step-dot span:not(.circle) { display: none; } .step-sep { width: 14px; } .panel { padding: 22px; } }
   </style>
@@ -61,6 +61,7 @@
       </div>
     </div>
   </div>
+  <dc-import name="Toplum Vakfı Footer" hint-size="100%,60px"></dc-import>
 </div>
 </x-dc>
 </body>

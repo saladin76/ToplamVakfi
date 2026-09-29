@@ -50,19 +50,17 @@
     .ct-safe svg { width: 14px; height: 14px; }
     @media (max-width: 900px) { .ct-cart { grid-template-columns: 1fr; } .ct-sum { position: static; } }
     @media (max-width: 560px) { .ct-row { grid-template-columns: 1fr; } .ct-items { padding: 6px 16px; } }
+    /* No banner on the cart: the content clears the fixed header directly
+       (86px desktop, 66px phone) plus breathing room. */
+    .ct-main { padding-top: 112px; }
+    @media (max-width: 760px) { .ct-main { padding-top: 90px; } }
   </style>
 </helmet>
 <div dir="rtl">
   <dc-import name="Toplum Vakfı Header" active-key="" hint-size="100%,64px"></dc-import>
 
-  <section class="in-banner">
-    <div class="in-wrap">
-      <nav class="in-crumb" aria-label="مسار التنقل"><a href="Toplum Vakfı Homepage.dc.html">الرئيسية</a><span aria-hidden="true">‹</span><span>سلة التبرعات</span></nav>
-      <h1>سلة التبرعات</h1>
-    </div>
-  </section>
-
-  <main class="in-main">
+  <main class="in-main ct-main">
+    <h1 class="in-wrap" style="margin:0 auto 18px;font-size:clamp(24px,3vw,32px);font-weight:900;color:var(--ink)">سلة التبرعات</h1>
     <div class="in-wrap ct-cart">
       <section class="in-card ct-items" aria-label="سلة التبرعات">
         <div id="ctList"></div>
